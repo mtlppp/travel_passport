@@ -1,0 +1,1260 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14213D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="旅貼">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<title>旅貼</title>
+<style>
+:root{
+  color-scheme:light;
+  --ink:#14213D; --sun:#FFC93C; --bg:#E6EAF0; --card:#fff; --mute:#5A6578; --line:#D5DBE4; --blue:#3F6FE0;
+  --sans:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.45}
+button,input{font:inherit;color:inherit}
+button{border:0;background:none;cursor:pointer;padding:0}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(92px + env(safe-area-inset-bottom))}
+h1,h2,h3,p{margin:0}
+.num{font-variant-numeric:tabular-nums}
+
+/* tab bar */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--ink);padding:6px 16px calc(6px + env(safe-area-inset-bottom))}
+.tabs div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.tab{height:52px;border-radius:14px;color:#AEB8CC;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:13px;font-weight:700}
+.tab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tab.on{color:var(--sun);background:rgba(255,255,255,.1)}
+
+/* start */
+.start{padding-top:28px;display:grid;gap:14px}
+.start h1{font-size:34px;font-weight:900;letter-spacing:.02em;line-height:1.2}
+.sub{color:var(--mute);font-size:15px;max-width:30ch}
+.start label{display:grid;gap:6px;font-weight:700;font-size:14px}
+.start input{height:52px;border:2px solid var(--ink);border-radius:14px;background:#fff;padding:0 14px;font-size:18px;font-weight:600}
+.primary{height:56px;border-radius:16px;background:var(--sun);color:var(--ink);font-weight:900;font-size:18px;box-shadow:0 4px 0 var(--ink);border:2px solid var(--ink)}
+.primary:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.ghost{height:40px;padding:0 14px;border-radius:12px;border:2px solid var(--ink);font-weight:800;font-size:14px;background:transparent}
+
+/* trip */
+.hd{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.hd h1{font-size:26px;font-weight:900;line-height:1.2;overflow-wrap:anywhere}
+.hd p{color:var(--mute);font-size:14px;font-weight:600}
+.sum{margin:14px 0}
+.sum .lab{font-size:14px;font-weight:700;color:var(--mute)}
+.big{font-size:46px;font-weight:900;line-height:1.1;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.big span{font-size:18px;font-weight:800;margin-right:8px;color:var(--mute)}
+.mini{display:flex;gap:18px;font-size:14px;font-weight:700;color:var(--mute);margin-top:4px}
+.pad{background:var(--card);border-radius:22px;padding:14px;display:grid;gap:12px;box-shadow:0 2px 0 var(--line)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border-radius:12px;padding:3px}
+.seg button{height:36px;border-radius:10px;font-weight:800;font-size:14px;color:var(--mute)}
+.seg button.on{background:var(--ink);color:#fff}
+.disp{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:0 4px}
+.disp small{font-size:15px;font-weight:800;color:var(--mute)}
+.disp b{font-size:40px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1.15;overflow:hidden;text-overflow:ellipsis}
+.disp.empty b{color:#B3BCCB}
+.chips{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.chip{height:56px;border-radius:12px;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;font-weight:700;gap:1px}
+.chip span{font-size:20px;line-height:1.1}
+.chip.on{background:var(--ink);color:#fff}
+.note{height:44px;border:2px solid var(--line);border-radius:12px;padding:0 12px;font-size:16px;width:100%;background:#fff}
+.keys{display:grid;grid-template-columns:3fr 1.1fr;gap:8px}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.key{height:52px;border-radius:12px;background:var(--bg);font-size:22px;font-weight:800;font-variant-numeric:tabular-nums}
+.key:active{background:var(--line)}
+.side{display:grid;grid-template-rows:52px 1fr;gap:8px}
+.side .bs{border-radius:12px;background:var(--bg);font-size:20px;font-weight:800}
+.side .add{border-radius:14px;background:var(--sun);border:2px solid var(--ink);font-weight:900;font-size:18px;line-height:1.25;box-shadow:0 3px 0 var(--ink)}
+.side .add:active{transform:translateY(2px);box-shadow:0 1px 0 var(--ink)}
+.list{margin-top:20px}
+.day{font-size:13px;font-weight:800;color:var(--mute);margin:16px 2px 6px}
+.row{display:grid;grid-template-columns:40px 1fr auto auto;align-items:center;gap:10px;background:var(--card);border-radius:14px;padding:8px 6px 8px 8px;margin-bottom:6px}
+.ro{grid-template-columns:40px 1fr auto;padding-right:12px}
+.ic{width:40px;height:40px;border-radius:12px;background:var(--bg);display:grid;place-items:center;font-size:20px}
+.tx{min-width:0}
+.tx b{display:block;font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tx small{color:var(--mute);font-size:12px;font-weight:600}
+.am{font-weight:800;font-variant-numeric:tabular-nums}
+.am.in{color:#14795F}
+.del{width:36px;height:36px;border-radius:10px;font-size:22px;color:var(--mute)}
+.empty-note{color:var(--mute);font-size:14px;margin:20px 2px}
+
+/* book */
+.bk h1{font-size:30px;font-weight:900;line-height:1.2}
+.cover{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:relative;width:min(100%,340px);aspect-ratio:3/4.3;margin:10px auto 0;padding:28px 24px 28px 36px;border-radius:8px 22px 22px 8px;color:#E8C26A;text-align:center;
+  background:radial-gradient(120% 70% at 30% 0%,rgba(255,255,255,.12),transparent 60%),repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 2px,transparent 2px 5px),#14213D;
+  box-shadow:inset 12px 0 0 rgba(0,0,0,.3),inset 14px 0 0 rgba(255,255,255,.07),0 22px 30px -14px rgba(20,33,61,.6)}
+.cover:active{transform:scale(.99)}
+.cover svg{width:96px;height:96px;fill:none;stroke:#E8C26A;stroke-width:2;opacity:.95}
+.ct{font-size:54px;font-weight:900;letter-spacing:.18em;margin-right:-.18em;line-height:1.1;text-shadow:0 1px 0 rgba(0,0,0,.45)}
+.cs{font-size:15px;font-weight:700;letter-spacing:.5em;margin-right:-.5em}
+.cc{margin-top:18px;font-size:14px;font-weight:700;color:#F3DFA6;border:1.5px solid rgba(232,194,106,.5);border-radius:999px;padding:8px 16px}
+.blank{margin-top:28px;display:grid;gap:12px;justify-items:center;text-align:center}
+.blank h2{font-size:20px;font-weight:900}
+.page{--u:clamp(10px,calc((min(100vw,480px) - 132px) / 18),16px);position:relative;border-radius:6px 16px 16px 6px;padding:58px 24px 40px 32px;display:grid;gap:34px;min-height:660px;align-content:start;transform-origin:left center;
+  background:radial-gradient(circle at 15% 85%,rgba(217,120,150,.20),transparent 50%),radial-gradient(circle at 85% 15%,rgba(80,130,200,.22),transparent 55%),repeating-radial-gradient(circle at 50% 130%,rgba(63,111,224,.08) 0 1px,transparent 1px 7px),#F4F2F8;
+  box-shadow:inset 8px 0 14px -8px rgba(20,33,61,.28),0 2px 0 var(--line)}
+.pn{position:absolute;top:8px;right:16px;font-size:34px;font-weight:900;color:transparent;-webkit-text-stroke:1.5px rgba(63,111,224,.38);font-variant-numeric:tabular-nums}
+.pt{position:absolute;top:18px;left:26px;font-size:13px;font-weight:800;letter-spacing:.2em;color:#6B7590}
+.slot{display:grid;place-items:center}
+.slot button{display:block;padding:8px;border-radius:10px;max-width:100%}
+.slot .st{font-size:var(--u)}
+.slot.multi{gap:6px}
+.grp{position:relative;width:calc(var(--u) * 18 + 16px);height:calc(var(--u) * 17 + 16px)}
+.grp>button{position:absolute;padding:3px;border-radius:8px}
+.slot .grp .st{font-size:calc(var(--u) * var(--k))}
+.grp>button.sub{z-index:2}
+/* 45% 小貼紙：名稱固定用最大字級（375 寬約 10px），長名自動換行 */
+.grp>button.sub .sc .nm{font-size:1.7em!important}
+.grp-cap{font-size:12px;font-weight:800;color:var(--mute);letter-spacing:.05em;text-align:center}
+.slot.empty{justify-self:center;width:calc(var(--u) * 18);height:calc(var(--u) * 17);border:2px dashed rgba(90,101,120,.4);border-radius:10px;color:var(--mute);font-size:14px;font-weight:700}
+.turn-n{animation:turnN .38s ease-out}
+.turn-p{animation:turnP .38s ease-out}
+@keyframes turnN{from{transform:perspective(900px) rotateY(-55deg);opacity:.3}to{transform:none;opacity:1}}
+@keyframes turnP{from{transform:perspective(900px) rotateY(40deg);opacity:.3}to{transform:none;opacity:1}}
+.pg{display:grid;grid-template-columns:52px 1fr 52px;align-items:center;gap:10px;margin-top:16px}
+.pg button{height:52px;border-radius:16px;background:var(--ink);color:var(--sun);font-size:22px;font-weight:900}
+.pg button:disabled{opacity:.3;cursor:default}
+.pg p{text-align:center;font-weight:800;font-size:14px;color:var(--mute)}
+
+/* sticker: squarer landing-permission style with a local landmark scene */
+.st{position:relative;width:18em;height:17em;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);color:var(--ink);border:.14em solid var(--ac);border-radius:.5em;box-shadow:0 0 0 .35em rgba(255,255,255,.92),0 .25em .6em .2em rgba(20,33,61,.25)}
+.st::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(135deg,rgba(255,255,255,.38) 0 .15em,transparent .15em .6em);pointer-events:none}
+.st>*{position:relative}
+.sh{flex:none;display:flex;justify-content:space-between;align-items:center;gap:.6em;background:var(--ac);color:#fff;padding:.35em .8em;font-weight:800}
+.sh span:first-child{letter-spacing:.15em}
+.sh span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc{position:relative;flex:none;line-height:0;background:var(--bg)}
+.sc .nm{position:absolute;z-index:1;top:.55em;left:.5em;max-width:56%;color:#14213D;text-shadow:0 1px 5px rgba(255,255,255,.5);white-space:normal;overflow-wrap:anywhere}
+.sc svg{display:block;width:100%;height:auto}
+.st .bar{flex:none;height:.5em;display:flex;gap:.1em;background:#fff}
+.st .bar i{display:block}
+.sf{flex:1;min-height:0;display:flex;justify-content:space-between;align-items:flex-end;gap:.8em;padding:.5em .8em .6em}
+.sm{display:flex;flex-direction:column;gap:.2em;min-width:0;flex:1}
+.st .nm{font-weight:900;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st small{font-size:.9em;font-weight:700;color:rgba(20,33,61,.72);white-space:nowrap}
+.am2{display:flex;gap:1.1em;min-width:0;margin-top:.2em}
+.am2 div{display:grid}
+.am2 b{font-weight:800;font-variant-numeric:tabular-nums;line-height:1.2;white-space:nowrap}
+.am2 div:last-child b{font-size:1.1em}
+.qr{width:3.4em;height:3.4em;flex:none;color:var(--ink)}
+.qr svg{display:block;width:100%;height:100%}
+
+/* layer */
+#layer{position:fixed;inset:0;z-index:30;display:none}
+#layer.show{display:block}
+.reveal{height:100%;background:rgba(20,33,61,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px;text-align:center;color:#fff}
+.reveal h2{font-size:28px;font-weight:900}
+.reveal p{color:#C9D2E3;font-size:15px}
+.reveal .primary{width:min(320px,100%)}
+.stamp{animation:stamp .6s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes stamp{0%{transform:scale(1.9) rotate(-14deg);opacity:0}55%{opacity:1}100%{transform:none;opacity:1}}
+.dialog{height:100%;background:rgba(20,33,61,.6);display:grid;place-items:end center;padding:16px}
+.dlg{background:#fff;border-radius:24px;padding:22px;width:min(460px,100%);display:grid;gap:14px;margin-bottom:env(safe-area-inset-bottom)}
+.dlg h2{font-size:22px;font-weight:900}
+.dlg p{color:var(--mute);font-size:15px}
+.dlg .two{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}
+.dlg .primary,.dlg .ghost{height:50px;font-size:16px}
+.sheet{height:100%;background:var(--bg);overflow-y:auto;overscroll-behavior:contain}
+.sheet .wrap{max-width:480px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(32px + env(safe-area-inset-bottom))}
+.sheet .top{display:flex;justify-content:flex-end}
+.stage{display:grid;place-items:center;padding:20px 0 26px}
+.panel{background:#fff;border-radius:18px;padding:6px 14px;margin-bottom:14px}
+.kv{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);font-weight:700}
+.kv:last-child{border-bottom:0}
+.kv span{color:var(--mute);font-weight:600}
+.br{display:grid;grid-template-columns:84px 1fr auto;gap:10px;align-items:center;padding:9px 0;font-size:14px;font-weight:700}
+.tr{height:10px;border-radius:6px;background:var(--bg);overflow:hidden}
+.tr i{display:block;height:100%;border-radius:6px}
+.acts{display:grid;gap:10px;margin-top:6px}
+.dh{font-size:20px;font-weight:900;margin:22px 2px 0}
+.dayh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin:16px 2px 6px}
+.dayh b{font-size:15px;font-weight:900}
+.dayh span{font-size:13px;font-weight:700;color:var(--mute);font-variant-numeric:tabular-nums}
+.dbar{height:6px;border-radius:4px;background:#fff;margin:0 2px 8px;overflow:hidden}
+.dbar i{display:block;height:100%;background:var(--ink);border-radius:4px}
+.empty-day{color:var(--mute);font-size:13px;margin:0 2px 6px}
+.danger{color:#B3261E;border-color:#B3261E}
+
+/* planning + ledger */
+.sec{font-size:18px;font-weight:900;margin:10px 0 -4px}
+.start .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.start input,.start textarea{min-width:0;width:100%}
+.start textarea{border:2px solid var(--ink);border-radius:14px;background:#fff;padding:10px 12px;font-size:16px;line-height:1.4;resize:vertical;font-family:inherit}
+.tcard{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:14px;text-align:left;box-shadow:0 2px 0 var(--line);width:100%}
+.tcard b{display:block;font-size:18px;font-weight:900;overflow-wrap:anywhere}
+.tcard small{color:var(--mute);font-size:13px;font-weight:600}
+.bdg{flex:none;border-radius:999px;background:var(--ink);color:var(--sun);font-size:12px;font-weight:800;padding:6px 10px}
+.bdg.od{background:#B3261E;color:#fff}
+.pday{display:grid;gap:6px}
+.pday b{font-size:14px;font-weight:800}
+.dpg{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;gap:8px;margin:14px 0 4px}
+.dpg button{height:44px;border-radius:14px;background:var(--ink);color:var(--sun);font-size:22px;font-weight:900}
+.dpg button:disabled{opacity:.3;cursor:default}
+.dpg div{text-align:center;font-weight:900;font-size:17px}
+.bud{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px;font-weight:700;color:var(--mute);margin-top:6px}
+.over{color:#B3261E}
+.dn{margin:12px 0;background:var(--card);border-radius:14px;padding:10px 12px}
+.dn summary{font-weight:800;font-size:14px;cursor:pointer}
+.dn textarea{margin-top:8px;width:100%;border:2px solid var(--line);border-radius:10px;padding:8px 10px;font-size:15px;font-family:inherit;resize:vertical}
+.dnote{margin:0 2px 6px;font-size:13px;color:var(--mute)}
+.foot{display:grid;gap:10px;margin-top:22px}
+
+
+/* two-page trip creation: illustrated destination index */
+.dest-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.step-label{font-size:13px;font-weight:800;color:var(--mute)}
+.dest-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:4px}
+.dest-choice{text-align:left;border:2px solid var(--ink);border-radius:16px;overflow:hidden;background:white;transition:transform .15s}
+.dest-choice:active{transform:scale(.97)}
+.dest-art{display:block;width:100%;height:88px;background:#dce7ee}
+.dest-choice .dest-copy{display:block;padding:10px 12px 12px}
+.dest-choice b{display:block;font-size:20px;font-weight:900;line-height:1.2}
+.dest-choice small{display:block;font-size:12px;color:var(--mute);margin-top:4px;font-weight:650}
+.dest-summary{display:flex;align-items:center;gap:14px;background:white;border:2px solid var(--ink);border-radius:16px;padding:12px}
+.dest-summary .dest-art{flex:none;width:90px;height:70px;border-radius:9px}
+.dest-summary .dest-info{flex:1;min-width:0}
+.dest-summary b{font-size:23px;font-weight:900;display:block}
+.dest-summary small{font-size:13px;color:var(--mute);display:block}
+.dest-summary button{font-size:13px;font-weight:800;text-decoration:underline;min-height:44px;padding:4px}
+.start select{font:inherit;color:var(--ink);width:100%;height:56px;border:2px solid var(--ink);border-radius:14px;background:#fff;padding:0 12px;font-size:16px;font-weight:700}
+.dest-preview{overflow:hidden;border:2px solid var(--ink);border-radius:18px;background:#fff}
+.dest-preview .dest-art{height:auto;aspect-ratio:16/9;width:100%;display:block}
+.preview-caption{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.preview-caption b{font-size:24px;font-weight:900}
+.preview-caption span{font-size:14px;font-weight:700;color:var(--mute)}
+.preview-empty{min-height:180px;display:grid;place-items:center;text-align:center;padding:24px;color:var(--mute);font-size:14px;background:#edf1f5}
+.primary:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.duration{font-size:15px;font-weight:800;color:var(--blue);min-height:22px}
+.budget-caption{font-size:13px;color:var(--mute);margin-top:-4px}
+.start input[type=date]{font-size:15px;padding:0 8px}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;border-radius:14px;padding:10px 16px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:40;white-space:nowrap}
+#toast.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#toast button{color:var(--sun);font-weight:900;margin-left:12px;padding:4px 6px}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* daily overview: a continuous travel ledger, not another card grid */
+.ov-head{margin:12px 0 22px}.ov-head h1{font-size:30px;font-weight:900}.ov-head p{color:var(--mute);margin-top:6px}
+.ov-total{border-top:4px solid var(--ink);border-bottom:2px solid var(--ink);padding:16px 0;margin-bottom:22px}
+.ov-total h2{font-size:22px;margin-bottom:12px}.ov-money{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ov-money small{display:block;color:var(--mute);font-size:12px}.ov-money b{display:block;font-size:18px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.ov-key{display:flex;justify-content:space-between;font-size:13px;color:var(--mute);padding-bottom:8px}
+.ov-day{display:block;width:100%;text-align:left;border-top:1px solid #bac4d2;padding:17px 8px;min-height:106px}
+.ov-day.is-today{background:#fff7d8;border-left:4px solid var(--sun)}.ov-date{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.ov-date b{font-size:16px}.ov-date span{font-size:12px;color:var(--mute)}.ov-day .ov-money b{font-size:16px}.ov-note{font-size:13px;color:var(--mute);margin-top:9px;overflow-wrap:anywhere}
+.pwa-info{margin-top:32px;padding:14px 0 2px;border-top:1px solid var(--line);font-size:12px;color:var(--mute);line-height:1.6}
+.pwa-info button{display:inline-block;font-size:13px;font-weight:800;text-decoration:underline;margin:8px 16px 0 0;min-height:32px}.pwa-info .warn{color:#a43225}.pwa-info small{display:block;font-size:11px;margin-top:5px}
+/* Compact pocket ledger. Keep the original travel-ticket palette and illustrations. */
+[hidden]{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.ghost{min-height:44px;height:auto;padding:10px 14px}.del{width:44px;height:44px;flex:none}.modal-open{overflow:hidden}
+.field{display:grid;gap:6px;font-size:14px;font-weight:700;margin-top:12px}
+.field input,.field select,select#overview-trip{font:inherit;width:100%;min-width:0;min-height:46px;border:2px solid var(--line);border-radius:12px;padding:9px;background:#fff;color:var(--ink)}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.muted,.rate-label{font-size:13px;line-height:1.6;color:var(--mute);overflow-wrap:anywhere}.rate-label{font-weight:500}
+.hkd{display:block;color:var(--mute);font-size:12px;font-weight:600;line-height:1.45;font-variant-numeric:tabular-nums}
+.settings-link{padding-top:22px;text-align:center}.settings-link .ghost{font-size:13px;border:0;color:var(--mute);text-decoration:underline}
+.app-foot{padding:22px 0 4px;text-align:center;display:grid;gap:10px;justify-items:center}
+.app-foot .settings-btn{font-size:14px;font-weight:800;min-height:44px;padding:0 22px}
+.net-line{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 8px;font-size:12px;color:var(--mute);line-height:1.5;margin:0}
+.net-line i{width:8px;height:8px;border-radius:50%;background:#b9b2a3;flex:none}.net-line[data-state=ok] i{background:#3c8b5a}.net-line[data-state=off] i{background:#d08a1c}
+.net-line button{font-size:12px;font-weight:800;text-decoration:underline;min-height:44px;padding:0 6px;color:var(--ink)}.net-line small{flex-basis:100%;font-size:11px}
+.net-chip{position:sticky;top:8px;z-index:30;margin:0 auto 10px;width:max-content;max-width:100%;display:flex;align-items:center;gap:8px;padding:0 14px;min-height:36px;border-radius:999px;background:#2f2a24;color:#fff;font-size:12.5px;font-weight:700;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.net-chip button{color:#ffd77a;font-weight:800;text-decoration:underline;font-size:12.5px;min-height:44px}
+.storage-alert{background:#fff0ed;border-left:4px solid #b3261e;padding:10px;font-size:14px;margin-bottom:12px;color:#9a271d}
+.text-action{color:var(--blue);text-decoration:underline;font-weight:700;min-height:44px;padding:8px 5px;font-size:13px}
+.ledger .hd h1{font-size:23px}.ledger .hd p{font-size:12px}.ledger .hd .ghost{padding:6px 12px}
+.switch-trip{display:block;width:100%;min-height:44px;margin:6px 0 2px;padding:6px 12px;font-size:14px;font-weight:700;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.choose-trip .sub{margin:4px 0 2px}
+.date-strip{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:8px;margin:8px 0 4px;align-items:center}
+.date-strip button{font-size:22px;padding:2px}.date-strip label{min-width:0}.date-strip input{width:100%;min-width:0;min-height:44px;border:0;border-radius:10px;background:transparent;font-weight:800;text-align:center;font-size:16px;padding:5px;color:var(--ink);font-family:var(--sans)}
+.ledger-total{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;font-size:12px;margin:0 0 8px;color:var(--mute)}.ledger-total b{color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.ledger .pad{padding:10px;gap:7px;border-radius:18px}.ledger .seg button{height:44px}.ledger .seg{padding:2px}
+.ledger .disp{padding:0;min-width:0}.ledger .disp b{font-size:clamp(24px,7.5vw,34px);line-height:1.12}.ledger .disp small{font-size:13px;flex:none}
+.typing-hkd{height:18px;text-align:right}.ledger .chips{gap:4px}.ledger .chip{height:44px;border-radius:10px;font-size:11px;gap:0}.ledger .chip span{font-size:16px}
+.ledger .note{height:44px}.ledger .keys,.ledger .kp,.ledger .side{gap:5px}.ledger .key{height:44px;font-size:22px}.ledger .side{grid-template-rows:44px 1fr}.ledger .side .add{font-size:17px}.ledger .side .bs{min-height:44px}
+.ledger .dn{margin:14px 0}.ledger .dn summary{min-height:24px}.ledger .list{margin-top:12px}
+.entry-row{display:flex;align-items:center;gap:2px;background:#fff;border-radius:14px;padding:5px;margin-bottom:6px;min-width:0}
+.entry-main{display:grid;grid-template-columns:36px minmax(0,1fr) auto;gap:8px;align-items:center;min-width:0;flex:1;text-align:left;padding:5px;min-height:48px}
+.entry-main .ic{width:36px;height:36px;font-size:18px}.entry-amount{text-align:right;max-width:156px;overflow-wrap:anywhere}.entry-amount .am{font-size:14px}.entry-row .tx b{font-size:14px}.entry-row .tx small{font-size:11px}
+.ov-head{margin:8px 0 14px}.ov-head h1{font-size:28px}.ov-total{margin-bottom:16px;padding:14px 0}.ov-total h2{font-size:19px}.ov-money.expense-only{grid-template-columns:1fr}.ov-total .expense-only b{font-size:30px}.ov-day{min-height:96px;scroll-margin-top:12px}.ov-date{align-items:start}.ov-date b{font-size:14px}.ov-date span{flex:none}.ov-key{align-items:center;padding:0}
+.outside-day{border-left:3px solid var(--mute);padding-left:10px}.budget-summary{margin-bottom:12px}.budget-summary h2{font-size:18px;margin-bottom:9px}.budget-line{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;font-size:13px}.budget-meter{height:9px;background:#cbd2de;border-radius:5px;overflow:hidden;margin:9px 0}.budget-meter i{display:block;height:100%;background:var(--blue)}.budget-meter .overfill{background:#b3261e}.budget-summary .muted{margin-top:6px}
+.category-summary{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:5px 0;margin:16px 0 8px}.category-summary summary{font-size:15px;font-weight:800;min-height:44px;padding:10px 0;cursor:pointer}.br{grid-template-columns:70px minmax(20px,1fr) auto;font-size:13px}
+.editor,.settings{display:grid;gap:12px}.editor h1,.settings h1{font-size:24px}.editor .field{margin:0}.editor .primary{margin-top:6px}.settings p{font-size:14px;line-height:1.65}.settings section{border-top:1px solid var(--line);padding-top:15px}.settings h2{font-size:18px}.settings .muted{margin-top:10px}.settings .pwa-info{margin-top:0}.pwa-info button{min-height:44px}.settings input[type=file]{font-size:13px;max-width:100%}.import-success{color:#14795f;font-weight:700}
+.dlg{max-height:calc(100dvh - 32px);overflow-y:auto}.dlg .two{grid-template-columns:1fr 1fr}.dlg .primary,.dlg .ghost{height:auto;min-height:50px;padding:10px;font-size:15px}.sheet .wrap{padding-bottom:calc(32px + env(safe-area-inset-bottom))}.sheet .top{position:sticky;top:0;z-index:1;background:var(--bg);padding:4px 0}
+@media(max-width:360px){.app{padding-left:10px;padding-right:10px}.entry-main{grid-template-columns:30px minmax(0,1fr) auto;gap:5px}.entry-main .ic{width:30px;height:30px}.entry-amount .am{font-size:12px}.ov-date b{font-size:13px}.ledger .hd h1{font-size:21px}}
+
+/* 各國景點圖卡片（沿用各國景點圖/preview.html 排版） */
+.tcard.art-card{position:relative;display:block;width:100%;aspect-ratio:4/3;padding:0;background-color:#d9c6a4;background-size:cover;background-position:center;border:4px solid #f0e3c9;border-radius:16px;overflow:hidden;text-align:left}
+.art-card .ac-txt{position:absolute;left:7%;top:12%;width:38%;display:flex;flex-direction:column;align-items:flex-start}
+.art-card .ac-k{font-size:12px;letter-spacing:.15em;color:#c85e40;font-weight:700}
+.art-card .ac-h{display:block;margin:2px 0 8px;font-size:26px;line-height:1.2;letter-spacing:.08em;font-weight:900;color:#234f5e;overflow-wrap:anywhere}
+.art-card .ac-amt{font-size:15px;font-weight:700;color:#234f5e}
+.art-card .ac-m{margin-top:4px;font-size:12px;color:#665b58;font-weight:600}
+.art-card .ac-h.ac-h-m{font-size:21px;letter-spacing:.04em}.art-card .ac-h.ac-h-s{font-size:17px;letter-spacing:0}
+.art-card.night .ac-k{color:#f2c879}.art-card.night .ac-h,.art-card.night .ac-amt{color:#f3e8c8}.art-card.night .ac-m{color:#cfc6b0}
+.art-card .ac-season{position:absolute;right:10px;top:10px;width:40px;height:40px}.art-card .ac-season svg{display:block;width:100%;height:100%}
+.art-card .ac-bdg{position:absolute;left:7%;bottom:8%}
+div.art-card{margin-top:10px}
+.art-seg button{height:44px}
+.dest-photo{object-fit:cover;object-position:72% 50%}
+/* 建立旅程第 1 步：左右滑動選代表圖 */
+.art-car{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:6px}
+.car-view{position:relative;min-width:0;background:#d9c6a4;border-radius:12px;overflow:hidden}
+.car-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain}
+.car-track::-webkit-scrollbar{display:none}
+.car-track:focus-visible{outline:3px solid #234f5e;outline-offset:-3px}
+.car-slide{position:relative;flex:0 0 100%;margin:0;scroll-snap-align:center;scroll-snap-stop:always;aspect-ratio:4/3}
+.car-slide img{display:block;width:100%;height:100%;object-fit:cover}
+.car-slide figcaption{position:absolute;left:12px;bottom:12px;padding:4px 10px;border-radius:999px;background:rgba(35,79,94,.85);color:#f3e8c8;font-size:14px;font-weight:800}
+.car-nav{width:44px;height:44px;border-radius:50%;background:rgba(240,227,201,.92);color:#234f5e;font-size:26px;font-weight:900;line-height:1;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+.car-dots{display:flex;justify-content:center;gap:4px;margin:-4px 0 -6px}
+.car-dots button{width:44px;height:44px;min-height:44px;display:grid;place-items:center}
+.car-dots button::after{content:'';width:9px;height:9px;border-radius:50%;background:#c9bfae}
+.car-dots button.on::after{width:22px;border-radius:5px;background:#c85e40}
+.art-car-ctl{padding:0 12px 4px}
+.art-car-ctl .seg button{height:44px}
+.art-pick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:6px 0 10px}
+.art-thumb{position:relative;display:block;padding:0;border:3px solid transparent;border-radius:12px;overflow:hidden;background:#d9c6a4;aspect-ratio:4/3;min-height:44px;cursor:pointer}
+.art-thumb img{display:block;width:100%;height:100%;object-fit:cover;object-position:72% 50%}
+.art-thumb span{position:absolute;left:0;right:0;bottom:0;padding:3px 4px;background:rgba(35,79,94,.82);color:#f3e8c8;font-size:12px;font-weight:700;line-height:1.25;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.art-thumb.on{border-color:#c85e40;box-shadow:0 0 0 2px #f0e3c9 inset}
+.art-thumb:focus-visible{outline:3px solid #234f5e;outline-offset:2px}
+</style>
+</head>
+<body>
+<main class="app" id="view"></main>
+<nav class="tabs" aria-label="主選單"><div>
+  <button class="tab" data-act="tab" data-tab="trip"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>旅程</button>
+  <button class="tab" data-act="tab" data-tab="overview"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 16v-5m6 5V5m6 11V8"/></svg>收支總覽</button>
+  <button class="tab" data-act="tab" data-tab="book"><svg viewBox="0 0 24 24"><path d="M5 4h14v10l-6 6H5z"/><path d="M19 14h-6v6"/></svg>貼紙簿</button>
+</div></nav>
+<div id="layer"></div>
+<div id="toast" role="status"></div>
+<datalist id="cur"><option>HKD</option><option>JPY</option><option>TWD</option><option>KRW</option><option>CNY</option><option>USD</option><option>EUR</option><option>GBP</option><option>THB</option><option>SGD</option><option>AUD</option><option>MYR</option></datalist>
+
+<script src="./season.js"></script>
+<script src="./core.js"></script>
+<script>
+const CATS=[
+  {k:'food',n:'餐飲',e:'🍜',c:'#FF6B57'},
+  {k:'move',n:'交通',e:'🚆',c:'#3F6FE0'},
+  {k:'stay',n:'住宿',e:'🛏️',c:'#7C4DEB'},
+  {k:'shop',n:'購物',e:'🛍️',c:'#FFC93C'},
+  {k:'play',n:'玩樂',e:'🎟️',c:'#2BB3A3'},
+  {k:'other',n:'其他',e:'🧾',c:'#8A94A6'}
+];
+const CAT_IN={k:'in',n:'收入',e:'💰',c:'#14795F'};
+const catOf=k=>k==='in'?CAT_IN:(CATS.find(c=>c.k===k)||CATS[5]);
+const PAL=[
+  {bg:'#CFE6F3',ac:'#276F95'},{bg:'#F7E3B5',ac:'#8F5B12'},{bg:'#D5EBD3',ac:'#2F7A41'},
+  {bg:'#F3D3D3',ac:'#B84A4A'},{bg:'#E0D8F2',ac:'#6A4FB5'},{bg:'#D9E2E8',ac:'#3A4F66'}
+];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n).toLocaleString('en-US',{maximumFractionDigits:2});
+const uid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36).slice(-3);
+const p2=n=>String(n).padStart(2,'0');
+const sum=TravelCore.total;
+const entryDay=TravelCore.dateOf;
+const dayStart=ts=>{const d=new Date(ts);d.setHours(0,0,0,0);return d.getTime()};
+const daysOf=t=>Math.max(1,Math.round((dayStart(t.end||Date.now())-dayStart(t.start))/864e5)+1);
+const hash=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h};
+const dayLabel=ts=>new Date(ts).toLocaleDateString('zh-HK',{month:'long',day:'numeric'});
+const timeLabel=ts=>{const d=new Date(ts);return p2(d.getHours())+':'+p2(d.getMinutes())};
+function range(t){
+  const a=new Date(t.start),b=new Date(t.end||Date.now());
+  const A=`${a.getFullYear()}.${p2(a.getMonth()+1)}.${p2(a.getDate())}`;
+  if(dayStart(a)===dayStart(b))return A;
+  const B=a.getFullYear()===b.getFullYear()?`${p2(b.getMonth()+1)}.${p2(b.getDate())}`:`${b.getFullYear()}.${p2(b.getMonth()+1)}.${p2(b.getDate())}`;
+  return A+'–'+B;
+}
+function stats(t){return TravelCore.stats(t)}
+
+/* ---------- storage (localStorage when available, memory otherwise) ---------- */
+const KEY='lvtie.v1';
+let mem=null;
+function load(){
+  try{const raw=localStorage.getItem(KEY);if(raw){const data=JSON.parse(raw);if(!data||!Array.isArray(data.trips))throw Error('Invalid storage');return data}}catch(e){window.lvtieStorageError=true;window.lvtieLoadError=true}
+  return mem||{trips:[]};
+}
+function save(){
+  mem=S;
+  if(window.lvtieLoadError){toast('無法讀取原有帳目，已停止覆寫。請先到備份設定匯出原始資料。');return false}
+  try{localStorage.setItem(KEY,JSON.stringify(S));window.lvtieStorageError=false}catch(e){window.lvtieStorageError=true}
+  updateStorageNotice();if(window.updatePwaUI)window.updatePwaUI();return !window.lvtieStorageError;
+}
+
+/* dates are 'YYYY-MM-DD' strings in local time */
+const parseD=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d).getTime()};
+const iso=ts=>{const d=new Date(ts);return `${d.getFullYear()}-${p2(d.getMonth()+1)}-${p2(d.getDate())}`};
+const today=()=>iso(Date.now());
+const idxOf=(t,day)=>Math.round((parseD(day)-parseD(t.startDate))/864e5)+1;
+const nDays=t=>idxOf(t,t.endDate);
+const dayList=TravelCore.days;
+const dLabel=d=>new Date(parseD(d)).toLocaleDateString('zh-HK',{month:'long',day:'numeric',weekday:'short'});
+const budNum=v=>{const s=String(v).replace(/,/g,'').trim();if(!s)return null;const n=Number(s);return Number.isFinite(n)&&n>0&&n<=999999999.99&&/^\d+(\.\d{1,2})?$/.test(s)?n:NaN};
+function norm(t){
+  if(!t.startDate)t.startDate=iso(t.start||Date.now());
+  if(!t.endDate)t.endDate=iso(t.end||Date.now());
+  if(t.endDate<t.startDate)t.endDate=t.startDate;
+  if(t.status==='active')t.status='planned';
+  t.plan=t.plan||{};t.entries=t.entries||[];
+  t.entries.forEach(e=>{if(!e.date)e.date=iso(e.ts)});
+  if(t.hkdRate===undefined)t.hkdRate=t.currency==='HKD'?1:null;
+  if(t.snoozeUntil===undefined)t.snoozeUntil=0;
+  if(t.budget===undefined)t.budget=null;
+  if(t.dailyBudget===undefined)t.dailyBudget=null;
+  return t;
+}
+let S=load();S.trips=(S.trips||[]).map(norm);
+
+const ui={overviewId:null,detailId:null,pendingDates:null,pendingImport:null,editId:null,editTid:null,tab:'trip',type:'out',amt:'',cat:'food',note:'',page:0,turn:null,home:false,planId:null,ledgerId:null,day:null,dayFor:null,asked:{},lastToday:null,newStep:1,destId:null,pickFor:null,draft:{place:'',start:'',end:'',budget:'',dailyBudget:''}};
+const tripById=id=>S.trips.find(t=>t.id===id);
+const liveTrips=()=>S.trips.filter(t=>t.status!=='done'&&t.startDate<=today()&&today()<=t.endDate);
+const inProg=()=>liveTrips()[0];
+const overdue=()=>S.trips.filter(t=>t.status!=='done'&&t.endDate<today());
+const upcoming=()=>S.trips.filter(t=>t.status!=='done'&&t.startDate>today()).sort((a,b)=>a.startDate<b.startDate?-1:1);
+/* 今天有多於一段旅程時，不自動挑一段，交給 chooseTripView 讓用家選 */
+const curTrip=()=>{const L=liveTrips(),t=ui.ledgerId?tripById(ui.ledgerId):(ui.home||L.length>1?null:L[0]);return t&&t.status!=='done'?t:null};
+let lastDel=null;
+
+/* ---------- sticker ---------- */
+const INK='#14213D',RED='#D64A3A',GOLD='#E8C26A',GREY='#8A94A6';
+/* Landmark drawings: 60 x 36 box, ground line at y = 30. */
+const LM={
+  tokyo:ac=>`<path d="M0 30L18 9L36 30Z" fill="${ac}"/><path d="M13.5 15.5L18 9L22.5 15.5L20 14L18 16L16 14Z" fill="#fff"/><path d="M43 30L48 5L53 30H50.5L48 14L45.5 30Z" fill="${RED}"/><rect x="44.5" y="13" width="7" height="2" fill="${RED}"/><rect x="45.4" y="19" width="5.2" height="1.1" fill="${RED}"/><rect x="47.7" y="1" width=".6" height="4.5" fill="${RED}"/>`,
+  fuji:ac=>`<path d="M8 30L26 8L44 30Z" fill="${ac}"/><path d="M21.5 14.5L26 8L30.5 14.5L28 13L26 15L24 13Z" fill="#fff"/><path d="M34 30L45 16L56 30Z" fill="${ac}" opacity=".55"/>`,
+  torii:ac=>`<path d="M0 30Q16 18 32 30Z" fill="${ac}" opacity=".35"/><path d="M14 11Q30 6 46 11L46 15Q30 10 14 15Z" fill="${RED}"/><rect x="20" y="16" width="20" height="2.2" fill="${RED}"/><rect x="22" y="14" width="2.6" height="16" fill="${RED}"/><rect x="35.4" y="14" width="2.6" height="16" fill="${RED}"/>`,
+  osaka:ac=>`<rect x="14" y="25" width="32" height="5" fill="${GREY}"/><rect x="20" y="19" width="20" height="6" fill="#fff"/><path d="M17 19L30 13L43 19Z" fill="${ac}"/><rect x="24" y="12" width="12" height="5" fill="#fff"/><path d="M21 12L30 6L39 12Z" fill="${ac}"/><rect x="28.5" y="3" width="3" height="3" fill="${GOLD}"/>`,
+  t101:ac=>{
+    const seg=Array.from({length:8},(_,i)=>{const w=8.4-i*.35,y=23.6-i*2.7;return `<path d="M${30-w/2} ${y+2.7}L${30-w/2-.8} ${y}H${30+w/2+.8}L${30+w/2} ${y+2.7}Z" fill="${ac}" opacity="${i%2?.75:1}"/>`}).join('');
+    return `<rect x="25" y="26" width="10" height="4" fill="${ac}"/>${seg}<rect x="29.6" y="0.5" width=".8" height="4.8" fill="${ac}"/>`;
+  },
+  chihkan:ac=>`<rect x="19" y="23" width="22" height="7" fill="${RED}"/><path d="M14 23Q30 17 46 23Z" fill="${ac}"/><rect x="23" y="16" width="14" height="6" fill="${RED}"/><path d="M19 16Q30 10 41 16Z" fill="${ac}"/><rect x="29.4" y="7" width="1.2" height="4" fill="${ac}"/>`,
+  arun:ac=>`<path d="M25 30V22Q30 3 35 22V30Z" fill="${ac}"/><rect x="29.6" y="0" width=".8" height="5" fill="${GOLD}"/><path d="M14 30V25Q17 15 20 25V30Z" fill="${ac}" opacity=".7"/><path d="M40 30V25Q43 15 46 25V30Z" fill="${ac}" opacity=".7"/><rect x="25" y="24" width="10" height="1" fill="#fff" opacity=".8"/><rect x="25" y="27" width="10" height="1" fill="#fff" opacity=".8"/>`,
+  hk:ac=>{
+    const b=[[8,12,6],[15,18,5],[21,10,6],[28,24,6],[35,15,5],[41,20,6],[48,11,5]];
+    return `<path d="M0 30Q22 8 50 30Z" fill="${ac}" opacity=".25"/>`+b.map(([x,h,w],i)=>`<rect x="${x}" y="${30-h}" width="${w}" height="${h}" fill="${ac}" opacity="${i%2?.7:1}"/>`).join('')+`<path d="M29 6L31 0L33 6Z" fill="${ac}"/>`;
+  },
+  seoul:ac=>`<path d="M2 30Q30 12 58 30Z" fill="${ac}" opacity=".45"/><rect x="29.2" y="10" width="1.6" height="16" fill="${ac}"/><ellipse cx="30" cy="12" rx="4" ry="1.6" fill="${ac}"/><rect x="28.8" y="5" width="2.4" height="5" fill="#fff"/><rect x="29.7" y="0" width=".6" height="5" fill="${ac}"/>`,
+  sg:ac=>`<rect x="12" y="9" width="36" height="2.4" rx="1.2" fill="${ac}"/><rect x="17" y="11" width="4.5" height="19" fill="${ac}"/><rect x="27.8" y="11" width="4.5" height="19" fill="${ac}" opacity=".8"/><rect x="38.5" y="11" width="4.5" height="19" fill="${ac}"/>`,
+  paris:ac=>`<path d="M20 30L30 4L40 30H36L30 14L24 30Z" fill="${ac}"/><rect x="24" y="22" width="12" height="1.6" fill="${ac}"/><rect x="26.4" y="15" width="7.2" height="1.4" fill="${ac}"/>`,
+  london:ac=>`<rect x="12" y="22" width="13" height="8" fill="${ac}" opacity=".55"/><rect x="35" y="21" width="13" height="9" fill="${ac}" opacity=".55"/><rect x="25" y="12" width="10" height="18" fill="${ac}"/><path d="M24 12L30 2L36 12Z" fill="${ac}" opacity=".8"/><circle cx="30" cy="16.5" r="3" fill="#fff"/><path d="M30 14.3v2.4h1.6" stroke="${ac}" stroke-width=".7" fill="none"/>`,
+  ny:ac=>`<rect x="23" y="25" width="14" height="5" fill="${GREY}"/><path d="M26 25L28 13H32L34 25Z" fill="${ac}"/><circle cx="30" cy="10.5" r="2.6" fill="${ac}"/><path d="M27 8.5L26 6M30 8V5.5M33 8.5L34 6" stroke="${ac}" stroke-width=".9"/><path d="M32 14L36 6" stroke="${ac}" stroke-width="1.6"/><circle cx="36.3" cy="4.8" r="1.6" fill="${GOLD}"/>`,
+  sydney:ac=>`<rect x="10" y="28" width="40" height="2" fill="${ac}"/><path d="M12 28Q13 14 26 11Q23 21 24 28Z" fill="#fff" stroke="${ac}" stroke-width=".8"/><path d="M24 28Q25 12 38 8Q35 20 36 28Z" fill="#fff" stroke="${ac}" stroke-width=".8"/><path d="M36 28Q38 16 48 14Q46 22 47 28Z" fill="#fff" stroke="${ac}" stroke-width=".8"/>`,
+  generic:(ac,h)=>{
+    const a=14+(h%14),b=26+((h>>4)%14),pa=8+((h>>7)%10),pb=4+((h>>9)%8),sx=38+((h>>11)%10);
+    return `<circle cx="${sx}" cy="11" r="5.5" fill="${ac}" opacity=".45"/><path d="M0 30L${a} ${pa}L${a+22} 30Z" fill="${ac}" opacity=".9"/><path d="M${b} 30L${b+14} ${pb+8}L60 30Z" fill="${ac}" opacity=".55"/>`;
+  }
+};
+/* Destination text (Chinese or English) -> landmark. First match wins. */
+const LM_RULES=[
+  [/東京|tokyo/i,'tokyo'],[/大阪|osaka/i,'osaka'],[/京都|kyoto|奈良/i,'torii'],
+  [/日本|japan|北海道|沖繩|福岡|名古屋|札幌/i,'fuji'],
+  [/台南|tainan/i,'chihkan'],[/台北|台灣|台湾|taipei|taiwan|高雄|台中/i,'t101'],
+  [/曼谷|bangkok|泰國|thai|清邁|普吉|芭堤雅/i,'arun'],
+  [/香港|hong\s?kong|\bhk\b/i,'hk'],[/首爾|seoul|韓國|korea|釜山|濟州/i,'seoul'],
+  [/新加坡|singapore/i,'sg'],[/巴黎|paris|法國|france/i,'paris'],
+  [/倫敦|london|英國|\buk\b/i,'london'],[/紐約|new york|nyc|美國/i,'ny'],
+  [/悉尼|雪梨|sydney|澳洲|australia/i,'sydney']
+];
+function scene(name,h,ac){
+  const match=LM_RULES.find(x=>x[0].test(name)),key=match?match[1]:'generic';
+  const water=['tokyo','fuji','arun','hk','sg','paris','london','ny','sydney','generic'].includes(key);
+  const dawn=['tokyo','fuji','torii','osaka','chihkan'].includes(key);
+  const sky=dawn?'#e8c4b2':'#bad6df',top=dawn?'#a8bfd0':'#96b7cc';
+  const tree=(x,y,k=1,pink=false)=>`<g transform="translate(${x} ${y}) scale(${k})"><path d="M0 0l.4-10m-.2 5L-3-8m3 3l3-4" stroke="#655d59" stroke-width=".65" fill="none"/><g fill="${pink?'#d99da8':'#4d7971'}"><circle cx="-2.5" cy="-10" r="3.1"/><circle cx="1" cy="-12" r="3.6"/><circle cx="3.6" cy="-9" r="3"/><circle cx="-.5" cy="-8" r="3.5"/></g><g fill="${pink?'#f2c9ce':'#86a08b'}"><circle cx="-2.7" cy="-11" r="1.4"/><circle cx="1" cy="-13" r="1.6"/></g></g>`;
+  const windows=(x,y,w,ht,cols=4,rows=5)=>Array.from({length:rows},(_,j)=>Array.from({length:cols},(_,i)=>`<rect x="${x+(i+0.5)*w/cols}" y="${y+(j+.35)*ht/rows}" width="${w/cols*.32}" height="${ht/rows*.5}" fill="${(i+j)%3?'#c1d5d5':'#f7d69c'}"/>`).join('')).join('');
+  const city=(base=30)=>Array.from({length:16},(_,i)=>{let ht=3+(i*7+h)%9;return `<rect x="${i*6-2}" y="${base-ht}" width="4.5" height="${ht}" fill="${i%2?'#718f9e':'#8da5ac'}"/>${windows(i*6-2,base-ht,4.5,ht,2,3)}`}).join('');
+  const roof=(x,y,w,c='#426b70')=>`<path d="M${x-2} ${y+1}q${w/2+2}-1 ${w/2+2}-4q${w/2} 3 ${w/2+2} 4l-1 1H${x-1}z" fill="${c}"/><path d="M${x-1} ${y+1}h${w+2}" stroke="#b9c5b8" stroke-width=".3"/>`;
+  let landmark='',back='',front='';
+  if(key==='tokyo'||key==='fuji'||key==='generic'){
+    back=`<path d="M0 29l13-12 9 5 20-16 24 20 12-10 18 13" fill="#8296aa"/><path d="M20 29L42 6l24 23" fill="#718ba2"/><path d="M34 14l8-8 9 9-5-1-3 2-3-3-3 2z" fill="#f2f0e4"/><path d="M42 9l-2 12-9 8M44 12l9 17" stroke="#adc0ca" stroke-width=".6" fill="none"/>`;
+    if(key==='tokyo')landmark=`<g transform="translate(63 0)"><path d="M-6 30L0 5l6 25h-2L0 13l-4 17z" fill="#c45b4b"/><path d="M-4 26l7-5-5-3 3-4M4 26l-7-5 5-3-3-4" stroke="#f7d1b8" stroke-width=".5" fill="none"/><path d="M-3 16h6M-4 22h8" stroke="#b65145" stroke-width="1.6"/><path d="M0 2v4" stroke="#aa544a" stroke-width=".5"/></g>`;
+    front=tree(5,41,1.1,true)+tree(86,40,1.3,true);
+  }else if(key==='osaka'||key==='chihkan'){
+    back=`<path d="M0 29q18-17 36-5q30-16 60 4" fill="#8ca298"/>`;
+    const red=key==='chihkan';
+    landmark=`<path d="M27 35l3-7h36l4 7z" fill="#96948a"/>`;
+    for(let i=0;i<3;i++){let w=32-i*7,x=48-w/2,y=27-i*6;landmark+=`<rect x="${x}" y="${y-4}" width="${w}" height="5" fill="${red?'#b96752':'#e9e6d5'}"/>${windows(x,y-4,w,4,5-i,1)}${roof(x,y-5,w,red?'#627d74':'#39717a')}`;}
+    landmark+=`<path d="M48 7v-2m-2 3l2-2 2 2" stroke="#d6b56a" stroke-width=".7" fill="none"/>`;
+    front=tree(8,40,1.4,true)+tree(84,39,1.3);
+  }else if(key==='torii'){
+    back=`<path d="M0 30q16-23 39-14q24-16 57 11v10H0z" fill="#7b9381"/>${tree(13,32,1.5)}${tree(81,33,1.7)}`;
+    landmark=`<path d="M30 42l10-16h16l10 16" fill="#c6b7a4"/><path d="M31 11q17 3 34 0l-1 3H32z" fill="#3c4f50"/><path d="M32 14h32v2H32zm4 6h24v2H36z" fill="#bd5745"/><path d="M38 16h3v20h-3zm17 0h3v20h-3z" fill="#bd5745"/><path d="M39 18v16m17-16v16" stroke="#e3a581" stroke-width=".7"/>`;
+    front=tree(3,43,1.3,true)+tree(91,45,1.7,true);
+  }else if(key==='arun'){
+    back=`<path d="M0 29h96v4H0z" fill="#819887"/>`;
+    for(const [x,k] of [[29,.65],[48,1],[67,.65]])landmark+=`<g transform="translate(${x} 31) scale(${k})"><path d="M-7 0l2-7 1-5 2-7 2-10 2 10 2 7 1 5 2 7z" fill="#ece2c7" stroke="#a88d68" stroke-width=".55"/><path d="M-6-3H6M-5-7H5M-4-11H4M-3-15H3M-2-19H2" stroke="#b39c7b" stroke-width=".6"/><path d="M0-30v-3" stroke="#b79654" stroke-width=".5"/>${windows(-3,-12,6,12,3,4)}</g>`;
+    front=`<path d="M8 39h16l-3 2H11z" fill="#685c52"/><path d="M14 37h6v2h-6" fill="#d3bb8b"/>`;
+  }else if(key==='hk'||key==='t101'||key==='sg'){
+    back=`<path d="M0 28q20-24 43-10q20-12 53 6v8H0" fill="#8aa2a5"/>${city()}`;
+    if(key==='hk')landmark=`<path d="M27 30V12l4-5 4 5v18z" fill="#5b7c8c"/><path d="M31 7V3m-4 10l8 8-8 7m8-15l-8 8 8 7" stroke="#d7e4df" stroke-width=".6"/><path d="M62 30V8l3-4 3 4v22z" fill="#648190"/>${windows(62,9,6,21,2,9)}`;
+    if(key==='t101'){
+      landmark='<rect x="44" y="26" width="8" height="4" fill="#3e7779"/>';
+      for(let i=0;i<7;i++){let y=23-i*3,w=8-i*.35;landmark+=`<path d="M${48-w/2} ${y+3}l-1-3h${w+2}l-1 3z" fill="${i%2?'#5c9290':'#417f81'}" stroke="#a8c2b2" stroke-width=".3"/>`;}
+      landmark+='<path d="M48 0v5" stroke="#436d71" stroke-width=".6"/>';
+    }
+    if(key==='sg')landmark=`<path d="M27 10q22-5 43-1l-3 3H29z" fill="#e6d6b2"/><path d="M28 10q20-4 40-1" stroke="#648871" stroke-width="1.2"/><path d="M31 12h6v18h-6zm13 0h6v18h-6zm13 0h6v18h-6z" fill="#b7c7c7"/>${[31,44,57].map(x=>windows(x,13,6,17,3,8)).join('')}`;
+    front=`<path d="M9 38h18l-3 3H12z" fill="#5e6d6f"/><path d="M15 33h8v5h-8z" fill="#ece3cb"/>`;
+  }else if(key==='seoul'){
+    back=city()+`<path d="M8 33q41-34 79 0z" fill="#68887e"/>`;
+    landmark=`<path d="M48 9v18" stroke="#dfddcc" stroke-width="1.8"/><path d="M43 13h10v3H43z" fill="#c5d0ce" stroke="#607d82" stroke-width=".5"/><ellipse cx="48" cy="12" rx="5.5" ry="1.2" fill="#e5e6d9"/><path d="M47 7h2v5h-2z" fill="#d6d9cc"/><path d="M48 1v6" stroke="#677f88" stroke-width=".6"/>`;
+    front=tree(10,43,1.3,true)+tree(88,43,1.5,true);
+  }else if(key==='paris'){
+    back=city(30);
+    landmark=`<path d="M38 32L48 4l10 28h-3l-7-19-7 19z" fill="#776e63"/><path d="M42 21h12m-14 7h16M45 15h6M48 1v4" stroke="#685f55" stroke-width=".8"/><path d="M41 28l11-7-7-6m10 13l-11-7 7-6" stroke="#e3c9a3" stroke-width=".6" fill="none"/><path d="M44 32q4-8 8 0" fill="#b9d3d9"/>`;
+    front=tree(8,43,1.4)+tree(88,42,1.3);
+  }else if(key==='london'){
+    back=`<path d="M4 31V23h65v8z" fill="#bb9f77"/>${windows(4,24,64,7,21,3)}`;
+    landmark=`<rect x="40" y="12" width="10" height="21" fill="#cbb58d"/><path d="M39 12l6-10 6 10z" fill="#677875"/><path d="M42 7h6v5h-6" fill="#a69478"/><circle cx="45" cy="17" r="3.4" fill="#f8f1d9" stroke="#7a7968" stroke-width=".5"/><path d="M45 14.8v2.5l1.7 1" stroke="#5e6c6c" stroke-width=".5" fill="none"/>${windows(41,22,8,10,3,3)}<path d="M45 0v3" stroke="#817b66" stroke-width=".5"/>`;
+    front=`<path d="M0 39q45-8 96-1" stroke="#798c8c" stroke-width="1.5" fill="none"/>`;
+  }else if(key==='ny'){
+    back=city(30);
+    landmark=`<path d="M35 35l2-6h20l2 6z" fill="#ab9d86"/><path d="M41 29l3-15h6l4 15z" fill="#6c9e8e"/><circle cx="47" cy="12" r="2.7" fill="#83af9d"/><path d="M44 10l-2-3m4 2V5m3 4l2-3m0 12l6-11" stroke="#719d8e" stroke-width="1.2"/><path d="M56 7l2-5 1 5z" fill="#dfb865"/><path d="M45 18l-2 10m5-12l2 12" stroke="#a6c3ac" stroke-width=".6"/>`;
+  }else if(key==='sydney'){
+    back=city(29);
+    landmark=`<path d="M23 31h49v3H23z" fill="#b6aa8a"/>`;
+    for(const [x,y,w] of [[24,17,18],[37,9,20],[53,18,16]])landmark+=`<path d="M${x} 31Q${x+1} ${y+3} ${x+w} ${y}Q${x+w-4} 24 ${x+w-3} 31z" fill="#f4ebd4" stroke="#b0b8b1" stroke-width=".5"/><path d="M${x+3} 30L${x+w-2} ${y+2}" stroke="#d7d4be" stroke-width=".45"/>`;
+    front=`<path d="M3 40h13l-2 2H5z" fill="#6c838a"/><path d="M9 30v10m0-10l5 8H9" stroke="#f7ebcc" stroke-width=".6" fill="#f7ebcc"/>`;
+  }
+  const lines=Array.from({length:15},(_,i)=>`<path d="M${(i*17)%96} ${34+(i%4)*2.6}h${4+i%6}" stroke="${i%2?'#eef0d8':'#739ca8'}" stroke-width=".35"/>`).join('');
+  const right=art=>`<g transform="translate(24 4) scale(.75 .9)">${art}</g>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 44" aria-hidden="true"><defs><linearGradient id="sky${h}" x2="0" y2="100%"><stop stop-color="${top}"/><stop offset="1" stop-color="${sky}"/></linearGradient><linearGradient id="fade${h}"><stop stop-color="white" stop-opacity="0"/><stop offset=".42" stop-color="white" stop-opacity="0"/><stop offset=".65" stop-color="white"/></linearGradient><mask id="quiet${h}"><rect width="96" height="44" fill="url(#fade${h})"/></mask></defs><rect width="96" height="44" fill="url(#sky${h})"/><circle cx="82" cy="10" r="4.8" fill="#f7dfb4"/><g fill="#f8eddd" opacity=".6"><path d="M65 6q3-3 5 0q4-2 6 1H65z"/></g><g mask="url(#quiet${h})">${right(back)}</g>${water?'<path d="M0 31h96v13H0z" fill="#9ebec4"/>':'<path d="M0 33h96v11H0z" fill="#a1ad91"/>'}${right(landmark)}<g mask="url(#quiet${h})">${water?lines:right('<path d="M35 44l10-10h9l12 10" fill="#d4c7ac"/>')}${right(front)}</g><path d="M0 43.5h96" stroke="${ac}" stroke-width="1" opacity=".35"/></svg>`;
+}
+function qrSvg(h){
+  const n=11;let x=h||1,r='';
+  const inF=(i,j)=>(i<4&&j<4)||(i>n-5&&j<4)||(i<4&&j>n-5);
+  for(let j=0;j<n;j++)for(let i=0;i<n;i++){
+    x=(Math.imul(x,1664525)+1013904223)>>>0;
+    if(!inF(i,j)&&((x>>>16)&1))r+=`<rect x="${i}" y="${j}" width="1" height="1"/>`;
+  }
+  const f=(i,j)=>`<path fill-rule="evenodd" d="M${i} ${j}h3v3h-3zM${i+1} ${j+1}v1h1v-1z"/>`;
+  return `<svg viewBox="0 0 ${n} ${n}" fill="currentColor" shape-rendering="crispEdges" aria-hidden="true">${r}${f(0,0)}${f(n-3,0)}${f(0,n-3)}</svg>`;
+}
+function sticker(t,px){
+  const h=hash(t.id),pal=PAL[h%PAL.length],rot=((h>>5)%7)-3,dx=((h>>8)%5)-2;
+  const s=stats(t),len=[...t.name].length;
+  const nm=len<=4?1.7:len<=6?1.4:len<=9?1.15:1;
+  const segs=CATS.filter(c=>s.by[c.k]).map(c=>`<i style="flex:${s.by[c.k]};background:${c.c}"></i>`).join('');
+  const so=fmt(s.so),sf=so.length>7?1.15:1.35;
+  return `<div class="st" style="${px?`font-size:${px}px;`:''}--bg:${pal.bg};--ac:${pal.ac};transform:translateX(${dx*.12}em) rotate(${rot*.55}deg)">
+    <div class="sh"><span>旅程紀錄</span><span>${esc(t.currency)}</span></div>
+    <div class="sc">${scene(t.name,h,pal.ac)}<b class="nm" style="font-size:${nm}em">${esc(t.name)}</b></div>
+    <div class="bar">${segs}</div>
+    <div class="sf"><div class="sm"><small>${range(t)}</small><div class="am2"><div><small>支出</small><b style="font-size:${sf}em">${so}</b></div><div><small>收入</small><b>${s.si?'+'+fmt(s.si):'—'}</b></div></div></div><div class="qr">${qrSvg(h)}</div></div>
+  </div>`;
+}
+
+/* ---------- views ---------- */
+function tripCard(t,preview=false,act='plan'){
+  const td=today();let badge,od=false;
+  if(t.endDate<td){badge='已過回程日';od=true}
+  else if(t.startDate>td)badge=`還有 ${Math.round((parseD(t.startDate)-parseD(td))/864e5)} 天出發`;
+  else badge='旅程中';
+  const c=countryOf(t),night=t.artVariant==='night',img=countryArt(c,night,artIndexOf(t));
+  if(img){
+    const s=stats(t),se=tripSeasonOf(t,c),tag=preview?'div':'button',L=[...t.name].length,hs=L<=4?'':L<=7?' ac-h-m':' ac-h-s';
+    return `<${tag} class="tcard art-card${night?' night':''}" ${preview?'aria-hidden="true"':`data-act="${act}" data-id="${t.id}"`} style="background-image:url('${img}')">`+
+      `<span class="ac-txt"><span class="ac-k">${esc(c.name)}</span><b class="ac-h${hs}">${esc(t.name)}</b><span class="ac-amt">${esc(t.currency)} ${fmt(s.so)}</span><span class="ac-m">${nDays(t)} 天 · ${t.entries.length} 筆</span></span>`+
+      `${se?`<span class="ac-season" role="img" aria-label="季節：${se.label}" title="${se.label}">${SEASON_ICON[se.season]}</span>`:''}<span class="bdg ac-bdg ${od?'od':''}">${badge}</span></${tag}>`;
+  }
+  return `<button class="tcard" data-act="${act}" data-id="${t.id}"><div><b>${esc(t.name)}</b><small>${t.startDate.replace(/-/g,'.')}–${(t.startDate.slice(0,4)===t.endDate.slice(0,4)?t.endDate.slice(5):t.endDate).replace(/-/g,'.')} 共 ${nDays(t)} 天</small></div><span class="bdg ${od?'od':''}">${badge}</span></button>`;
+}
+/* 目的地只選國家與幣別；城市或地方由用家自填，存在 t.name。每個國家三張景點圖，景點與日景／夜景由每趟旅程自選。 */
+/* 每國三張景點圖：[檔名, 景點名]；第一張是預設（旅程沒有 artIndex 時使用）。 */
+const COUNTRIES=[
+  ['JP','日本','JPY','日圓',[['jp-fuji','富士山'],['jp-kiyomizu','清水寺'],['jp-osaka-castle','大阪城']]],
+  ['TW','台灣','TWD','新台幣',[['tw-taipei-101','台北101'],['tw-jiufen','九份'],['tw-sun-moon-lake','日月潭']]],
+  ['KR','韓國','KRW','韓圜',[['kr-gyeongbokgung','景福宮'],['kr-n-seoul-tower','N首爾塔'],['kr-gamcheon','甘川洞']]],
+  ['TH','泰國','THB','泰銖',[['th-wat-arun','鄭王廟'],['th-ayutthaya','大城府'],['th-floating-market','水上市場']]],
+  ['SG','新加坡','SGD','新加坡元',[['sg-marina-bay-sands','濱海灣金沙'],['sg-merlion','魚尾獅'],['sg-shophouses','牛車水']]],
+  ['MY','馬來西亞','MYR','馬來西亞令吉',[['my-petronas-towers','雙子塔'],['my-melaka','馬六甲'],['my-kinabalu','京那巴魯山']]],
+  ['CN','中國內地','CNY','人民幣',[['cn-great-wall','萬里長城'],['cn-temple-of-heaven','天壇'],['cn-shanghai','上海外灘']]],
+  ['VN','越南','VND','越南盾',[['vn-ha-long-bay','下龍灣'],['vn-hoi-an','會安'],['vn-sapa-terraces','沙壩梯田']]],
+  ['PH','菲律賓','PHP','菲律賓披索',[['ph-chocolate-hills','巧克力山'],['ph-mayon','馬榮火山'],['ph-boracay','長灘島']]],
+  ['ID','印尼','IDR','印尼盾',[['id-pura-ulun-danu','水神廟'],['id-borobudur','婆羅浮屠'],['id-bromo','布羅莫火山']]],
+  ['IN','印度','INR','印度盧比',[['in-taj-mahal','泰姬瑪哈陵'],['in-hawa-mahal','風之宮'],['in-ganges','恆河']]],
+  ['GB','英國','GBP','英鎊',[['gb-big-ben','大笨鐘'],['gb-tower-bridge','倫敦塔橋'],['gb-stonehenge','巨石陣']]],
+  ['FR','法國','EUR','歐元',[['fr-eiffel-tower','艾菲爾鐵塔'],['fr-mont-saint-michel','聖米歇爾山'],['fr-arc-de-triomphe','凱旋門']]],
+  ['IT','意大利','EUR','歐元',[['it-colosseum','羅馬鬥獸場'],['it-pisa','比薩斜塔'],['it-venice','威尼斯']]],
+  ['DE','德國','EUR','歐元',[['de-neuschwanstein','新天鵝堡'],['de-brandenburg-gate','布蘭登堡門'],['de-cologne','科隆大教堂']]],
+  ['ES','西班牙','EUR','歐元',[['es-sagrada-familia','聖家堂'],['es-alhambra','阿罕布拉宮'],['es-giralda','吉拉達塔']]],
+  ['NL','荷蘭','EUR','歐元',[['nl-windmill','風車'],['nl-canal-houses','運河屋'],['nl-tulips','鬱金香花田']]],
+  ['CH','瑞士','CHF','瑞士法郎',[['ch-matterhorn','馬特洪峰'],['ch-chapel-bridge','卡貝爾橋'],['ch-jungfrau','少女峰']]],
+  ['TR','土耳其','TRY','土耳其里拉',[['tr-cappadocia','卡帕多奇亞'],['tr-blue-mosque','藍色清真寺'],['tr-pamukkale','棉堡']]],
+  ['EG','埃及','EGP','埃及鎊',[['eg-giza-pyramids','金字塔'],['eg-felucca','尼羅河帆船'],['eg-karnak','卡納克神廟']]],
+  ['US','美國','USD','美元',[['us-statue-of-liberty','自由女神像'],['us-golden-gate','金門大橋'],['us-grand-canyon','大峽谷']]],
+  ['CA','加拿大','CAD','加拿大元',[['ca-moraine-lake','夢蓮湖'],['ca-cn-tower','CN塔'],['ca-niagara','尼加拉瀑布']]],
+  ['AU','澳洲','AUD','澳元',[['au-sydney-opera-house','悉尼歌劇院'],['au-uluru','烏魯魯'],['au-gold-coast','黃金海岸']]],
+  ['NZ','紐西蘭','NZD','紐西蘭元',[['nz-milford-sound','米爾福德峽灣'],['nz-sky-tower','天空塔'],['nz-tekapo','蒂卡波湖']]]
+].map(([id,name,currency,money,arts])=>({id,name,currency,money,arts:arts.map(([art,label])=>({art,label})),art:arts[0][0]}));
+/* 舊版以城市為目的地；保留對照，讓舊旅程也能找到國家。 */
+const LEGACY_DEST={tokyo:'JP',osaka:'JP',kyoto:'JP',fukuoka:'JP',sapporo:'JP',okinawa:'JP',taipei:'TW',taichung:'TW',tainan:'TW',seoul:'KR',busan:'KR',bangkok:'TH',chiangmai:'TH',phuket:'TH',singapore:'SG',kl:'MY',shanghai:'CN',shenzhen:'CN',london:'GB',paris:'FR'};
+const LEGACY_NAME={'東京':'JP','大阪':'JP','京都':'JP','福岡':'JP','札幌':'JP','沖繩':'JP','台北':'TW','台中':'TW','台南':'TW','首爾':'KR','釜山':'KR','曼谷':'TH','清邁':'TH','普吉':'TH','新加坡':'SG','吉隆坡':'MY','上海':'CN','深圳':'CN','倫敦':'GB','巴黎':'FR'};
+const countryById=id=>COUNTRIES.find(c=>c.id===id)||null;
+/* 旅程的國家：新旅程存 t.country；舊旅程依舊目的地、名稱或唯一幣別推回（不寫入資料，舊備份重新匯入不會變成副本）。 */
+function countryOf(t){
+  if(t.country)return countryById(t.country);
+  const c=countryById(LEGACY_DEST[t.destinationId]||LEGACY_NAME[t.name]);
+  if(c&&c.currency===t.currency)return c;
+  const same=COUNTRIES.filter(x=>x.currency===t.currency);
+  return same.length===1?same[0]:null;
+}
+const SEASON_ICON={spring:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="22" fill="#f0e3c9" stroke="#234f5e" stroke-width="2"/><ellipse cx="24" cy="15" rx="5.5" ry="7.5" fill="#c86761" transform="rotate(0 24 24)"/><ellipse cx="24" cy="15" rx="5.5" ry="7.5" fill="#c86761" transform="rotate(72 24 24)"/><ellipse cx="24" cy="15" rx="5.5" ry="7.5" fill="#c86761" transform="rotate(144 24 24)"/><ellipse cx="24" cy="15" rx="5.5" ry="7.5" fill="#c86761" transform="rotate(216 24 24)"/><ellipse cx="24" cy="15" rx="5.5" ry="7.5" fill="#c86761" transform="rotate(288 24 24)"/><path d="M24 12L22.6 9.5H25.4Z" fill="#f0e3c9" transform="rotate(0 24 24)"/><path d="M24 12L22.6 9.5H25.4Z" fill="#f0e3c9" transform="rotate(72 24 24)"/><path d="M24 12L22.6 9.5H25.4Z" fill="#f0e3c9" transform="rotate(144 24 24)"/><path d="M24 12L22.6 9.5H25.4Z" fill="#f0e3c9" transform="rotate(216 24 24)"/><path d="M24 12L22.6 9.5H25.4Z" fill="#f0e3c9" transform="rotate(288 24 24)"/><circle cx="24" cy="24" r="5" fill="#efd0c9"/><circle cx="24" cy="24" r="2.4" fill="#f2c879"/></svg>',summer:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="22" fill="#f0e3c9" stroke="#234f5e" stroke-width="2"/><path d="M24 7.5V12" stroke="#ca5e41" stroke-width="3" stroke-linecap="round" transform="rotate(0 24 24)"/><path d="M24 7.5V12" stroke="#ca5e41" stroke-width="3" stroke-linecap="round" transform="rotate(45 24 24)"/><path d="M24 7.5V12" stroke="#ca5e41" stroke-width="3" stroke-linecap="round" transform="rotate(90 24 24)"/><path d="M24 7.5V12" stroke="#ca5e41" stroke-width="3" stroke-linecap="round" transform="rotate(135 24 24)"/><path d="M24 7.5V12" stroke="#ca5e41" stroke-width="3" stroke-linecap="round" transform="rotate(180 24 24)"/><path d="M24 7.5V12" stroke="#ca5e41" stroke-width="3" stroke-linecap="round" transform="rotate(225 24 24)"/><path d="M24 7.5V12" stroke="#ca5e41" stroke-width="3" stroke-linecap="round" transform="rotate(270 24 24)"/><path d="M24 7.5V12" stroke="#ca5e41" stroke-width="3" stroke-linecap="round" transform="rotate(315 24 24)"/><circle cx="24" cy="24" r="8.5" fill="#ca5e41"/></svg>',autumn:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="22" fill="#f0e3c9" stroke="#234f5e" stroke-width="2"/><path d="M24.0 8.0L27.1 16.7L34.2 15.0L31.8 21.1L37.6 26.4L29.1 27.0L28.7 31.8L24.7 26.9L23.3 26.9L19.3 31.8L18.9 27.0L10.4 26.4L16.2 21.1L13.8 15.0L20.9 16.7Z" fill="#c85e40"/><path d="M24 23V38" stroke="#665b58" stroke-width="2" stroke-linecap="round"/><path d="M24 13V25M24 25L17 19M24 25L31 19" stroke="#d59165" stroke-width="1.3"/></svg>',winter:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="22" fill="#f0e3c9" stroke="#234f5e" stroke-width="2"/><g transform="rotate(0 24 24)"><path d="M24 24V9" stroke="#527b89" stroke-width="2.6" stroke-linecap="round"/><path d="M24 14L20 10.5M24 14L28 10.5M24 19L21 16.5M24 19L27 16.5" stroke="#527b89" stroke-width="2" stroke-linecap="round"/></g><g transform="rotate(60 24 24)"><path d="M24 24V9" stroke="#527b89" stroke-width="2.6" stroke-linecap="round"/><path d="M24 14L20 10.5M24 14L28 10.5M24 19L21 16.5M24 19L27 16.5" stroke="#527b89" stroke-width="2" stroke-linecap="round"/></g><g transform="rotate(120 24 24)"><path d="M24 24V9" stroke="#527b89" stroke-width="2.6" stroke-linecap="round"/><path d="M24 14L20 10.5M24 14L28 10.5M24 19L21 16.5M24 19L27 16.5" stroke="#527b89" stroke-width="2" stroke-linecap="round"/></g><g transform="rotate(180 24 24)"><path d="M24 24V9" stroke="#527b89" stroke-width="2.6" stroke-linecap="round"/><path d="M24 14L20 10.5M24 14L28 10.5M24 19L21 16.5M24 19L27 16.5" stroke="#527b89" stroke-width="2" stroke-linecap="round"/></g><g transform="rotate(240 24 24)"><path d="M24 24V9" stroke="#527b89" stroke-width="2.6" stroke-linecap="round"/><path d="M24 14L20 10.5M24 14L28 10.5M24 19L21 16.5M24 19L27 16.5" stroke="#527b89" stroke-width="2" stroke-linecap="round"/></g><g transform="rotate(300 24 24)"><path d="M24 24V9" stroke="#527b89" stroke-width="2.6" stroke-linecap="round"/><path d="M24 14L20 10.5M24 14L28 10.5M24 19L21 16.5M24 19L27 16.5" stroke="#527b89" stroke-width="2" stroke-linecap="round"/></g><circle cx="24" cy="24" r="2.6" fill="#315b70"/></svg>'};
+/* 旅程選的景點：只存 1 或 2（第 2、3 張）；沒有欄位就是第 1 張，舊備份重新匯入不會變成副本。 */
+const artIndexOf=t=>t&&(t.artIndex===1||t.artIndex===2)?t.artIndex:0;
+const countryArt=(c,night,i=0)=>c&&countryById(c.id)===c?`art/${(c.arts[i]||c.arts[0]).art}${night?'-night':''}.webp`:null;
+/* 季節：依旅程日期推算春夏秋冬（南半球反轉），由 season.js 提供；未載入時不顯示徽章。 */
+const tripSeasonOf=(t,c)=>{const L=window.LvtieSeason;return c&&L?L.tripSeason(c.id,t.startDate,t.endDate):null};
+const placeMax=20;
+/* Original pen-and-watercolour-style destination illustrations. */
+/* Original pen-and-watercolour-style destination illustrations. */
+function destinationArt(d){
+  const photo=countryArt(d,false);
+  if(photo)return `<img class="dest-art dest-photo" src="${photo}" alt="${esc(d.name)}景點插畫">`;
+  const id=d.id||'legacy',seed=hash(id)%1000,ink='#4a5960',paper='#f5f1e6';
+  const path=(p,fill='none',stroke=ink,w=1.15)=>`<path d="${p}" fill="${fill}" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
+  const rect=(x,y,w,h,fill,sw=1)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${ink}" stroke-width="${sw}"/>`;
+  const circle=(x,y,r,fill,stroke='none')=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="1"/>`;
+  const win=(x,y,w,h,cols,rows)=>Array.from({length:rows},(_,j)=>Array.from({length:cols},(_,i)=>{let xx=x+i*w/cols+2,yy=y+j*h/rows+2,ww=w/cols-4,hh=h/rows-5;return rect(xx,yy,Math.max(2,ww),Math.max(3,hh),(i+j)%5===0?'#e6bf79':'#91a8ad',.65)+path(`M${xx+ww/2} ${yy}v${hh}`, 'none','#526b74',.45)}).join('')).join('');
+  const tree=(x,y,k=1,pink=false)=>`<g transform="translate(${x} ${y}) scale(${k})">${path('M0 0l2-56M1-21l-17-16M2-33l15-17','none','#6d6a5b',2)}${[[-15,-49,18],[6,-67,22],[22,-49,20],[-2,-43,23]].map(([a,b,r],i)=>circle(a,b,r,pink?['#ddb3af','#e9c3ba','#d4a4a5','#eacbc1'][i]:['#7e9982','#93aa89','#6e8e7c','#a4b29a'][i])).join('')}${path('M-27-51q12-12 20-5M4-77q11 2 16 12M7-41l16-9','none',pink?'#bf8f93':'#688573',.8)}</g>`;
+  const palm=(x,y,k=1)=>`<g transform="translate(${x} ${y}) scale(${k})">${path('M0 0Q-8-45 1-88','none','#947d5a',7)}${path('M-1-87q-34-30-57-8q34-9 57 8q-3-42-24-47q8 28 24 47q19-37 45-30q-29 16-45 30q40-12 58 12q-30-11-58-12q26 8 30 32q-22-23-30-32','#628d77','#537865',1)}${path('M0-8l-8-3m7-8l-8-3m8-8l-8-3m10-8l-8-3','none','#c0a57a',1)}</g>`;
+  const people=(x,y,k=1)=>`<g transform="translate(${x} ${y}) scale(${k})">${circle(0,-18,3.2,'#857363')}${path('M-4-13l-1 13h10L4-13z','#b36d5c')}${path('M-2 0l-2 11M3 0l3 10','none','#565e64',1.8)}</g>`;
+  const roof=(x,y,w,c='#688a82')=>path(`M${x-10} ${y+5}q${w/2+10}-9 ${w/2+10}-25q${w/2} 17 ${w/2+10} 25l-5 5H${x-5}z`,c)+path(`M${x-4} ${y+5}h${w+8}`,'none','#e2d8bb',1.5)+Array.from({length:Math.floor(w/9)},(_,i)=>path(`M${x+i*9} ${y+5}l8-8`,'none','#466d69',.65)).join('');
+  const shop=(x,y,w,h,c='#cdbd9e')=>rect(x,y,w,h,c)+win(x+5,y+10,w-10,h*.4,3,2)+rect(x+5,y+h*.6,w-10,h*.4,'#6e8588')+path(`M${x-3} ${y+h*.57}h${w+6}v9h-${w+6}z`,'#b96c5c')+Array.from({length:7},(_,i)=>path(`M${x+i*w/7} ${y+h*.57}v9`,'none','#eed8b8',3)).join('');
+  const waves=(base=275)=>Array.from({length:26},(_,i)=>{let x=(i*97)%630,y=base+(i%6)*11;return path(`M${x} ${y}q12-2 ${12+i%14} 0`,'none',i%2?'#729da8':'#e2e8dc',.9)}).join('');
+  const skyline=(base=240)=>Array.from({length:18},(_,i)=>{const h=25+(i*37+seed)%85,x=i*39-15;return rect(x,base-h,31,h,i%2?'#aec2c4':'#bed0ce',.5)+win(x+2,base-h+5,27,h-7,3,Math.max(2,Math.floor(h/12)))}).join('');
+  const temple=(x,y,w,h,red=false)=>{let a=path(`M${x-12} ${y+h+12}l15-15h${w-6}l15 15z`,'#bcb4a1');for(let i=0;i<3;i++){let xx=x+i*w*.13,yy=y-i*h*.32,ww=w-i*w*.26;a+=rect(xx,yy,ww,h*.28,red?'#bd7967':'#eee9d8')+win(xx+4,yy+3,ww-8,h*.23,5-i,1)+roof(xx,yy-2,ww,red?'#6e8576':'#5d867f')}return a+path(`M${x+w/2} ${y-h*.64-27}v-12m-7 6l7-8 7 8`,'none','#b59a5b',1.7)};
+  const tower=(x,y,h,c='#a9c0bf')=>path(`M${x-16} ${y}V${y-h+20}l16-20 16 20V${y}z`,c)+win(x-13,y-h+26,26,h-30,3,Math.floor(h/13));
+  const boat=(x,y)=>path(`M${x} ${y}h65l-10 12h-45z`,'#886f5c')+rect(x+17,y-11,30,11,'#e4cc9e')+path(`M${x+13} ${y-11}h38`,'none','#8c6759',2);
+  let back='',art='',front='',ground='street',sky='#d2e1e2';
+  if(id==='tokyo'){
+    back=path('M0 238l75-27 58 10 91-105 105 110 57-26 72 24 82-14 100 28','#b7c8c9','#acbfc2',.7)+path('M164 183l60-67 62 68-26-9-19 11-17-16-24 14-15-8z','#edece0','#d0d5cf',.5)+skyline(257);
+    art=`<g transform="translate(414 44)">${path('M-57 219L0 0l57 219h-16L0 56l-41 163z','#bc6b56')}${Array.from({length:9},(_,i)=>{let yy=53+i*18,ww=yy*.24;return path(`M${-ww} ${yy}h${ww*2}M${-ww} ${yy}l${ww*2+6} 18M${ww} ${yy}l${-ww*2-6} 18`,'none','#f0d7b7',1.2)}).join('')}${rect(-17,89,34,12,'#b86451')}${rect(-26,144,52,10,'#b86451')}${path('M0-20V0','none','#a96654',2)}</g>`;
+    front=tree(60,302,1.25,true)+tree(580,297,1.5,true)+path('M0 313q210-28 640 0v47H0','#c5c1ad')+people(293,315,.8)+people(312,319,.8);
+  }else if(id==='osaka'){
+    back=path('M0 250q150-85 320-21q160-70 320 17v40H0','#a2b59b','none');ground='water';art=temple(217,205,210,110)+path('M195 272l19-45h219l26 45z','#9b9d90')+Array.from({length:10},(_,i)=>path(`M${202+i*24} 250l15 20m-10-26l19 0`,'none','#737f7a',.8)).join('');front=tree(55,306,1.4,true)+tree(575,303,1.3,true)+waves(293);
+  }else if(id==='kyoto'){
+    back=path('M0 256q120-120 252-44q172-116 388 16v60H0','#a4b89d','none')+tree(105,266,1.8)+tree(558,266,1.6);
+    art=path('M226 360l64-124h58l70 124','#cfbfa4')+Array.from({length:6},(_,i)=>{let k=1-i*.11,x=320,y=91+i*27;return `<g transform="translate(${x} ${y}) scale(${k})">${path('M-119 0q119 23 238 0l-7 15q-112 17-224 0z','#685e52')}${rect(-106,17,212,14,'#b7614a')}${rect(-96,63,192,12,'#b7614a')}${rect(-82,28,16,227,'#b7614a')}${rect(66,28,16,227,'#b7614a')}${path('M-76 36v208M72 36v208','none','#e9ab83',2)}</g>`}).reverse().join('');front=tree(29,347,1.6,true)+people(322,313,.65);
+  }else if(id==='fukuoka'){
+    back=path('M0 250q170-54 330-12q175-61 310 8v50H0','#b3c2ac','none');art=temple(195,215,250,100,true)+path('M195 225v64h250v-64','#bc7966')+rect(285,244,70,45,'#656e64')+Array.from({length:10},(_,i)=>rect(202+i*23,232,9,53,'#d9ac85',.6)).join('')+path('M153 332l65-39h204l69 39','#b4b7a8');front=tree(54,304,1.4,true)+tree(578,303,1.4,true)+people(290,327,.8)+people(350,334,.9);
+  }else if(id==='sapporo'){
+    sky='#d7e4e7';back=skyline(257);art=rect(179,189,285,105,'#e6ded0')+win(190,204,263,69,8,2)+path('M159 190l161-75 163 75z','#8a8982')+Array.from({length:15},(_,i)=>path(`M${180+i*20} 187l65-31`,'none','#a2a298',.7)).join('')+rect(286,135,69,73,'#e9e3d7')+path('M278 135l42-48 43 48z','#8a8982')+rect(309,66,23,38,'#ddd7ca')+path('M301 67l20-24 21 24z','#7e8d8b')+circle(320,161,22,'#f4eedb',ink)+path('M320 145v18l13 5','none',ink,1.6)+path('M182 223h279M182 239h279M182 255h279','none','#c4bbaa',.7);front=tree(63,308,1.4)+tree(569,307,1.3)+path('M0 318q270-17 640 1v41H0','#e4e6df')+people(259,323,.9);
+  }else if(id==='okinawa'||id==='phuket'){
+    ground='water';sky='#cae2e4';back=path('M0 244q70-65 139-22q64-58 126-10q74 19 110 40H0','#91b4a6','#719b92',.7)+path('M487 255l30-43 17 9 9-58 22-19 18 66 31 17 26 30','#95b5a7','#779e94',.8);
+    art=path('M0 283q140-44 245 2q62 25 179 11q104-11 216 17v47H0','#dcca9e','#c3b68e',.7)+waves(247)+boat(375,276);
+    if(id==='okinawa')art+=path('M235 284q-13-17-2-29q7-7 7-20l9-4 11 8 1 11 13 12-7 25z','#b08e73')+path('M240 248l6 9 10-7m-13-12l5 3 6-3','none','#785f4c',1.3)+rect(329,292,57,12,'#769a99');
+    else art+=path('M397 265l-8-23h20l14 21M425 266l10-21','none','#8a6955',3)+path('M402 249h17l7 12h-20z','#ae6b54');
+    front=palm(78,333,1.35)+palm(579,351,1.2)+path('M0 350q190-15 640 4','none','#b9ad8d',1)+people(290,327,.7);
+  }else if(id==='taipei'){
+    back=path('M0 240l70-60 73 32 93-52 115 76 98-48 101 34 90-43v92H0','#a2b7ab','none')+skyline(265);art=rect(305,232,53,39,'#52858a');for(let i=0;i<8;i++){let y=224-i*23,w=55-i*2;art+=path(`M${331-w/2} ${y+22}l-6-22h${w+12}l-6 22z`,i%2?'#759c9b':'#628d90')+win(331-w/2+2,y+4,w-4,16,6,1)}art+=rect(321,24,20,28,'#6f9294')+path('M331 5v23','none',ink,1.5);front=shop(23,235,115,80)+shop(472,231,145,83)+tree(186,307,.8)+tree(429,310,.8)+people(256,328,.9)+people(407,332,.8);
+  }else if(id==='taichung'){
+    art=path('M105 141q215-97 430 0v151H105z','#d7d0b5')+Array.from({length:6},(_,i)=>{let x=128+i*65;return path(`M${x} 292v-80q23-85 47 0v80z`,'#94b3b6')+path(`M${x+3} 285v-72q20-73 41 0`,'none','#b9c8bb',1)}).join('')+path('M105 164q220-80 430 0M105 186q220-63 430 0','none','#b9b79f',1)+path('M84 301h474','none','#a9b3a3',3);back=tree(30,290,1.6)+tree(594,290,1.8);front=path('M0 324q210-28 640 0v36H0','#aebd9e')+people(286,321,.9)+people(355,329,1)+tree(61,350,.8);
+  }else if(id==='tainan'){
+    back=tree(79,270,1.8)+tree(555,268,1.8);art=temple(202,212,237,112,true)+rect(190,251,260,43,'#ad7d65')+Array.from({length:8},(_,i)=>path(`M${192+i*34} 255v38m-17-20h32`,'none','#d4b397',.7)).join('')+path('M244 317l29-23h105l31 23','#b5b3a0');front=path('M0 330q240-32 640 0v30H0','#bfc19e')+tree(41,330,1.1)+people(306,323,.85)+people(354,328,.85);
+  }else if(id==='seoul'){
+    back=skyline(274)+path('M62 281q255-235 518 0z','#8fa997','#7a9887',.8);art=path('M332 96v163','none','#ece9d9',7)+rect(315,116,34,15,'#c1ceca')+path('M308 114q24-9 48 0v7h-48z','#e3e0ce')+rect(324,89,16,22,'#dddccd')+path('M332 52v37','none','#71878b',1.8)+temple(89,263,136,52)+tree(484,293,1.2,true);front=tree(40,335,1.8,true)+tree(588,330,1.5,true)+people(296,325,.85)+people(322,330,.85);
+  }else if(id==='busan'){
+    ground='water';back=path('M0 218q165-120 337 2q163-94 303 6v45H0','#adc2b5','none')+skyline(250);art=path('M0 265q320-16 640 0M151 266V135m333 131V135M28 253q123-2 123-111q163 175 333 0q24 105 138 111','none','#758c91',3)+Array.from({length:22},(_,i)=>{let x=35+i*27,y=150+85*Math.sin((x-150)*Math.PI/333);return path(`M${x} ${Math.min(246,Math.max(156,y))}V264`,'none','#99adb0',.9)}).join('')+waves(281);front=path('M0 333q180-15 640 8v19H0','#c2b79d')+boat(420,304)+people(100,337,.8);
+  }else if(id==='bangkok'){
+    ground='water';back=tree(59,271,1.4)+tree(579,270,1.5);for(const [x,k] of [[186,.62],[320,1],[453,.62]])art+=`<g transform="translate(${x} 275) scale(${k})">${path('M-58 0l15-36 7-36 12-42 11-51 13-66 13 66 11 51 12 42 7 36L58 0z','#e5d8b8','#a48e6d',1.2)}${Array.from({length:11},(_,i)=>{let yy=-12-i*18,w=49-i*4;return path(`M${-w} ${yy}h${w*2}`,'none','#ac9672',1)+Array.from({length:Math.max(1,9-i)},(_,j)=>rect(-w+5+j*10,yy-8,3,6,j%2?'#98aaa2':'#c9b077',.3)).join('')}).join('')}${path('M0-251v20','none','#b2965c',1.5)}</g>`;front=waves(290)+boat(90,319);
+  }else if(id==='chiangmai'){
+    back=path('M0 241q180-167 350-29q154-117 290 26v60H0','#a1b59d','none')+tree(65,284,1.5)+tree(583,284,1.5);art=path('M165 287v-101h310v101z','#b67e60')+path('M151 186l13-15h312l13 15z','#bd8a65')+rect(289,230,63,57,'#716653')+path('M289 230q31-42 63 0','#716653')+Array.from({length:11},(_,j)=>Array.from({length:13},(_,i)=>path(`M${165+i*24+(j%2)*12} ${195+j*8}h22m-11 0v7`,'none','#d0a17b',.65)).join('')).join('');front=path('M0 324h640','none','#baad91',2)+people(272,316,.9)+people(366,319,.9)+tree(41,341,1);
+  }else if(id==='singapore'){
+    ground='water';back=skyline(267);art=Array.from({length:3},(_,i)=>{let x=212+i*73;return path(`M${x} 268q5-92-3-148h37q-5 71 3 148z`,'#a5bfbe')+win(x+3,128,30,134,5,16)}).join('')+path('M187 112q119-34 246-8l-16 21q-111-13-219 7z','#d8ceb1')+path('M199 113q103-25 220-8','none','#6e927e',6)+waves(286);front=path('M46 325l4-49 12-17 16 4 8 25-7 37z','#ece9d8')+path('M77 280q36 10 34 44','none','#e7eee4',4)+tree(583,323,1.2)+boat(400,316);
+  }else if(id==='kl'){
+    back=skyline(273);for(let i=0;i<2;i++){let x=255+i*117;art+=path(`M${x-25} 276V117l7-26h8V72h20v19h8l7 26v159z`,'#b7c7c4')+path(`M${x} 27v46`,'none','#7d9295',2)+Array.from({length:15},(_,j)=>path(`M${x-25} ${126+j*9}h50`,'none','#6e9195',1)).join('')+win(x-20,125,40,139,5,15)}art+=rect(279,177,69,12,'#a3b8b7')+path('M280 180l64 7m0-7l-64 7','none','#e2e5d5',.8);front=tree(60,319,1.6)+tree(575,319,1.6)+path('M0 329q250-32 640 0v31H0','#b0bd99')+people(324,333,.9);
+  }else if(id==='shanghai'){
+    ground='water';back=skyline(270);art=path('M316 276l24-129 24 129M340 89V33','none','#7d9299',3)+circle(340,109,20,'#c99c9c',ink)+circle(340,199,33,'#bb8b88',ink)+rect(334,121,12,48,'#aabfc0')+path('M435 273V84l24-10v199z','#9eb7bc')+path('M490 273V53l29-24v244z','#a5babe')+win(439,93,16,171,3,17)+win(495,66,19,196,3,20)+path('M145 272v-77l15-17 15 17v77z','#c4bb9f')+waves(287);front=path('M0 336q260-22 640 0v24H0','#b7ad96')+Array.from({length:12},(_,i)=>path(`M${i*59} 332v-20m0 0h59`,'none','#758488',1.4)).join('')+people(111,336,.85);
+  }else if(id==='shenzhen'){
+    back=skyline(272);art=tower(238,276,167)+path('M326 276V87l24-61 24 61v189z','#a7bfbe')+win(333,93,34,177,4,20)+path('M422 276V151l40-18v143z','#91afb3')+win(429,157,26,114,3,12)+path('M354 28V12','none','#768d91',1.5);front=path('M0 331q250-30 640-3v32H0','#adbf9d')+tree(63,322,1.45)+palm(575,330,1.1)+people(292,328,.9);
+  }else if(id==='london'){
+    ground='water';back=rect(40,217,445,59,'#c3b292')+win(47,225,432,45,29,3)+Array.from({length:15},(_,i)=>path(`M${47+i*30} 217v-14l5-7 5 7v14`,'#ad9d7d')).join('');art=rect(344,118,63,159,'#c8b693')+path('M340 118l36-55 36 55z','#798c89')+rect(360,79,31,31,'#a79579')+path('M375 39v28','none','#857b65',2)+circle(375,153,23,'#f4edd7',ink)+circle(375,153,19,'none','#a99a79')+path('M375 137v17l11 7','none',ink,1.7)+win(350,190,50,78,4,5)+Array.from({length:8},(_,i)=>path(`M${346+i*8} 120v16`,'none','#947f61',.8)).join('');front=waves(288)+path('M0 330q235-67 640-9','none','#7b8b88',5)+people(91,331,.8)+boat(478,303);
+  }else if(id==='paris'){
+    back=skyline(265);art=path('M261 276L340 39l80 237h-24l-56-170-55 170z','#ac9980')+path('M285 220h111M304 159h73M319 113h43M340 18v23','none','#7e766b',3)+Array.from({length:9},(_,i)=>{let y=119+i*17,w=(y-39)*.3;return path(`M${340-w} ${y}l${2*w+10} 17M${340+w} ${y}l${-2*w-10} 17`,'none','#e7d6b7',1.5)}).join('')+path('M300 276q40-85 80 0','#c8d8d6');front=tree(54,319,1.7)+tree(585,319,1.7)+path('M0 330q245-30 640 0v30H0','#b8c29f')+path('M275 360l40-52h53l42 52','#d2c7af')+people(326,331,.8)+people(350,336,.8);
+  }else{back=skyline(265);art=tree(320,300,1.7);}
+  const cloud=path('M48 71q15-19 32-6q7-28 34-18q21 1 24 18q24-8 38 9q-64 7-128-3z','#f3f0e4','none')+path('M471 64q21-15 38-3q12-20 31-3q21-6 35 11q-58 2-104-5z','#f1efe5','none');
+  const base=ground==='water'?path('M0 269q280-9 640 0v91H0','#accbd0','none'):path('M0 280q220-19 640 0v80H0','#d7cfb9','none')+Array.from({length:11},(_,i)=>path(`M${-80+i*80} 360L${275+i*10} 279`,'none','#bcb9a8',.55)).join('')+path('M0 315h640M0 337h640','none','#bcb9a8',.55);
+  return `<svg class="dest-art" viewBox="0 0 640 360" role="img" aria-label="${esc(d.name)}旅遊手繪插畫" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wash-${id}" x2="0" y2="100%"><stop stop-color="${sky}"/><stop offset="1" stop-color="${paper}"/></linearGradient><filter id="pencil-${id}" x="-3%" y="-4%" width="106%" height="108%"><feTurbulence type="fractalNoise" baseFrequency=".025" numOctaves="2" seed="${seed}" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale=".65" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="paper-${id}"><feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="3" seed="7"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".09"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter></defs><g filter="url(#paper-${id})"><rect width="640" height="360" fill="url(#wash-${id})"/>${cloud}<g filter="url(#pencil-${id})">${back}${base}${art}${front}</g><path d="M18 16h64M18 16v18M622 344h-64M622 344v-18" fill="none" stroke="#778b8c" stroke-width=".7" opacity=".45"/></g></svg>`;
+}
+
+function destinationSummary(d,action='changeDestination',img=null,note=''){
+  return `<div class="dest-summary">${img?`<img class="dest-art dest-photo" src="${img}" alt="">`:destinationArt(d)}<div class="dest-info"><b>${esc(d.name)}</b><small>${esc(d.money||d.currency)} · ${esc(d.currency)}</small>${note?`<small>${esc(note)}</small>`:''}</div><button data-act="${action}">更改</button></div>`;
+}
+function destinationPicker(editing=false){
+  const selected=countryById(editing?ui.pickDest:ui.destId);
+  return `<section class="start"><div class="dest-head">${editing?'<button class="ghost" data-act="cancelPick">返回行程</button>':'<span class="step-label">新增行程 · 1 / 2</span>'}</div><h1>下一站，去哪個國家？</h1><p class="sub">選擇國家，同時設定當地幣別。城市或地方在下一步自行填寫。</p><label for="destination-select">國家與幣別<select id="destination-select"><option value="" ${!selected?'selected':''}>請選擇國家</option>${COUNTRIES.map(c=>`<option value="${c.id}" ${selected&&selected.id===c.id?'selected':''}>${c.name} · ${c.currency}（${c.money}）</option>`).join('')}</select></label><div class="dest-preview" aria-live="polite">${selected?`${!editing&&countryArt(selected,false)?artCarousel(selected):destinationArt(selected)}<div class="preview-caption"><b>${selected.name}</b><span>${selected.money} · ${selected.currency}</span></div>`:'<div class="preview-empty">選擇國家後，這裡會顯示當地景點插畫。</div>'}</div><p class="budget-caption">${selected&&!editing?'左右滑動選擇旅程代表圖；建立後仍可在行程頁更改。':`共 ${COUNTRIES.length} 個國家，每國 3 款景點圖可選；帳目以所選當地幣別記錄。`}</p><button class="primary" data-act="chooseDestination" ${!selected?'disabled':''}>${editing?'確認國家':'下一步：填寫旅程資料'}</button></section>`;
+}
+function durationText(sd,ed){
+  if(!sd||!ed)return '選好日期，即可查看旅程天數';
+  return ed<sd?'回程日不能早於出發日':`共 ${Math.round((parseD(ed)-parseD(sd))/864e5)+1} 天（包括出發及回程日）`;
+}
+/* 建立旅程時選的景點只對當時的國家有效；換國家就回到第一張。 */
+const draftArtIndex=d=>ui.draft.artFor===d.id&&(ui.draft.artIndex===1||ui.draft.artIndex===2)?ui.draft.artIndex:0;
+const draftNight=d=>ui.draft.artFor===d.id&&ui.draft.night===true;
+function setDraftArt(patch){
+  if(ui.draft.artFor!==ui.destId){ui.draft.artIndex=0;ui.draft.night=false;ui.draft.artFor=ui.destId}
+  Object.assign(ui.draft,patch);
+}
+function artCarousel(d){
+  const idx=draftArtIndex(d),n=draftNight(d),N=d.arts.length;
+  /* 無限循環：前面放最後一張的複製、後面放第一張的複製；真的第 i 張在位置 i+1 */
+  const slide=(a,i,clone)=>`<figure class="car-slide${clone?' clone':''}"${clone?' aria-hidden="true"':` aria-label="${i+1} / ${N}：${esc(a.label)}"`}><img src="${countryArt(d,n,i)}" alt="${clone?'':`${esc(d.name)} ${esc(a.label)}${n?'夜景':'日景'}插畫`}"${i!==idx||clone?' loading="lazy"':''}><figcaption>${esc(a.label)}</figcaption></figure>`;
+  const slides=(N>1?slide(d.arts[N-1],N-1,true):'')+d.arts.map((a,i)=>slide(a,i,false)).join('')+(N>1?slide(d.arts[0],0,true):'');
+  return `<div class="art-car"><button type="button" class="car-nav prev" data-act="draftArtStep" data-v="-1" aria-label="上一張">‹</button><div class="car-view"><div class="car-track" id="art-track" tabindex="0" role="group" aria-roledescription="輪播" aria-label="旅程代表圖，左右滑動選擇，可循環" data-i="${idx}" data-n="${N}">${slides}</div></div><button type="button" class="car-nav next" data-act="draftArtStep" data-v="1" aria-label="下一張">›</button></div><div class="car-dots" role="group" aria-label="選擇景點">${d.arts.map((a,i)=>`<button type="button" class="${i===idx?'on':''}" aria-pressed="${i===idx}" aria-label="${esc(a.label)}" data-act="draftArt" data-v="${i}"></button>`).join('')}</div><div class="art-car-ctl"><div class="seg art-seg" role="group" aria-label="日景或夜景"><button type="button" class="${n?'':'on'}" aria-pressed="${!n}" data-act="draftVariant" data-v="day">日景</button><button type="button" class="${n?'on':''}" aria-pressed="${n}" data-act="draftVariant" data-v="night">夜景</button></div></div>`;
+}
+/* 輪播：render 後捲到目前那張（不用動畫）；滑動停下後只更新圓點，不整頁重繪。
+   停在頭尾的複製張時，瞬間跳回對應的真實那張，看起來就是無限循環。 */
+const carOffset=tr=>Number(tr.dataset.n)>1?1:0;
+function carJump(tr,pos){if(!tr.style)return;tr.style.scrollBehavior='auto';tr.scrollLeft=pos*tr.clientWidth;tr.style.scrollBehavior=''}
+function syncCarousel(){
+  const tr=$('#art-track');if(!tr||!tr.clientWidth||!tr.style)return;
+  carJump(tr,(Number(tr.dataset.i)||0)+carOffset(tr));
+}
+function carouselSettled(tr){
+  const d=countryById(ui.destId);if(!d||!tr.clientWidth)return;
+  const N=d.arts.length,off=N>1?1:0,pos=Math.round(tr.scrollLeft/tr.clientWidth);
+  const i=((pos-off)%N+N)%N;
+  if(pos!==i+off)carJump(tr,i+off);
+  if(i===draftArtIndex(d)&&ui.draft.artFor===d.id)return;
+  setDraftArt({artIndex:i});tr.dataset.i=i;
+  document.querySelectorAll('.car-dots button').forEach((b,k)=>{b.classList.toggle('on',k===i);b.setAttribute('aria-pressed',k===i)});
+}
+let carTimer=null;
+document.addEventListener('scroll',e=>{
+  const tr=e.target;if(!tr||tr.id!=='art-track')return;
+  clearTimeout(carTimer);carTimer=setTimeout(()=>carouselSettled(tr),120);
+},true);
+function newTripDetails(){
+  const d=countryById(ui.destId),v=ui.draft;
+  if(!d){ui.newStep=1;return planningView()}
+  return `<section class="start"><div class="dest-head"><button class="ghost" data-act="changeDestination">返回選國家</button><span class="step-label">新增行程 · 2 / 2</span></div><h1>安排這趟旅程</h1>${destinationSummary(d,'changeDestination',countryArt(d,draftNight(d),draftArtIndex(d)),countryArt(d,false)?`代表圖：${d.arts[draftArtIndex(d)].label} · ${draftNight(d)?'夜景':'日景'}`:'')}<h2 class="sec">城市或地方</h2><label>自行填寫（選填）<input id="f-place" maxlength="${placeMax}" value="${esc(v.place||'')}" placeholder="例如：城市、景區或小鎮名稱" autocomplete="off"></label><p class="budget-caption">會顯示為旅程卡片的大標題；留空就用「${esc(d.name)}」。</p><h2 class="sec">旅程時長</h2><div class="two"><label>出發日<input id="f-start" type="date" value="${esc(v.start)}"></label><label>回程日<input id="f-end" type="date" value="${esc(v.end)}"></label></div><p class="duration" id="duration">${durationText(v.start,v.end)}</p><h2 class="sec">旅行預算</h2><p class="budget-caption">以${d.money}（${d.currency}）計算，兩項皆可留空。</p><div class="two"><label>總預算（選填）<input id="f-bud" inputmode="decimal" value="${esc(v.budget)}" placeholder="不填也可以" autocomplete="off"></label><label>每日預算（選填）<input id="f-dbud" inputmode="decimal" value="${esc(v.dailyBudget)}" placeholder="不填也可以" autocomplete="off"></label></div><p class="budget-caption">每日預算適用於旅程中的每一天；建立後可加入每日行程備註。</p><button class="primary" data-act="create">建立行程</button></section>`;
+}
+function chooseTripView(){
+  const L=liveTrips();
+  return `<section class="start choose-trip"><h1>今天有 ${L.length} 段旅程</h1><p class="sub">選一段開始記帳。之後可以在記帳頁上方切換。</p>${L.map(t=>tripCard(t,false,'ledger')).join('')}<div class="foot"><button class="ghost" data-act="home">規劃其他行程</button></div></section>`;
+}
+function planningView(){
+  if(ui.newStep===2)return newTripDetails();
+  const live=S.trips.filter(t=>t.status!=='done'&&t.startDate<=today()&&today()<=t.endDate);
+  const list=(title,arr)=>arr.length?`<h2 class="sec">${title}</h2>${arr.map(t=>tripCard(t)).join('')}`:'';
+  const existing=`${live.length?`<button class="primary" data-act="ledger" data-id="${live[0].id}">回到今天的記帳</button>`:''}${list('旅程中',live)}${list('待完結',overdue())}${list('即將出發',upcoming())}`;
+  return (existing?`<section class="start"><h1>我的旅程</h1>${existing}</section>`:'')+destinationPicker();
+}
+function landmarkPicker(c,idx,night,act,id=''){
+  return `<div class="art-pick" role="group" aria-label="卡片景點">${c.arts.map((a,i)=>`<button type="button" class="art-thumb${i===idx?' on':''}" aria-pressed="${i===idx}" data-act="${act}"${id?` data-id="${id}"`:''} data-v="${i}"><img src="${countryArt(c,night,i)}" alt="" loading="lazy"><span>${esc(a.label)}</span></button>`).join('')}</div>`;
+}
+function artPicker(t){
+  const c=countryOf(t);if(!countryArt(c,false))return '';
+  const n=t.artVariant==='night';
+  return `<h2 class="sec">卡片背景</h2>${landmarkPicker(c,artIndexOf(t),n,'artIndex',t.id)}<div class="seg art-seg" role="group" aria-label="卡片背景"><button class="${n?'':'on'}" aria-pressed="${!n}" data-act="artVariant" data-id="${t.id}" data-v="day">日景</button><button class="${n?'on':''}" aria-pressed="${n}" data-act="artVariant" data-id="${t.id}" data-v="night">夜景</button></div>${tripCard(t,true)}`;
+}
+function planView(t){
+  const live=t.status!=='done'&&t.startDate<=today();
+  const dayRows=dayList(t).map((d,i)=>`<div class="pday"><b>第 ${idxOf(t,d)} 天 ${dLabel(d)}</b><textarea data-note="${d}" data-tid="${t.id}" rows="2" maxlength="200" placeholder="這天想去哪裡、做什麼">${esc(t.plan[d]||'')}</textarea></div>`).join('');
+  return `<section class="start">
+    <div class="hd"><button class="ghost" data-act="planBack">返回</button></div>
+    <h1>行程</h1>
+    ${destinationSummary(countryOf(t)||{name:t.name,currency:t.currency,art:'generic'},'editDestination')}
+    <label>城市或地方<input data-f="name" maxlength="${placeMax}" value="${esc(t.name)}" placeholder="${esc((countryOf(t)||{}).name||'')}" autocomplete="off"></label>
+    ${artPicker(t)}
+    <p class="budget-caption">預算與收支以 ${esc(t.currency)} 計算。</p>
+    <div class="two"><label>出發日<input type="date" data-f="startDate" value="${t.startDate}"></label><label>回程日<input type="date" data-f="endDate" value="${t.endDate}"></label></div>
+    <div class="two"><label>總預算（選填）<input data-f="budget" inputmode="decimal" value="${t.budget??''}" placeholder="不填也可以" autocomplete="off"></label><label>每日預算（選填）<input data-f="dailyBudget" inputmode="decimal" value="${t.dailyBudget??''}" placeholder="不填也可以" autocomplete="off"></label></div>
+    ${rateField(t)}
+    <button class="primary" data-act="ledger" data-id="${t.id}">${t.status==='done'?'查看帳目／繼續記帳':t.startDate>today()?'記錄行前支出':'去記帳'}</button>
+    <p class="budget-caption">帳目會保留原本日期；行前與回程後的記錄也會計入旅程總額。</p>
+    <h2 class="sec">每日行程</h2>
+    ${legacyRangeNote(t)}${dayRows}
+    ${live?`<button class="ghost" data-act="finish" data-id="${t.id}">完結旅程</button>`:''}
+    <button class="ghost danger" data-act="askdelplan" data-id="${t.id}">刪除這個行程</button>
+  </section>`;
+}
+const rowOf=(e,editable,t)=>{
+  const c=catOf(e.cat);
+  return `<div class="entry-row"><button class="entry-main" data-act="editEntry" data-id="${e.id}" data-tid="${t?t.id:''}" aria-label="編輯：${esc(e.note||c.n)}"><span class="ic">${c.e}</span><span class="tx"><b>${esc(e.note||c.n)}</b><small>${c.n} ${timeLabel(e.ts)} · 點按修改</small></span><span class="entry-amount"><b class="am ${e.type}">${e.type==='in'?'+':'−'}${fmt(e.amt)}</b>${t?hkd(t,e.amt):''}</span></button>${editable?`<button class="del" data-act="del" data-id="${e.id}" aria-label="刪除這筆">×</button>`:''}</div>`;
+};
+function rows(t,del){
+  let h='',last='';
+  [...t.entries].sort((a,b)=>b.ts-a.ts).forEach(e=>{
+    const d=dayLabel(e.ts);
+    if(d!==last){h+=`<h3 class="day">${d}</h3>`;last=d}
+    h+=rowOf(e,del,t);
+  });
+  return h;
+}
+function fmtTyping(a){
+  const [i,d]=a.split('.');
+  return Number(i||0).toLocaleString('en-US')+(a.includes('.')?'.'+(d||''):'');
+}
+function overviewTrip(){
+  return tripById(ui.overviewId)||tripById(ui.ledgerId)||tripById(ui.planId)||inProg()||upcoming()[0]||overdue()[0]||S.trips[0];
+}
+function dailyTotals(t){return TravelCore.daily(t)}
+function phaseLabel(t,d){return d<t.startDate?'行前支出':d>t.endDate?'回程後記錄':`第 ${idxOf(t,d)} 天`}
+function categoryBars(t){
+  const s=stats(t);
+  return CATS.filter(c=>s.by[c.k]).sort((a,b)=>s.by[b.k]-s.by[a.k]).map(c=>`<div class="br"><span>${c.e} ${c.n}</span><div class="tr"><i style="width:${s.by[c.k]/s.so*100}%;background:${c.c}"></i></div><b class="num">${fmt(s.by[c.k])}</b></div>`).join('');
+}
+function budgetView(t){
+  const s=stats(t),r=t.budget==null?null:Math.round((t.budget-s.so)*100)/100;
+  const elapsed=Math.max(0,Math.min(nDays(t),idxOf(t,today()))),remain=Math.max(0,nDays(t)-elapsed);
+  const spentToDate=sum(t.entries.filter(e=>e.type==='out'&&entryDay(e)>=t.startDate&&entryDay(e)<=today()&&entryDay(e)<=t.endDate));
+  const futureKnown=Math.max(0,s.during-spentToDate);
+  const forecast=elapsed&&remain&&t.startDate<=today()&&today()<=t.endDate?s.before+s.after+spentToDate+Math.max(futureKnown,spentToDate/elapsed*remain):null;
+  return `<section class="budget-summary"><h2>預算進度</h2>${r===null?`<p class="muted">尚未設定總預算。<button class="text-action" data-act="plan" data-id="${t.id}">設定預算</button></p>`:`<div class="budget-line"><span>已用 ${fmt(s.so)}／${fmt(t.budget)} ${esc(t.currency)}</span><b class="${r<0?'over':''}">${r<0?'超支':'剩餘'} ${fmt(Math.abs(r))}</b></div><div class="budget-meter" role="progressbar" aria-label="總預算使用率" aria-valuenow="${Math.min(100,Math.round(s.so/t.budget*100))}" aria-valuemin="0" aria-valuemax="100"><i class="${r<0?'overfill':''}" style="width:${Math.min(100,s.so/t.budget*100)}%"></i></div>${hkd(t,Math.abs(r),r<0?'約超支':'約剩餘')}${forecast!==null?`<p class="muted">按已過 ${elapsed} 天的旅途中支出推算，全程約 ${esc(t.currency)} ${fmt(forecast)}${forecast>t.budget?'，可能超出預算':''}。只作參考，今天尚未完結。</p>`:''}`}${t.dailyBudget?`<p class="muted">每日預算 ${esc(t.currency)} ${fmt(t.dailyBudget)}；不套用於行前／回程後記錄。</p>`:''}<p class="muted">總預算按支出計算，不以收入抵銷。</p></section>`;
+}
+function overviewView(){
+  const t=overviewTrip();
+  if(!t)return `<section class="start"><h1>收支總覽</h1><p class="sub">先建立一趟旅程，就能記錄行前支出和查看預算。</p><button class="primary" data-act="overviewHome">建立旅程</button></section>`;
+  ui.overviewId=t.id;
+  const totals=stats(t),days=dailyTotals(t),net=Math.round((totals.si-totals.so)*100)/100,hasIncome=totals.si>0;
+  const money=(income,out,balance)=>`<div class="ov-money ${hasIncome?'':'expense-only'}">${hasIncome?`<div><small>收入</small><b>${fmt(income)}</b></div>`:''}<div><small>支出</small><b>${fmt(out)}</b></div>${hasIncome?`<div><small>淨收支</small><b>${balance>0?'+':''}${fmt(balance)}</b></div>`:''}</div>`;
+  return `<header class="ov-head"><h1>收支總覽</h1><label class="field">旅程<select id="overview-trip">${S.trips.map(x=>`<option value="${x.id}" ${x.id===t.id?'selected':''}>${esc(x.name)} · ${x.startDate}${x.status==='done'?'（已完結）':''}</option>`).join('')}</select></label><p>${esc(t.currency)} · ${t.startDate} — ${t.endDate}</p></header><section class="ov-total"><h2>全旅程累計</h2>${money(totals.si,totals.so,net)}${hkd(t,totals.so)}<p class="ov-note">包含行前與回程後所有記錄。${hasIncome?'淨收支不代表剩餘預算。':''}</p></section>${budgetView(t)}<details class="category-summary"><summary>支出分類 · ${CATS.filter(c=>totals.by[c.k]).length} 類</summary>${categoryBars(t)||'<p class="muted">還沒有支出。</p>'}</details><div class="ov-key"><span>每日收支 · 旅程 ${nDays(t)} 天</span>${days.some(r=>r.day===today())?'<button class="text-action" data-act="jumpToday">前往今天</button>':''}</div>${legacyRangeNote(t)}<section aria-label="每日收支">${days.map(row=>`<button id="day-${row.day}" class="ov-day ${row.day===today()?'is-today':''} ${row.phase!=='during'?'outside-day':''}" data-act="overviewDay" data-id="${t.id}" data-day="${row.day}"><div class="ov-date"><b>${phaseLabel(t,row.day)} · ${dLabel(row.day)}${row.day===today()?'（今天）':''}</b><span>${row.count?row.count+' 筆':row.day>today()?'未到日期':'尚無記錄'} ›</span></div>${money(row.income,row.out,row.net)}${t.plan[row.day]?`<p class="ov-note">${esc(t.plan[row.day])}</p>`:''}</button>`).join('')}</section>`;
+}
+function switchBar(t){
+  const o=liveTrips().filter(x=>x.id!==t.id);if(!o.length||!liveTrips().some(x=>x.id===t.id))return '';
+  return `<button class="ghost switch-trip" data-act="switchTrip">今天還有${o.length===1?`「${esc(o[0].name)}」`:` ${o.length} 段旅程`} · 切換</button>`;
+}
+function ledgerView(t){
+  const td=today();
+  if(ui.dayFor!==t.id||!TravelCore.validDate(ui.day)){ui.dayFor=t.id;ui.day=td<t.startDate?td:td>t.endDate?t.endDate:td}
+  const day=ui.day,c=esc(t.currency),es=t.entries.filter(e=>entryDay(e)===day),dout=sum(es.filter(e=>e.type==='out')),din=sum(es.filter(e=>e.type==='in'));
+  const note=t.plan[day]||'',inDates=TravelCore.phase(t,day)==='during';
+  const chips=CATS.map(x=>`<button class="chip ${ui.cat===x.k?'on':''}" aria-pressed="${ui.cat===x.k}" data-act="cat" data-k="${x.k}"><span>${x.e}</span>${x.n}</button>`).join('');
+  const keys=['1','2','3','4','5','6','7','8','9','.','0','00'].map(k=>`<button class="key" data-act="key" data-k="${k}">${k}</button>`).join('');
+  return `<section class="ledger"><header class="hd"><div><h1>${esc(t.name)}</h1><p>${phaseLabel(t,day)} · 旅程共 ${nDays(t)} 天</p></div><button class="ghost" data-act="plan" data-id="${t.id}">行程</button></header>
+  ${switchBar(t)}<div class="date-strip"><button class="ghost" data-act="day" data-d="-1" aria-label="前一天">‹</button><label><span class="sr-only">記帳日期</span><input id="ledger-date" type="date" min="1900-01-01" max="2199-12-31" value="${day}"></label><button class="ghost" data-act="day" data-d="1" aria-label="後一天">›</button></div>
+  <div class="ledger-total"><span>${day===td?'今天':'當天'}支出 <b>${c} ${fmt(dout)}</b></span>${din?`<span>收入 ${fmt(din)}</span>`:''}${hkd(t,dout)}</div>
+  <section class="pad"><div class="seg"><button class="${ui.type==='out'?'on':''}" data-act="type" data-k="out">支出</button><button class="${ui.type==='in'?'on':''}" data-act="type" data-k="in">收入</button></div>
+  <div class="amount-line"><div class="disp ${ui.amt?'':'empty'}"><small>${c}</small><b id="amtv">${ui.amt?fmtTyping(ui.amt):'0'}</b></div><div id="typing-hkd" class="typing-hkd">${hkd(t,Number(ui.amt)||0)}</div></div>
+  <div class="chips" ${ui.type==='in'?'hidden':''}>${chips}</div><input class="note" id="note" maxlength="500" placeholder="備註（選填）" value="${esc(ui.note)}" autocomplete="off">
+  <div class="keys"><div class="kp">${keys}</div><div class="side"><button class="bs" data-act="key" data-k="b" aria-label="刪除一位數">⌫</button><button class="add" data-act="add">記一筆</button></div></div></section>
+  <details class="dn"><summary>${inDates?'行程與預算':'行前／回程後記錄說明'}</summary><p class="muted">${inDates?'補記其他日子的帳目時，時間預設為 12:00，可點記錄修改。':'這些記錄計入總預算、總支出及分類，但不計入旅程日均支出。'}</p>${inDates?`<textarea data-note="${day}" data-tid="${t.id}" rows="2" maxlength="200" placeholder="這天想去哪裡、做什麼">${esc(note)}</textarea>`:''}${inDates&&t.dailyBudget?`<p class="muted">當天預算${dout>t.dailyBudget?'超支':'剩餘'} ${c} ${fmt(Math.abs(t.dailyBudget-dout))}</p>`:''}${t.budget?`<p class="muted">總預算${stats(t).so>t.budget?'超支':'剩餘'} ${c} ${fmt(Math.abs(t.budget-stats(t).so))}</p>`:''}</details>
+  <section class="list">${es.length?[...es].sort((a,b)=>b.ts-a.ts).map(e=>rowOf(e,true,t)).join(''):'<p class="empty-note">輸入金額、選分類，按「記一筆」。</p>'}</section><div class="foot"><button class="ghost" data-act="finish" data-id="${t.id}">完結旅程</button><button class="ghost" data-act="home">規劃其他行程</button></div></section>`;
+}
+
+const doneTrips=()=>S.trips.filter(t=>t.status==='done').sort((a,b)=>a.start-b.start);
+/* 貼紙簿分組：日期完全相同 → 同一格等比縮小斜貼；被另一段完全包含 → 同一格，主 66%＋被包含 45%；部分重疊不合併 */
+function doneGroups(){
+  const T=doneTrips().slice().sort((a,b)=>a.startDate!==b.startDate?(a.startDate<b.startDate?-1:1):a.endDate!==b.endDate?(a.endDate>b.endDate?-1:1):a.start-b.start);
+  const G=[];
+  for(const t of T){
+    const g=G.find(g=>g.start<=t.startDate&&t.endDate<=g.end);
+    if(g)g.trips.push(t);else G.push({trips:[t],start:t.startDate,end:t.endDate});
+  }
+  for(const g of G){g.main=g.trips.filter(t=>t.startDate===g.start&&t.endDate===g.end);g.sub=g.trips.filter(t=>!g.main.includes(t))}
+  return G;
+}
+const pageCount=()=>Math.max(1,Math.ceil(doneGroups().length/2));
+const pageOfTrip=id=>{const i=doneGroups().findIndex(g=>g.trips.some(t=>t.id===id));return i<0?pageCount():Math.floor(i/2)+1};
+const EQ_K={2:.74,3:.64,4:.56},MAIN_K=.66,SUB_K=.45;
+function groupSlot(g){
+  if(g.trips.length===1){const t=g.trips[0];return `<div class="slot"><button data-act="open" data-id="${t.id}" aria-label="${esc(t.name)}">${sticker(t)}</button></div>`}
+  const md=d=>d.slice(5).replace('-','.'),it=[];
+  if(!g.sub.length){
+    const n=g.main.length,k=EQ_K[Math.min(n,4)],st=(1-k)/(n-1);
+    g.main.forEach((t,i)=>it.push([t,k,i*18*st,i*17*st,0]));
+  }else{
+    const mk=g.main.length>1?MAIN_K-.04:MAIN_K,W=18*SUB_K,H=17*SUB_K,sx=18-W-.4,sy=17-H-.4;
+    g.main.forEach((t,i)=>it.push([t,mk,.6+i*1.2,.6+i*1.2,0]));
+    const spots=[[sx,sy],[sx,sy-H-.5],[sx-W-.5,sy]];
+    g.sub.forEach((t,j)=>{const p=spots[j]||[sx-(j-2)*1.2,sy-(j-2)*1.2];it.push([t,SUB_K,p[0],p[1],1])});
+  }
+  const btn=it.map(([t,k,x,y,sub])=>`<button class="${sub?'sub':''}" data-act="open" data-id="${t.id}" aria-label="${esc(t.name)}" style="--k:${k};left:calc(var(--u) * ${x.toFixed(2)});top:calc(var(--u) * ${y.toFixed(2)})">${sticker(t)}</button>`).join('');
+  const cap=g.sub.length?`${esc(g.main.map(t=>t.name).join('、'))} ${md(g.start)}–${md(g.end)} · 含 ${g.sub.length} 段旅程`:`同期 ${g.main.length} 段旅程 · ${md(g.start)}–${md(g.end)}`;
+  return `<div class="slot multi"><div class="grp">${btn}</div><p class="grp-cap">${cap}</p></div>`;
+}
+function bookView(){
+  const d=doneTrips();
+  if(!d.length||ui.page<=0){
+    ui.page=0;
+    return `<section class="bk">
+      <button class="cover" data-act="openBook" ${d.length?'':'disabled'} aria-label="翻開貼紙簿">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20"/><ellipse cx="24" cy="24" rx="8" ry="20"/><path d="M4 24h40M7 14h34M7 34h34"/></svg>
+        <b class="ct">旅貼</b><span class="cs">旅程帳本</span>
+        <span class="cc">${d.length?`已收藏 ${d.length} 趟，點一下翻開`:'還沒有旅程'}</span>
+      </button>
+      ${d.length?'':`<div class="blank"><h2>這本冊子還是空的</h2><p class="sub">完結一趟旅程，它就會貼在這裡。</p><button class="ghost" data-act="sample">載入範例旅程</button></div>`}
+    </section>`;
+  }
+  const total=pageCount();
+  ui.page=Math.min(ui.page,total);
+  const pg=ui.page,items=doneGroups().slice((pg-1)*2,pg*2);
+  const slots=items.map(groupSlot);
+  if(items.length<2)slots.push('<div class="slot empty">下一趟旅程會貼在這裡</div>');
+  const cls=ui.turn?'turn-'+ui.turn:'';ui.turn=null;
+  return `<section class="bk">
+    <div class="page ${cls}"><span class="pt">旅程紀錄</span><span class="pn">${String(pg).padStart(2,'0')}</span>${slots.join('')}</div>
+    <div class="pg"><button data-act="page" data-d="-1" aria-label="上一頁">‹</button><p>第 ${pg} 頁，共 ${total} 頁</p><button data-act="page" data-d="1" aria-label="下一頁" ${pg>=total?'disabled':''}>›</button></div>
+  </section>`;
+}
+function dayBlocks(t){
+  const rows=dailyTotals(t),mx=Math.max(1,...rows.map(r=>r.out));
+  return rows.map(r=>{const es=t.entries.filter(e=>entryDay(e)===r.day);return `<div class="dayh"><b>${phaseLabel(t,r.day)} ${dLabel(r.day)}</b><span>支出 ${fmt(r.out)}${r.income?' 收入 '+fmt(r.income):''}</span></div><div class="dbar"><i style="width:${r.out/mx*100}%"></i></div>${t.plan[r.day]?`<p class="dnote">行程：${esc(t.plan[r.day])}</p>`:''}${es.length?es.sort((a,b)=>a.ts-b.ts).map(e=>rowOf(e,false,t)).join(''):'<p class="empty-day">沒有記錄</p>'}`}).join('');
+}
+function detailView(t){
+  const s=stats(t),canReopen=true;
+  const br=CATS.filter(c=>s.by[c.k]).sort((a,b)=>s.by[b.k]-s.by[a.k]).map(c=>`<div class="br"><span>${c.e} ${c.n}</span><div class="tr"><i style="width:${s.by[c.k]/s.so*100}%;background:${c.c}"></i></div><b class="num">${fmt(s.by[c.k])}</b></div>`).join('');
+  return `<div class="sheet"><div class="wrap">
+    <div class="top"><button class="ghost" data-act="close">關閉</button></div>
+    <div class="stage">${sticker(t,15)}</div>
+    <div class="panel">
+      <div class="kv"><span>總支出</span><b class="num">${esc(t.currency)} ${fmt(s.so)}</b></div>
+      <div class="kv"><span>總收入</span><b class="num">${esc(t.currency)} ${fmt(s.si)}</b></div>
+      <div class="kv"><span>旅程天數</span><b>${s.days} 天</b></div>
+      <div class="kv"><span>旅途中日均支出</span><b class="num">${esc(t.currency)} ${fmt(s.avg)}</b></div>
+      ${t.budget?`<div class="kv"><span>總預算</span><b class="num">${esc(t.currency)} ${fmt(t.budget)}</b></div><div class="kv"><span>${s.so<=t.budget?'預算結餘':'超出預算'}</span><b class="num">${esc(t.currency)} ${fmt(Math.abs(t.budget-s.so))}</b></div>`:''}
+    </div>
+    <p class="muted">日均不含行前及回程後支出；總支出包含所有帳目。</p>${hkd(t,s.so)}
+    ${br?`<div class="panel">${br}</div>`:''}
+    <h2 class="dh">每日詳情</h2>
+    ${legacyRangeNote(t)}${dayBlocks(t)}
+    <div class="acts">
+      ${canReopen?`<button class="ghost" data-act="reopen" data-id="${t.id}">繼續記帳</button>`:''}
+      <button class="ghost danger" data-act="askdel" data-id="${t.id}">刪除這張貼紙</button>
+    </div>
+  </div></div>`;
+}
+
+/* ---------- layer / toast ---------- */
+let layerFocus=null;
+const showLayer=h=>{const l=$('#layer');if(!l.classList.contains('show'))layerFocus=document.activeElement;l.innerHTML=h;l.classList.add('show');l.setAttribute('role','dialog');l.setAttribute('aria-modal','true');l.setAttribute('aria-label','旅貼對話視窗');document.body.classList.add('modal-open');$('#view').inert=true;$('.tabs').inert=true;const first=l.querySelector('button,input,select');if(first)first.focus({preventScroll:true})};
+const hideLayer=()=>{const l=$('#layer');l.classList.remove('show');l.innerHTML='';document.body.classList.remove('modal-open');$('#view').inert=false;$('.tabs').inert=false;ui.editId=null;ui.editTid=null;ui.pendingImport=null;ui.pendingDates=null;ui.detailId=null;if(layerFocus&&layerFocus.isConnected)layerFocus.focus({preventScroll:true})};
+
+let tt;
+function toast(msg,undo){
+  const el=$('#toast');
+  el.innerHTML=esc(msg)+(undo?'<button data-act="undo">復原</button>':'');
+  el.classList.add('show');clearTimeout(tt);
+  tt=setTimeout(()=>el.classList.remove('show'),undo?4500:1600);
+}
+function dialog(title,text,okLabel,okAct,id,danger){
+  showLayer(`<div class="dialog"><div class="dlg"><h2>${title}</h2><p>${text}</p><div class="two"><button class="ghost" data-act="close">取消</button><button class="primary" ${danger?'style="background:#B3261E;color:#fff"':''} data-act="${okAct}" ${id?`data-id="${id}"`:''}>${okLabel}</button></div></div></div>`);
+}
+
+/* ---------- render ---------- */
+function render(){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.tab===ui.tab));
+  let h;
+  if(ui.tab==='book')h=bookView();
+  else if(ui.tab==='overview')h=overviewView();
+  else if(ui.pickFor)h=destinationPicker(true);
+  else if(ui.planId&&tripById(ui.planId))h=planView(tripById(ui.planId));
+  else{ui.planId=null;const t=curTrip();h=t?ledgerView(t):(!ui.home&&liveTrips().length>1?chooseTripView():planningView())}
+  $('#view').innerHTML='<div id="storage-notice" role="alert"></div><div id="net-chip" class="net-chip" role="status" hidden></div>'+h+'<footer class="app-foot"><p id="net-line" class="net-line" aria-live="polite"></p>'+(ui.tab==='book'?'<button class="ghost settings-btn" data-act="settings">備份與設定</button>':'')+'</footer>';
+  updateStorageNotice();
+  if(window.updatePwaUI)window.updatePwaUI();
+  syncCarousel();
+}
+
+/* ---------- actions ---------- */
+function key(k){
+  let a=ui.amt;
+  if(k==='b')a=a.slice(0,-1);
+  else if(k==='.'){if(a.includes('.'))return;a=(a||'0')+'.'}
+  else{if(k==='00'&&!a)return;if(a==='0')a='';a+=k}
+  if(a.split('.')[0].length>9)return;
+  const m=a.split('.');if(m[1]&&m[1].length>2)return;
+  ui.amt=a;
+  $('#amtv').textContent=a?fmtTyping(a):'0';
+  $('#amtv').parentElement.classList.toggle('empty',!a);
+  const h=$('#typing-hkd');if(h)h.innerHTML=hkd(curTrip(),Number(a)||0);
+}
+function sample(){
+  const mk=(name,cur,y,m,d,days,rows)=>{
+    const start=new Date(y,m-1,d,9).getTime();
+    return norm({id:uid(),name,currency:cur,start,end:start+(days-1)*864e5+8*36e5,status:'done',
+      entries:rows.map((r,i)=>({id:uid(),type:r[0],amt:r[1],cat:r[2],note:r[3],ts:start+r[4]*864e5+i*36e5}))});
+  };
+  S.trips.push(
+    mk('東京','JPY',2026,4,2,6,[['out',18000,'move','機場快線來回',0],['out',64000,'stay','新宿酒店 5 晚',0],['out',2400,'food','拉麵',0],['out',3800,'play','teamLab',1],['out',12500,'shop','藥妝',2],['out',5200,'food','壽司',2],['out',1800,'move','地鐵一日券',3],['in',3000,'in','退稅',5]]),
+    mk('台南','TWD',2026,7,11,3,[['out',2800,'move','高鐵',0],['out',1900,'stay','民宿 2 晚',0],['out',350,'food','牛肉湯',1],['out',680,'food','擔仔麵',1],['out',1200,'shop','伴手禮',2]]),
+    mk('曼谷','THB',2026,9,5,4,[['out',9800,'move','機票',0],['out',3600,'stay','酒店 3 晚',0],['out',450,'food','船麵',1],['out',1500,'play','按摩',2],['out',2300,'shop','夜市',2]])
+  );
+  save();render();
+}
+function checkOverdue(){
+  const t=overdue().find(x=>!(ui.asked[x.id]>Date.now())&&!(x.snoozeUntil>Date.now()));
+  if(!t||document.querySelector('#layer').classList.contains('show'))return;
+  ui.asked[t.id]=Date.now()+864e5;
+  showLayer(`<div class="dialog"><div class="dlg"><h2>「${esc(t.name)}」已經結束</h2><p>回程日 ${t.endDate.replace(/-/g,'.')} 已過，要完結這趟旅程並生成貼紙嗎？選「明天再提醒」，24 小時內不會再彈出；行程仍會留在「待完結」。</p><div class="two"><button class="ghost" data-act="snooze" data-id="${t.id}">明天再提醒</button><button class="primary" data-act="confirmFinish" data-id="${t.id}">完結並生成貼紙</button></div></div></div>`);
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;
+  const a=b.dataset.act,id=b.dataset.id;
+  switch(a){
+    case 'tab':
+      if(b.dataset.tab==='trip'&&ui.tab==='trip'){ui.planId=null;ui.pickFor=null;ui.ledgerId=null;ui.home=false}
+      ui.tab=b.dataset.tab;hideLayer();render();window.scrollTo(0,0);break;
+    case 'overviewHome':ui.tab='trip';ui.home=true;ui.planId=null;ui.pickFor=null;render();window.scrollTo(0,0);break;
+    case 'overviewDay':{
+      const t=tripById(id),day=b.dataset.day;
+      if(!t||!TravelCore.validDate(day))return;
+      if(t.status==='done'){ui.detailId=t.id;showLayer(detailView(t));return}
+      ui.tab='trip';ui.planId=null;ui.pickFor=null;ui.home=false;ui.ledgerId=t.id;ui.dayFor=t.id;ui.day=day;ui.amt='';ui.note='';render();window.scrollTo(0,0);break;
+    }
+    case 'chooseDestination':{
+      const d=countryById(ui.pickFor?ui.pickDest:ui.destId);if(!d){toast('先選國家');return}
+      if(ui.pickFor){const t=tripById(ui.pickFor);if(!t)return;
+        if(t.entries.length&&t.currency!==d.currency){toast('已有帳目，只能更改為相同幣別的國家');return}
+        if(t.currency!==d.currency)t.hkdRate=d.currency==='HKD'?1:null;
+        const old=countryOf(t);if(!t.name.trim()||(old&&t.name===old.name))t.name=d.name;
+        if(!old||old.id!==d.id)delete t.artIndex; /* 換國家：景點圖不同，回到第一張 */
+        t.country=d.id;t.currency=d.currency;save();ui.pickFor=null;
+      }else{ui.destId=d.id;ui.newStep=2}
+      render();window.scrollTo(0,0);break;
+    }
+    case 'changeDestination':ui.newStep=1;render();window.scrollTo(0,0);break;
+    case 'editDestination':ui.pickFor=ui.planId;ui.pickDest=(countryOf(tripById(ui.planId))||{}).id||null;render();window.scrollTo(0,0);break;
+    case 'cancelPick':ui.pickFor=null;render();window.scrollTo(0,0);break;
+    case 'create':{
+      const d=countryById(ui.destId);if(!d){toast('先選國家');return}
+      const place=[...($('#f-place')?$('#f-place').value:ui.draft.place||'').trim()].slice(0,placeMax).join(''),name=place||d.name,cur=d.currency,sd=$('#f-start').value,ed=$('#f-end').value;
+      if(!TravelCore.validDate(sd)||!TravelCore.validDate(ed)){toast('請選 1900 至 2199 年內的有效日期');return}
+      if(Number.isNaN(budNum($('#f-bud').value))||Number.isNaN(budNum($('#f-dbud').value))){toast('預算請輸入正數，最多兩位小數及九位整數');return}
+      if(ed<sd){toast('回程日不能早於出發日');return}
+      if((parseD(ed)-parseD(sd))/864e5+1>120){toast('一趟旅程最長 120 天');return}
+      const t=norm({id:uid(),country:d.id,name,currency:cur,start:parseD(sd),startDate:sd,endDate:ed,status:'planned',entries:[],
+        budget:budNum($('#f-bud').value),dailyBudget:budNum($('#f-dbud').value)});
+      if(draftArtIndex(d))t.artIndex=draftArtIndex(d);
+      if(draftNight(d))t.artVariant='night';
+      S.trips.push(t);save();ui.newStep=1;ui.destId=null;ui.draft={place:'',start:'',end:'',budget:'',dailyBudget:''};ui.planId=t.id;render();window.scrollTo(0,0);toast('行程已建立');break;
+    }
+    case 'artIndex':{const t=tripById(id),v=Number(b.dataset.v);if(!t)return;if(v===1||v===2)t.artIndex=v;else delete t.artIndex;save();render();break}
+    case 'draftArt':case 'draftArtStep':{
+      const d=countryById(ui.destId);if(!d)return;
+      const N=d.arts.length,cur=draftArtIndex(d),tr=$('#art-track');
+      /* 箭頭一次一張，頭尾循環；圓點直接跳到該張 */
+      const step=a==='draftArtStep'?Math.sign(Number(b.dataset.v)||0):0,i=a==='draftArt'?Math.max(0,Math.min(N-1,Number(b.dataset.v)||0)):cur;
+      if(tr&&tr.clientWidth){
+        const off=N>1?1:0,pos=Math.round(tr.scrollLeft/tr.clientWidth),target=step?pos+step:i+off;
+        tr.scrollTo({left:target*tr.clientWidth,behavior:'smooth'});clearTimeout(carTimer);carTimer=setTimeout(()=>carouselSettled(tr),450);
+      }else{setDraftArt({artIndex:step?((cur+step)%N+N)%N:i});render()}
+      break;
+    }
+    case 'draftVariant':setDraftArt({night:b.dataset.v==='night'});render();break;
+    case 'artVariant':{const t=tripById(id);if(!t)return;if(b.dataset.v==='night')t.artVariant='night';else delete t.artVariant;save();render();break}
+    case 'plan':ui.tab='trip';ui.planId=id;render();window.scrollTo(0,0);break;
+    case 'planBack':ui.planId=null;render();window.scrollTo(0,0);break;
+    case 'ledger':if(tripById(id)?.status==='done'){ui.detailId=id;showLayer(detailView(tripById(id)));break}ui.planId=null;ui.home=false;ui.ledgerId=id;ui.overviewId=id;ui.dayFor=null;ui.amt='';ui.note='';render();window.scrollTo(0,0);break;
+    case 'home':ui.home=true;ui.ledgerId=null;render();window.scrollTo(0,0);break;
+    case 'switchTrip':ui.home=false;ui.ledgerId=null;ui.planId=null;render();window.scrollTo(0,0);break;
+    case 'day':{
+      const t=curTrip();if(!t)return;
+      const nd=iso(parseD(ui.day)+(+b.dataset.d)*864e5+432e5);
+      if(!TravelCore.validDate(nd))return;
+      ui.day=nd;render();break;
+    }
+    case 'key':key(b.dataset.k);break;
+    case 'type':ui.type=b.dataset.k;document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x.dataset.k===ui.type));$('.chips').hidden=ui.type==='in';break;
+    case 'cat':ui.cat=b.dataset.k;document.querySelectorAll('.chip').forEach(x=>{x.classList.toggle('on',x.dataset.k===ui.cat);x.setAttribute('aria-pressed',String(x.dataset.k===ui.cat))});break;
+    case 'add':{
+      const t=curTrip(),v=parseFloat(ui.amt);
+      if(!t)return;
+      if(!(v>0)){toast('先輸入金額');return}
+      const now=Date.now();
+      t.entries.push({id:uid(),type:ui.type,amt:v,cat:ui.type==='in'?'in':ui.cat,note:ui.note.trim(),date:ui.day,ts:ui.day===today()?now:new Date(ui.day+'T12:00:00').getTime()});
+      ui.amt='';ui.note='';save();render();toast('已記一筆');break;
+    }
+    case 'del':{
+      const t=curTrip();if(!t)return;
+      const i=t.entries.findIndex(x=>x.id===id);
+      if(i<0)return;
+      lastDel={tid:t.id,entry:t.entries[i],i};
+      t.entries.splice(i,1);save();render();toast('已刪除',true);break;
+    }
+    case 'undo':{
+      if(!lastDel)return;
+      const t=tripById(lastDel.tid);
+      if(t){t.entries.splice(lastDel.i,0,lastDel.entry);save();render()}
+      lastDel=null;$('#toast').classList.remove('show');break;
+    }
+    case 'finish':{
+      const t=tripById(id),n=t.entries.length;
+      dialog('完結這趟旅程？',n?`共 ${n} 筆記錄，完結後會變成一張貼紙。之後可以在貼紙簿裡繼續記帳。`:'這趟還沒有任何記錄，仍要完結嗎？','完結並生成貼紙','confirmFinish',id);break;
+    }
+    case 'confirmFinish':{
+      const t=tripById(id);if(!t)return;
+      const td=today();
+      t.status='done';t.start=parseD(t.startDate);
+      t.end=parseD(t.endDate);
+      ui.planId=null;ui.ledgerId=null;ui.asked[id]=1;save();render();
+      const s=stats(t);
+      showLayer(`<div class="reveal"><h2>旅程完結</h2><div class="stamp">${sticker(t,15)}</div><p>${esc(t.name)} 共 ${s.days} 天，支出 ${esc(t.currency)} ${fmt(s.so)}</p><button class="primary" data-act="toBook" data-id="${t.id}">收進貼紙簿</button></div>`);break;
+    }
+    case 'toBook':hideLayer();ui.tab='book';ui.page=pageOfTrip(id);ui.turn='n';render();window.scrollTo(0,0);break;
+    case 'open':ui.detailId=id;showLayer(detailView(tripById(id)));break;
+    case 'close':hideLayer();break;
+    case 'snooze':{const t=tripById(id);if(t){t.snoozeUntil=Date.now()+864e5;save()}hideLayer();break}
+    case 'jumpToday':document.getElementById('day-'+today())?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});break;
+    case 'settings':settingsView();break;
+    case 'exportJSON':exportJSON();break;
+    case 'exportCSV':downloadFile(TravelCore.csv(S),'旅貼帳目-'+today()+'.csv','text/csv;charset=utf-8');toast('已建立 CSV，請確認已儲存檔案');break;
+    case 'exportRaw':exportRaw();break;
+    case 'persist':requestPersistence();break;
+    case 'confirmImport':confirmImport();break;
+    case 'confirmDates':applyDates();break;
+    case 'editEntry':openEditor(b.dataset.tid||curTrip()?.id,id);break;
+    case 'saveEntry':saveEntry();break;
+    case 'reopen':{
+      const t=tripById(id);t.status='planned';delete t.end;t.snoozeUntil=Date.now()+864e5;ui.asked[id]=t.snoozeUntil;save();
+      hideLayer();ui.tab='trip';ui.planId=null;ui.home=false;ui.ledgerId=id;ui.dayFor=null;render();window.scrollTo(0,0);toast('已繼續記帳');break;
+    }
+    case 'askdel':dialog('刪除這張貼紙？','旅程和所有記錄都會一併刪除，無法復原。','刪除','delTrip',id,true);break;
+    case 'askdelplan':dialog('刪除這個行程？','行程和所有記帳都會一併刪除，無法復原。','刪除','delTrip',id,true);break;
+    case 'delTrip':
+      S.trips=S.trips.filter(t=>t.id!==id);
+      if(ui.planId===id)ui.planId=null;
+      if(ui.ledgerId===id)ui.ledgerId=null;
+      save();hideLayer();render();break;
+    case 'sample':sample();break;
+    case 'openBook':ui.page=1;ui.turn='n';render();window.scrollTo(0,0);break;
+    case 'page':{const d=+b.dataset.d;ui.page=Math.max(0,Math.min(pageCount(),ui.page+d));ui.turn=d>0?'n':'p';render();window.scrollTo(0,0);break}
+  }
+});
+document.addEventListener('input',e=>{
+  const el=e.target;
+  if(el.id==='note')ui.note=el.value;
+  const draftFields={'f-place':'place','f-start':'start','f-end':'end','f-bud':'budget','f-dbud':'dailyBudget'};
+  if(draftFields[el.id]){ui.draft[draftFields[el.id]]=el.value;const out=$('#duration');if(out)out.textContent=durationText(ui.draft.start,ui.draft.end)}
+  if(el.dataset&&el.dataset.note){
+    const t=tripById(el.dataset.tid);
+    if(t){t.plan[el.dataset.note]=el.value;save()}
+  }
+});
+document.addEventListener('change',e=>{
+  const el=e.target,f=el.dataset&&el.dataset.f;
+  if(el.id==='destination-select'){
+    const d=countryById(el.value);
+    if(ui.pickFor)ui.pickDest=d?d.id:null;else ui.destId=d?d.id:null;
+    render();const select=$('#destination-select');if(select)select.focus();return;
+  }
+  if(el.id==='overview-trip'){ui.overviewId=el.value;render();return}
+  if(el.id==='ledger-date'){if(TravelCore.validDate(el.value)){ui.day=el.value;render()}else{toast('請選有效日期');render()}return}
+  if(el.id==='backup-file'){readImport(el.files&&el.files[0]);return}
+  if(!f||!ui.planId)return;
+  const t=tripById(ui.planId);if(!t)return;const v=el.value.trim();
+  if(f==='name'){const c=countryOf(t),n=[...v].slice(0,placeMax).join('')||(c?c.name:t.name);if(n!==t.name){t.name=n;save()}el.value=n;render();return}
+  if(f==='budget'||f==='dailyBudget'){
+    const n=budNum(v);if(Number.isNaN(n)){toast('預算請輸入正數，最多兩位小數及九位整數');el.value=t[f]??'';return}t[f]=n;save();return;
+  }
+  if(f==='hkdRate'){
+    const n=v===''?null:Number(v);if(n!==null&&(!Number.isFinite(n)||n<=0||n>1000000)){toast('請輸入大於 0 的有效匯率');el.value=t.hkdRate??'';return}t.hkdRate=n;save();render();return;
+  }
+  if(f==='startDate'||f==='endDate'){
+    const sd=f==='startDate'?v:t.startDate,ed=f==='endDate'?v:t.endDate;
+    if(!TravelCore.validDate(sd)||!TravelCore.validDate(ed)||ed<sd||TravelCore.ordinal(ed)-TravelCore.ordinal(sd)>=120){toast('請選有效日期：回程不早於出發，最多 120 天');el.value=t[f];return}
+    if(v===t[f])return;
+    const affected=t.entries.filter(x=>{const d=entryDay(x);return d<sd||d>ed});
+    ui.pendingDates={id:t.id,startDate:sd,endDate:ed};
+    if(affected.length){el.value=t[f];dialog('調整旅程日期？',`有 ${affected.length} 筆帳目在新旅程日期以外。確認後會保留原日期，列於「行前支出」或「回程後記錄」，仍計入總額；不會移動或刪除帳目。`,'保留帳目並修改','confirmDates',t.id)}else applyDates();
+  }
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.target.id==='note')document.querySelector('[data-act="add"]').click();
+  if(e.key==='Escape'){const t=overdue().find(x=>ui.asked[x.id]&&!(x.snoozeUntil>Date.now()));if($('#layer [data-act=snooze]')&&t){t.snoozeUntil=Date.now()+864e5;save()}hideLayer()}
+  if(e.key==='Tab'&&$('#layer').classList.contains('show')){const els=[...$('#layer').querySelectorAll('button,input,select,textarea,[tabindex]')].filter(x=>!x.disabled&&x.offsetParent!==null);const first=els[0],last=els[els.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}}
+});
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden)return;
+  if(ui.lastToday!==today()){ui.lastToday=today();ui.dayFor=null;render()}
+  checkOverdue();
+});
+/* Core improvements: local-only backups, explicit dates, rates and editing. */
+function hkd(t,n,prefix='約'){
+  if(!t||t.currency==='HKD'||!(t.hkdRate>0))return '';
+  return `<small class="hkd">${prefix} HKD ${fmt(Math.round(n*t.hkdRate*100)/100)}</small>`;
+}
+function rateField(t){return t.currency==='HKD'?'<p class="budget-caption">本旅程已用港幣記帳，毋須換算。</p>':`<label>港幣參考匯率（選填）<span class="rate-label">1 ${esc(t.currency)} ＝ 多少 HKD？</span><input data-f="hkdRate" inputmode="decimal" value="${t.hkdRate??''}" placeholder="輸入你兌換時的匯率" autocomplete="off"></label><p class="budget-caption">手動匯率，非即時報價。只作參考，不改動原帳；更新匯率會重算整趟旅程的港幣參考值。清空即可關閉。</p>`}
+function updateStorageNotice(){
+  const el=$('#storage-notice');if(!el)return;
+  el.innerHTML=window.lvtieStorageError?`<p class="storage-alert">${window.lvtieLoadError?'無法讀取原有帳目，已停止覆寫，請先匯出原始資料。':'未能儲存在本機；請勿關閉頁面，先匯出備份。'}<button class="text-action" data-act="settings">開啟備份設定</button></p>`:'';
+}
+function applyDates(){
+  const change=ui.pendingDates;if(!change)return;const t=tripById(change.id);if(!t)return;
+  t.startDate=change.startDate;t.endDate=change.endDate;t.start=parseD(t.startDate);if(t.status==='done')t.end=parseD(t.endDate);
+  t.snoozeUntil=0;delete ui.asked[t.id];save();hideLayer();render();toast('日期已修改，所有帳目已保留');
+}
+function openEditor(tid,eid){
+  const t=tripById(tid),e=t&&t.entries.find(x=>x.id===eid);if(!e)return;
+  ui.editId=eid;ui.editTid=tid;
+  showLayer(`<div class="sheet"><div class="wrap editor"><div class="hd"><h1>修改記錄</h1><button class="ghost" data-act="close">取消</button></div><p class="muted">${esc(t.name)} · ${esc(t.currency)}。修改只影響這一筆。</p><div class="two"><label class="field">類型<select id="edit-type"><option value="out" ${e.type==='out'?'selected':''}>支出</option><option value="in" ${e.type==='in'?'selected':''}>收入</option></select></label><label class="field">分類<select id="edit-cat">${CATS.map(c=>`<option value="${c.k}" ${c.k===e.cat?'selected':''}>${c.n}</option>`).join('')}</select></label></div><p class="muted">選擇收入時，分類會自動設為「收入」。</p><label class="field">金額（${esc(t.currency)}）<input id="edit-amount" inputmode="decimal" value="${e.amt}"></label><div class="two"><label class="field">日期<input id="edit-date" type="date" min="1900-01-01" max="2199-12-31" value="${entryDay(e)}"></label><label class="field">時間<input id="edit-time" type="time" value="${timeLabel(e.ts)}"></label></div><label class="field">備註<input id="edit-note" maxlength="500" value="${esc(e.note)}"></label><p class="muted">旅程範圍：${t.startDate} 至 ${t.endDate}。範圍外的帳目仍會保留及計入總額。</p><p id="edit-error" class="over" role="alert"></p><button class="primary" data-act="saveEntry">儲存修改</button></div></div>`);
+}
+function saveEntry(){
+  const t=tripById(ui.editTid),e=t&&t.entries.find(x=>x.id===ui.editId);if(!e)return;
+  const amount=budNum($('#edit-amount').value),date=$('#edit-date').value,time=$('#edit-time').value;
+  const error=$('#edit-error');
+  if(!(amount>0)){error.textContent='請輸入大於 0 的金額，最多兩位小數及九位整數。';return}
+  if(!TravelCore.validDate(date)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){error.textContent='請填寫有效日期和時間。';return}
+  const ts=new Date(date+'T'+time+':00').getTime();if(iso(ts)!==date||timeLabel(ts)!==time){error.textContent='此時間在裝置時區不存在，請選另一個時間。';return}
+  const detail=ui.detailId,type=$('#edit-type').value;
+  Object.assign(e,{amt:amount,date,ts,type,cat:type==='in'?'in':$('#edit-cat').value,note:$('#edit-note').value.trim()});
+  if(ui.ledgerId===t.id){ui.day=date;ui.dayFor=t.id}lastDel=null;save();hideLayer();render();if(detail){ui.detailId=detail;showLayer(detailView(t))}toast('記錄已修改');
+}
+function downloadFile(content,name,mime){
+  const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+function exportJSON(){
+  const data={format:'lvtie-backup',version:1,exportedAt:new Date().toISOString(),data:S};
+  downloadFile(JSON.stringify(data),'旅貼備份-'+today()+'.json','application/json');
+  toast('已建立備份，請確認已儲存檔案');
+}
+function exportRaw(){
+  try{const raw=localStorage.getItem(KEY);if(raw===null){toast('找不到原始儲存資料');return}downloadFile(raw,'旅貼原始資料-'+today()+'.txt','text/plain;charset=utf-8')}catch(e){toast('瀏覽器不允許讀取原始儲存資料')}
+}
+function settingsView(){
+  showLayer(`<div class="sheet"><div class="wrap settings"><div class="hd"><h1>備份與設定</h1><button class="ghost" data-act="close">關閉</button></div><p>帳目只在這個瀏覽器保存，沒有雲端同步。換裝置或清除網站資料前，先存一份 JSON 備份。</p><section><h2>把旅程帶走</h2><div class="acts"><button class="primary" data-act="exportJSON">匯出 JSON 備份</button><button class="ghost" data-act="exportCSV">匯出 CSV 帳目</button></div><p class="muted">JSON 可還原帳目與行程；CSV 適合試算表，不支援還原。匯出後請確認檔案已存好，內容包含你的私人旅程資料。</p></section><section><h2>從備份帶回來</h2><label class="field">選擇 JSON 備份<input id="backup-file" type="file" accept=".json,application/json"></label><p class="muted">先驗證，再確認合併。不覆蓋現有旅程；相同資料不重複加入，有衝突則保留為另一趟旅程。上限 50 MB。</p><p id="import-error" class="over" role="alert"></p></section><section><h2>本機儲存</h2><p id="persist-status" class="muted">持久儲存可減少系統自動回收資料的機會，但不能代替備份。</p><button class="ghost" data-act="persist">申請持久儲存</button>${window.lvtieLoadError?'<p class="storage-alert">原有資料讀取失敗，為避免覆寫，已暫停儲存及匯入。請匯出原始檔並保留，再尋求協助；不要清除網站資料。</p><button class="ghost" data-act="exportRaw">匯出原始資料</button>':''}</section><aside id="pwa-info" class="pwa-info" aria-live="polite"></aside><p class="muted">旅貼 · 2026-10-24 carousel-1</p></div></div>`);
+  if(window.updatePwaUI)window.updatePwaUI();
+  if(navigator.storage?.persisted)navigator.storage.persisted().then(ok=>{const el=$('#persist-status');if(el)el.textContent=ok?'此瀏覽器已授予持久儲存。手動清除資料或換裝置仍會遺失帳目，請定期備份。':'尚未獲授持久儲存，可在下方申請。是否批准由瀏覽器決定，請定期備份。'}).catch(()=>{});
+}
+async function requestPersistence(){
+  const el=$('#persist-status');if(!el)return;
+  if(!navigator.storage?.persist){el.textContent='此瀏覽器不提供持久儲存申請，請使用 JSON 備份。';return}
+  try{const ok=await navigator.storage.persist();el.textContent=ok?'已獲授持久儲存；手動清除資料仍會刪除帳目，請定期備份。':'瀏覽器未批准申請；帳目仍使用一般本機儲存，請匯出 JSON 備份。'}catch(e){el.textContent='未能申請持久儲存，請使用 JSON 備份。'}
+}
+async function readImport(file){
+  if(!file)return;const error=$('#import-error');
+  if(window.lvtieLoadError){if(error)error.textContent='原有資料讀取失敗，請先匯出原始資料，現在不能合併。';return}
+  try{
+    if(file.size>50*1024*1024)throw Error('檔案超過 50 MB 上限');
+    const text=await file.text(),data=TravelCore.validateBackup(JSON.parse(text.replace(/^﻿/,'')));
+    const result=TravelCore.merge(S,data,uid);ui.pendingImport=data;
+    const n=data.trips.reduce((n,t)=>n+t.entries.length,0);
+    dialog('合併這份備份？',`包含 ${data.trips.length} 趟旅程、${n} 筆帳目。將加入 ${result.added} 趟，略過 ${result.skipped} 趟相同資料；其中 ${result.copies} 趟同 ID 的不同版本會以副本保留。原有旅程不會被覆蓋。`,'確認合併','confirmImport');
+  }catch(e){ui.pendingImport=null;if(error&&error.isConnected)error.textContent='未有更改帳目。'+(e instanceof SyntaxError?'檔案不是有效 JSON。':e.message);const input=$('#backup-file');if(input)input.value=''}
+}
+function confirmImport(){
+  if(!ui.pendingImport||window.lvtieLoadError)return;
+  try{
+    const result=TravelCore.merge(S,ui.pendingImport,uid);
+    // Commit only after the complete new state has been written successfully.
+    localStorage.setItem(KEY,JSON.stringify(result.data));S=result.data;mem=S;window.lvtieStorageError=false;lastDel=null;
+    hideLayer();render();settingsView();const msg=$('#import-error');if(msg){msg.className='import-success';msg.textContent=`合併完成：加入 ${result.added} 趟，略過 ${result.skipped} 趟相同資料。`}
+  }catch(e){showLayer(`<div class="dialog"><div class="dlg"><h2>未能匯入</h2><p>沒有更改原有帳目。瀏覽器儲存可能已滿或被封鎖，請先匯出現有資料。</p><button class="ghost" data-act="settings">返回備份設定</button></div></div>`)}
+}
+
+function legacyRangeNote(t){return nDays(t)>120?'<p class="budget-caption">舊旅程超過 120 天；顯示最初 120 天及所有有帳目或行程備註的日期。日均按完整旅程天數計算，所有帳目均保留。</p>':''}
+
+ui.lastToday=today();
+render();
+checkOverdue();
+</script>
+<script src="./pwa.js" defer></script>
+</body>
+</html>
