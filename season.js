@@ -10,9 +10,10 @@
   else root.LvtieSeason = factory();
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
+  const Lx=(typeof self!=='undefined'&&typeof self.Lx==='function')?self.Lx:(z=>z);
   const SOUTH = new Set(['AU', 'NZ', 'ID']);
   const BY_MONTH = ['winter', 'winter', 'spring', 'spring', 'spring', 'summer', 'summer', 'summer', 'autumn', 'autumn', 'autumn', 'winter'];
-  const LABEL = { spring: '春', summer: '夏', autumn: '秋', winter: '冬' };
+  const LABEL = { spring: Lx('春','Spring'), summer: Lx('夏','Summer'), autumn: Lx('秋','Autumn'), winter: Lx('冬','Winter') };
   const valid = d => typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) && !isNaN(Date.parse(d + 'T00:00:00Z'));
 
   function seasonOfMonth(cc, month) {          // month: 1–12

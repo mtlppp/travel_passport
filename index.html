@@ -18,6 +18,7 @@
   --sans:"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{touch-action:manipulation}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.45}
 button,input{font:inherit;color:inherit}
 button{border:0;background:none;cursor:pointer;padding:0}
@@ -188,7 +189,7 @@ h1,h2,h3,p{margin:0}
 
 /* planning + ledger */
 .sec{font-size:18px;font-weight:900;margin:10px 0 -4px}
-.start .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.start .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.two>*{min-width:0}
 .start input,.start textarea{min-width:0;width:100%}
 .start textarea{border:2px solid var(--ink);border-radius:14px;background:#fff;padding:10px 12px;font-size:16px;line-height:1.4;resize:vertical;font-family:inherit}
 .tcard{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:14px;text-align:left;box-shadow:0 2px 0 var(--line);width:100%}
@@ -206,7 +207,7 @@ h1,h2,h3,p{margin:0}
 .over{color:#B3261E}
 .dn{margin:12px 0;background:var(--card);border-radius:14px;padding:10px 12px}
 .dn summary{font-weight:800;font-size:14px;cursor:pointer}
-.dn textarea{margin-top:8px;width:100%;border:2px solid var(--line);border-radius:10px;padding:8px 10px;font-size:15px;font-family:inherit;resize:vertical}
+.dn textarea{margin-top:8px;width:100%;border:2px solid var(--line);border-radius:10px;padding:8px 10px;font-size:16px;font-family:inherit;resize:vertical}
 .dnote{margin:0 2px 6px;font-size:13px;color:var(--mute)}
 .foot{display:grid;gap:10px;margin-top:22px}
 
@@ -237,7 +238,7 @@ h1,h2,h3,p{margin:0}
 .primary:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
 .duration{font-size:15px;font-weight:800;color:var(--blue);min-height:22px}
 .budget-caption{font-size:13px;color:var(--mute);margin-top:-4px}
-.start input[type=date]{font-size:15px;padding:0 8px}
+.start input[type=date]{font-size:16px;padding:0 8px}
 
 /* toast */
 #toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));transform:translate(-50%,20px);background:var(--ink);color:#fff;border-radius:14px;padding:10px 16px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:40;white-space:nowrap}
@@ -261,7 +262,7 @@ h1,h2,h3,p{margin:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .ghost{min-height:44px;height:auto;padding:10px 14px}.del{width:44px;height:44px;flex:none}.modal-open{overflow:hidden}
 .field{display:grid;gap:6px;font-size:14px;font-weight:700;margin-top:12px}
-.field input,.field select,select#overview-trip{font:inherit;width:100%;min-width:0;min-height:46px;border:2px solid var(--line);border-radius:12px;padding:9px;background:#fff;color:var(--ink)}
+.field input,.field select,select#overview-trip{font:inherit;font-size:16px;width:100%;min-width:0;min-height:46px;border:2px solid var(--line);border-radius:12px;padding:9px;background:#fff;color:var(--ink)}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .muted,.rate-label{font-size:13px;line-height:1.6;color:var(--mute);overflow-wrap:anywhere}.rate-label{font-weight:500}
 .hkd{display:block;color:var(--mute);font-size:12px;font-weight:600;line-height:1.45;font-variant-numeric:tabular-nums}
@@ -284,7 +285,7 @@ h1,h2,h3,p{margin:0}
 .ledger .pad{padding:10px;gap:7px;border-radius:18px}.not-started{text-align:center;padding:22px 14px}.not-started h2{margin:0 0 6px;font-size:20px}.not-started p{margin:4px 0}.ledger .seg button{height:44px}.ledger .seg{padding:2px}
 .ledger .disp{padding:0;min-width:0}.ledger .disp b{font-size:clamp(24px,7.5vw,34px);line-height:1.12}.ledger .disp small{font-size:13px;flex:none}
 .typing-hkd{height:18px;text-align:right}.ledger .chips{gap:4px}.ledger .chip{height:44px;border-radius:10px;font-size:11px;gap:0}.ledger .chip span{font-size:16px}
-.ledger .note{height:44px}.ledger .keys,.ledger .kp,.ledger .side{gap:5px}.ledger .key{height:44px;font-size:22px}.ledger .side{grid-template-rows:44px 1fr}.ledger .side .add{font-size:17px}.ledger .side .bs{min-height:44px}
+.ledger .note{height:44px}.note-row{display:grid;grid-template-columns:1fr auto;gap:6px}.aa-tg{height:44px;min-width:76px;padding:0 10px;border:2px solid var(--line);border-radius:12px;background:#fff;font-weight:800;font-size:14px;color:var(--ink)}.aa-tg.on{background:var(--ink);border-color:var(--ink);color:#fff}.aa-row{display:flex;align-items:center;gap:4px 8px;flex-wrap:wrap;background:#fff7d6;border-radius:12px;padding:4px 8px}.aa-row[hidden]{display:none}.aa-step{display:flex;align-items:center;gap:2px}.aa-step button{width:44px;height:44px;border:0;background:transparent;font-size:22px;font-weight:800;color:var(--ink)}.aa-step b{min-width:44px;text-align:center;font-size:15px}.aa-row small{flex-basis:100%;font-size:11px;line-height:1.3;color:var(--muted);padding:0 0 3px 4px}.aa-use{flex:1;min-width:0;min-height:44px;padding:2px 10px;border:0;border-radius:10px;background:var(--ink);color:#fff;font-weight:700;font-size:13px;line-height:1.2}.aa-use b{font-size:15px}.aa-use:disabled{background:#d9d2bd;color:var(--ink)}.ledger .keys,.ledger .kp,.ledger .side{gap:5px}.ledger .key{height:44px;font-size:22px}.ledger .side{grid-template-rows:44px 1fr}.ledger .side .add{font-size:17px}.ledger .side .bs{min-height:44px}
 .ledger .chips{grid-template-columns:repeat(3,1fr);gap:6px}.ledger .chip{height:50px;flex-direction:row;gap:6px;font-size:15px;border-radius:12px}.ledger .chip span{font-size:22px}
 .bud-alert{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}.ba{font-size:13px;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--card);color:var(--ink)}.ba.over{background:#B3261E;color:#fff}
 .back{white-space:nowrap}.plan-meta{font-size:14px;line-height:1.6;color:var(--mute);margin:2px 0 12px}.sec .opt{font-size:12px;font-weight:700;color:var(--mute);margin-left:8px;letter-spacing:0}
@@ -292,8 +293,8 @@ h1,h2,h3,p{margin:0}
 details.ov-total summary{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 10px;cursor:pointer;min-height:44px;padding:4px 0}.ov-sum-t{font-size:19px;font-weight:800}.ov-sum-v{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}details.ov-total[open] summary{margin-bottom:12px}
 .cat-h{font-size:15px;margin:16px 0 8px}.cat-stack{display:flex;height:22px;border-radius:6px;overflow:hidden;background:#cbd2de}.cat-stack i{display:flex;align-items:center;justify-content:center;min-width:2px;font-style:normal;font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.35);white-space:nowrap;overflow:hidden}
 .cat-legend{list-style:none;padding:0;margin:8px 0 16px;display:grid;grid-template-columns:1fr 1fr;gap:4px 12px}.cat-legend li{display:flex;align-items:center;gap:5px;font-size:13px;min-width:0}.cat-legend b{margin-left:auto;font-variant-numeric:tabular-nums}.cat-legend small{color:var(--mute);font-size:11px;min-width:0;overflow:hidden;text-overflow:ellipsis}.dot{width:10px;height:10px;border-radius:3px;flex:none}
-.date-strip button:disabled{opacity:.3;cursor:default}.ov-sum-t::after{content:'▸ 展開';font-size:12px;font-weight:700;color:var(--mute);margin-left:8px}details[open] .ov-sum-t::after{content:'▾ 收起'}
-.date-box{position:relative;display:block}.date-box input{width:100%}.date-box.is-empty input:not(:focus){color:transparent}.date-box.is-empty input:not(:focus)::-webkit-datetime-edit{color:transparent}.date-ph{display:none;position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mute);font-weight:600;font-size:15px;pointer-events:none}.date-box.is-empty input:not(:focus)+.date-ph{display:block}
+.date-strip button:disabled{opacity:.3;cursor:default}.ov-sum-t::after{content:'▸ 展開';font-size:12px;font-weight:700;color:var(--mute);margin-left:8px}details[open] .ov-sum-t::after{content:'▾ 收起'}@font-face{font-family:LvQ;src:local("Helvetica Neue"),local("Segoe UI"),local("Roboto"),local("Arial");unicode-range:U+2018-201D}html[lang=en]{--sans:LvQ,"PingFang TC","Noto Sans TC","Microsoft JhengHei","Heiti TC",system-ui,sans-serif}html[lang=en] .ov-sum-t::after{content:'▸ Show'}html[lang=en] details[open] .ov-sum-t::after{content:'▾ Hide'}
+.date-box{position:relative;display:block;min-width:0;overflow:hidden;border-radius:14px}.date-box input{display:block;width:100%;min-width:0;max-width:100%;-webkit-appearance:none;appearance:none;text-align:left}.date-box input::-webkit-date-and-time-value{text-align:left;margin:0}.date-box input::-webkit-calendar-picker-indicator{margin-left:2px}.date-box.is-empty input:not(:focus){color:transparent}.date-box.is-empty input:not(:focus)::-webkit-datetime-edit{color:transparent}.date-ph{display:none;position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mute);font-weight:600;font-size:15px;pointer-events:none}.date-box.is-empty input:not(:focus)+.date-ph{display:block}
 .pday-h{display:flex!important;align-items:center;justify-content:space-between;gap:10px}.pday-ck{display:flex;align-items:center;gap:6px;flex:none;min-height:44px}.pday-ck small{font-size:12px;color:var(--mute);font-weight:700}.pday.on .pday-ck small{color:var(--ink)}
 .start input[type=checkbox]{width:26px;height:26px;min-width:26px;padding:0;border-radius:6px;accent-color:var(--ink);cursor:pointer}
 .pday{padding:4px 0;border-bottom:1px solid var(--line)}.center{text-align:center}.del-link{display:block;margin:6px auto 0;color:#B3261E}
@@ -348,31 +349,59 @@ div.art-card{margin-top:10px}
 .art-thumb span{position:absolute;left:0;right:0;bottom:0;padding:3px 4px;background:rgba(35,79,94,.82);color:#f3e8c8;font-size:12px;font-weight:700;line-height:1.25;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .art-thumb.on{border-color:#c85e40;box-shadow:0 0 0 2px #f0e3c9 inset}
 .art-thumb:focus-visible{outline:3px solid #234f5e;outline-offset:2px}
-</style>
+.ovd-list{border-bottom:1px solid #bac4d2}.ovd{display:block;border-top:1px solid #bac4d2;scroll-margin-top:12px}
+details.ov-total details.ovd>summary{display:block;list-style:none;margin:0;padding:9px 6px 9px 8px;min-height:56px}details.ov-total details.ovd>summary::-webkit-details-marker{display:none}
+.ovd-1{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.ovd-l{min-width:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px}.ovd-l b{font-size:15px}.ovd-l small{font-size:12px;color:var(--mute)}
+.ovd-r{flex:none;display:flex;align-items:baseline;gap:4px;font-variant-numeric:tabular-nums}.ovd-r b{font-size:17px}.ovd-r small{font-size:11px;color:var(--mute);font-weight:700}
+details.ovd>summary .ovd-r::after{content:'▾';font-size:12px;color:var(--mute);margin-left:4px;display:inline-block;transition:transform .15s}details.ovd[open]>summary .ovd-r::after{transform:rotate(180deg)}
+.ovd-2{display:flex;align-items:center;gap:8px;margin-top:5px;min-height:14px}.ovd-bar{flex:1;height:6px;background:#cbd2de;border-radius:3px;overflow:hidden}.ovd-bar i{display:block;height:100%;background:var(--blue)}.ovd-bar.over i{background:#b3261e}
+.ovd-s{flex:none;font-size:12px;color:var(--mute);font-weight:700}.ovd-s.over{color:#b3261e}.ovd.is-over .ovd-r b{color:#b3261e}
+.ovd.is-today{background:#fff7d8;box-shadow:inset 4px 0 var(--sun)}
+.ovd-body{padding:4px 8px 12px}.ovd-sum{font-size:13px;margin:0 0 6px}.ovd-sum b{font-size:15px}.ovd-sum small{display:block;color:var(--mute);font-size:12px}.ovd-rec{width:100%;margin-top:8px}
+.ovd-future{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:10px 6px 10px 8px;color:var(--mute);opacity:.75}.ovd-future em{font-style:normal;font-size:13px;font-weight:700}
+.ovd-in{font-size:12px;font-weight:800;color:#14795F;margin-right:6px}
+.tt{display:grid;grid-template-columns:1fr;margin:2px 0 8px;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #d3dae4}.tt-2{grid-template-columns:1fr 1fr}.tt-2 .tt-in{border-right:2px solid #1d2a44}
+.tt-col{display:flex;flex-direction:column;min-width:0}.tt-h{font-size:13px;font-weight:800;padding:7px 8px;border-bottom:2px solid #1d2a44;background:#f1f4f8}.tt-in .tt-h{color:#14795F}
+.tt-c{display:flex;align-items:center;gap:6px;width:100%;min-height:44px;padding:6px 8px;border:0;border-bottom:1px solid #e6eaf0;background:none;text-align:left;font:inherit;color:inherit;cursor:pointer}.tt-c .ic{flex:none;font-size:16px;width:28px;height:28px;border-radius:8px}
+.tt-tx{flex:1;min-width:0;display:flex;flex-direction:column}.tt-tx b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tt-tx small{font-size:11px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tt-top{display:flex;align-items:baseline;gap:6px;min-width:0}.tt-top>b:first-child{flex:1;min-width:0}.tt-c .am{flex:none;font-size:14px;font-variant-numeric:tabular-nums}.tt-2 .tt-c{padding:6px 6px;gap:5px}.tt-2 .tt-c .ic{width:24px;height:24px;font-size:14px}.tt-2 .tt-c .am{font-size:13px}
+.tt-f{margin-top:auto;display:flex;justify-content:space-between;align-items:baseline;padding:7px 8px;border-top:2px solid #1d2a44;font-size:12px;font-weight:800;background:#f1f4f8}.tt-f b{font-size:15px;font-variant-numeric:tabular-nums}
+.am.in{color:#14795F}.tt-net{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 6px;font-size:13px;font-weight:700}.tt-net b{font-size:15px}.tt-net small{color:var(--mute);font-size:11px}
+.tt-meta{font-size:12px;color:var(--mute);margin:0 0 4px}.tt-meta small{display:block}
+.ledger .chips{grid-template-columns:repeat(3,minmax(0,1fr))}.ledger .chip{min-width:0;padding:0 4px}@media(max-width:340px){.ledger .chip{font-size:13px;gap:4px}.ledger .chip span{font-size:18px}}</style>
 </head>
 <body>
 <main class="app" id="view"></main>
-<nav class="tabs" aria-label="主選單"><div>
-  <button class="tab" data-act="tab" data-tab="trip"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg>旅程</button>
-  <button class="tab" data-act="tab" data-tab="overview"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 16v-5m6 5V5m6 11V8"/></svg>收支總覽</button>
-  <button class="tab" data-act="tab" data-tab="book"><svg viewBox="0 0 24 24"><path d="M5 4h14v10l-6 6H5z"/><path d="M19 14h-6v6"/></svg>貼紙簿</button>
+<nav class="tabs" aria-label="主選單" data-en-label="Main menu"><div>
+  <button class="tab" data-act="tab" data-tab="trip"><svg viewBox="0 0 24 24"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span data-en="Trips">旅程</span></button>
+  <button class="tab" data-act="tab" data-tab="overview"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 16v-5m6 5V5m6 11V8"/></svg><span data-en="Overview">收支總覽</span></button>
+  <button class="tab" data-act="tab" data-tab="book"><svg viewBox="0 0 24 24"><path d="M5 4h14v10l-6 6H5z"/><path d="M19 14h-6v6"/></svg><span data-en="Sticker book">貼紙簿</span></button>
 </div></nav>
 <div id="layer"></div>
 <div id="toast" role="status"></div>
 <datalist id="cur"><option>HKD</option><option>JPY</option><option>TWD</option><option>KRW</option><option>CNY</option><option>USD</option><option>EUR</option><option>GBP</option><option>THB</option><option>SGD</option><option>AUD</option><option>MYR</option></datalist>
 
+<script src="./i18n.js"></script>
 <script src="./season.js"></script>
 <script src="./core.js"></script>
 <script>
+/* 語言：i18n.js 提供 Lx；未載入（例如測試）時一律中文 */
+if(typeof Lx!=='function')var Lx=z=>z;
+const EN=Lx('zh','en')==='en',LOC=EN?'en-GB':'zh-HK';
+/* 英文單數：「1 days」→「1 day」（只在英文介面） */
+const PLUR={days:'day',entries:'entry',trips:'trip',records:'record',countries:'country','trips collected':'trip collected','trips today':'trip today','overlapping trips':'overlapping trip'};
+const plur=h=>EN?String(h).replace(/(^|[^\d.,])1 (trips collected|trips today|overlapping trips|days|entries|trips|records|countries)\b/g,(m,p,w)=>p+'1 '+PLUR[w]):h;
+if(EN){document.querySelectorAll('[data-en]').forEach(el=>el.textContent=el.dataset.en);document.querySelectorAll('[data-en-label]').forEach(el=>el.setAttribute('aria-label',el.dataset.enLabel));document.title='Lvtie'}
 const CATS=[
-  {k:'food',n:'餐飲',e:'🍜',c:'#FF6B57'},
-  {k:'move',n:'交通',e:'🚆',c:'#3F6FE0'},
-  {k:'stay',n:'住宿',e:'🛏️',c:'#7C4DEB'},
-  {k:'shop',n:'購物',e:'🛍️',c:'#FFC93C'},
-  {k:'play',n:'玩樂',e:'🎟️',c:'#2BB3A3'},
-  {k:'other',n:'其他',e:'🧾',c:'#8A94A6'}
+  {k:'food',n:Lx('餐飲','Food'),e:'🍜',c:'#FF6B57'},
+  {k:'move',n:Lx('交通','Transport'),e:'🚆',c:'#3F6FE0'},
+  {k:'stay',n:Lx('住宿','Stay'),e:'🛏️',c:'#7C4DEB'},
+  {k:'shop',n:Lx('購物','Shopping'),e:'🛍️',c:'#FFC93C'},
+  {k:'play',n:Lx('玩樂','Fun'),e:'🎟️',c:'#2BB3A3'},
+  {k:'other',n:Lx('其他','Other'),e:'🧾',c:'#8A94A6'}
 ];
-const CAT_IN={k:'in',n:'收入',e:'💰',c:'#14795F'};
+const CAT_IN={k:'in',n:Lx('收入','Income'),e:'💰',c:'#14795F'};
+const inNotePh=()=>Lx('收入來源（例如退稅、朋友還錢）','Where it came from (e.g. tax refund)');
 const catOf=k=>k==='in'?CAT_IN:(CATS.find(c=>c.k===k)||CATS[5]);
 const PAL=[
   {bg:'#CFE6F3',ac:'#276F95'},{bg:'#F7E3B5',ac:'#8F5B12'},{bg:'#D5EBD3',ac:'#2F7A41'},
@@ -390,7 +419,7 @@ const entryDay=TravelCore.dateOf;
 const dayStart=ts=>{const d=new Date(ts);d.setHours(0,0,0,0);return d.getTime()};
 const daysOf=t=>Math.max(1,Math.round((dayStart(t.end||Date.now())-dayStart(t.start))/864e5)+1);
 const hash=s=>{let h=0;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h};
-const dayLabel=ts=>new Date(ts).toLocaleDateString('zh-HK',{month:'long',day:'numeric'});
+const dayLabel=ts=>new Date(ts).toLocaleDateString(LOC,{month:EN?'short':'long',day:'numeric'});
 const timeLabel=ts=>{const d=new Date(ts);return p2(d.getHours())+':'+p2(d.getMinutes())};
 function range(t){
   const a=new Date(t.start),b=new Date(t.end||Date.now());
@@ -410,7 +439,7 @@ function load(){
 }
 function save(){
   mem=S;
-  if(window.lvtieLoadError){toast('無法讀取原有帳目，已停止覆寫。請先到備份設定匯出原始資料。');return false}
+  if(window.lvtieLoadError){toast(Lx('無法讀取原有帳目，已停止覆寫。請先到備份設定匯出原始資料。','Could not read your existing records, so saving has been stopped to avoid overwriting them. Please export the raw data from Backup & Settings first.'));return false}
   try{localStorage.setItem(KEY,JSON.stringify(S));window.lvtieStorageError=false}catch(e){window.lvtieStorageError=true}
   updateStorageNotice();if(window.updatePwaUI)window.updatePwaUI();return !window.lvtieStorageError;
 }
@@ -425,7 +454,7 @@ const canRec=(t,d)=>TravelCore.validDate(d)&&d>=t.startDate&&d<=recMax(t);
 const idxOf=(t,day)=>Math.round((parseD(day)-parseD(t.startDate))/864e5)+1;
 const nDays=t=>idxOf(t,t.endDate);
 const dayList=TravelCore.days;
-const dLabel=d=>new Date(parseD(d)).toLocaleDateString('zh-HK',{month:'long',day:'numeric',weekday:'short'});
+const dLabel=d=>new Date(parseD(d)).toLocaleDateString(LOC,{month:EN?'short':'long',day:'numeric',weekday:'short'});
 const budNum=v=>{const s=String(v).replace(/,/g,'').trim();if(!s)return null;const n=Number(s);return Number.isFinite(n)&&n>0&&n<=999999999.99&&/^\d+(\.\d{1,2})?$/.test(s)?n:NaN};
 function norm(t){
   if(!t.startDate)t.startDate=iso(t.start||Date.now());
@@ -442,14 +471,14 @@ function norm(t){
 }
 let S=load();S.trips=(S.trips||[]).map(norm);
 
-const ui={overviewId:null,detailId:null,pendingDates:null,pendingImport:null,editId:null,editTid:null,tab:'trip',type:'out',amt:'',cat:'food',note:'',page:0,turn:null,home:false,planId:null,ledgerId:null,day:null,dayFor:null,asked:{},lastToday:null,newStep:1,destId:null,pickFor:null,draft:{place:'',start:'',end:'',budget:'',dailyBudget:'',rate:'',plan:{},planOn:{}}};
+const ui={aa:0,aaN:2,overviewId:null,detailId:null,pendingDates:null,pendingImport:null,editId:null,editTid:null,tab:'trip',type:'out',amt:'',cat:'food',note:'',page:0,turn:null,home:false,planId:null,ledgerId:null,day:null,dayFor:null,asked:{},lastToday:null,newStep:1,destId:null,pickFor:null,draft:{place:'',start:'',end:'',budget:'',dailyBudget:'',rate:'',plan:{},planOn:{}}};
 const tripById=id=>S.trips.find(t=>t.id===id);
 /* 貼紙簿內建範例旅程：只顯示、不存入資料、不計入任何統計／備份，不能修改；用家可刪除（S.hideSample），之後在設定重新顯示 */
 const SAMPLE=(()=>{
   const sd='2026-04-02',d=k=>iso(parseD(sd)+k*864e5+432e5),ts=(k,h)=>parseD(d(k))+h*36e5;
-  const R=[['out',18000,'move','關西機場 HARUKA 來回',0,10],['out',48000,'stay','町家民宿 4 晚',0,15],['out',1600,'food','錦市場小吃',0,18],['out',2500,'play','清水寺＋地主神社',1,9],['out',3200,'food','湯豆腐午餐',1,12],['out',6800,'shop','清水燒茶杯',1,16],['out',1100,'move','巴士一日券',2,9],['out',4400,'play','和服體驗',2,10],['out',2600,'food','抹茶甜點',2,15],['out',9800,'shop','藥妝與伴手禮',3,17],['out',1900,'food','烏冬',3,19],['in',2400,'in','退稅',4,11],['out',1300,'food','車站便當',4,12]];
-  return norm({id:'__sample',sample:true,name:'京都',country:'JP',artIndex:1,currency:'JPY',startDate:sd,endDate:d(4),start:ts(0,9),end:ts(4,17),status:'done',budget:120000,dailyBudget:25000,hkdRate:0.052,
-    plan:{[d(0)]:'抵達、錦市場',[d(1)]:'清水寺、二年坂',[d(2)]:'嵐山、和服體驗',[d(3)]:'伏見稻荷、買手信',[d(4)]:'回程'},
+  const R=[['out',18000,'move',Lx('關西機場 HARUKA 來回','Kansai Airport HARUKA return'),0,10],['out',48000,'stay',Lx('町家民宿 4 晚','Machiya guesthouse, 4 nights'),0,15],['out',1600,'food',Lx('錦市場小吃','Nishiki Market snacks'),0,18],['out',2500,'play',Lx('清水寺＋地主神社','Kiyomizu-dera + Jishu Shrine'),1,9],['out',3200,'food',Lx('湯豆腐午餐','Yudofu lunch'),1,12],['out',6800,'shop',Lx('清水燒茶杯','Kiyomizu-yaki teacup'),1,16],['out',1100,'move',Lx('巴士一日券','Bus day pass'),2,9],['out',4400,'play',Lx('和服體驗','Kimono experience'),2,10],['out',2600,'food',Lx('抹茶甜點','Matcha dessert'),2,15],['out',9800,'shop',Lx('藥妝與伴手禮','Drugstore & souvenirs'),3,17],['out',1900,'food',Lx('烏冬','Udon'),3,19],['in',2400,'in',Lx('退稅','Tax refund'),4,11],['out',1300,'food',Lx('車站便當','Station bento'),4,12]];
+  return norm({id:'__sample',sample:true,name:Lx('京都','Kyoto'),country:'JP',artIndex:1,currency:'JPY',startDate:sd,endDate:d(4),start:ts(0,9),end:ts(4,17),status:'done',budget:120000,dailyBudget:25000,hkdRate:0.052,
+    plan:{[d(0)]:Lx('抵達、錦市場','Arrive, Nishiki Market'),[d(1)]:Lx('清水寺、二年坂','Kiyomizu-dera, Ninenzaka'),[d(2)]:Lx('嵐山、和服體驗','Arashiyama, kimono experience'),[d(3)]:Lx('伏見稻荷、買手信','Fushimi Inari, souvenir shopping'),[d(4)]:Lx('回程','Fly home')},
     entries:R.map((r,i)=>({id:'s'+i,type:r[0],amt:r[1],cat:r[2],note:r[3],date:d(r[4]),ts:ts(r[4],r[5])}))});
 })();
 const showSample=()=>!S.hideSample;
@@ -583,60 +612,64 @@ function sticker(t,px){
   const segs=CATS.filter(c=>s.by[c.k]).map(c=>`<i style="flex:${s.by[c.k]};background:${c.c}"></i>`).join('');
   const so=fmt(s.so),sf=so.length>7?1.15:1.35;
   return `<div class="st" style="${px?`font-size:${px}px;`:''}--bg:${pal.bg};--ac:${pal.ac};transform:translateX(${dx*.12}em) rotate(${rot*.55}deg)">
-    <div class="sh"><span>旅程紀錄</span><span>${esc(t.currency)}</span></div>
-    <div class="sc">${scene(t.name,h,pal.ac)}<b class="nm" style="font-size:${nm}em">${esc(t.name)}</b></div>
+    <div class="sh"><span>${Lx('旅程紀錄','TRIP LOG')}</span><span>${esc(t.currency)}</span></div>
+    <div class="sc">${scene(t.name,h,pal.ac)}<b class="nm" style="font-size:${nm}em">${esc(tName(t))}</b></div>
     <div class="bar">${segs}</div>
-    <div class="sf"><div class="sm"><small>${range(t)}</small><div class="am2"><div><small>支出</small><b style="font-size:${sf}em">${so}</b></div><div><small>收入</small><b>${s.si?'+'+fmt(s.si):'—'}</b></div></div></div><div class="qr">${qrSvg(h)}</div></div>
+    <div class="sf"><div class="sm"><small>${range(t)}</small><div class="am2"><div><small>${Lx('支出','Spent')}</small><b style="font-size:${sf}em">${so}</b></div><div><small>${Lx('收入','Income')}</small><b>${s.si?'+'+fmt(s.si):'—'}</b></div></div></div><div class="qr">${qrSvg(h)}</div></div>
   </div>`;
 }
 
 /* ---------- views ---------- */
 function tripCard(t,preview=false,act='plan'){
   const td=today();let badge,od=false;
-  if(t.endDate<td){badge='已過回程日';od=true}
-  else if(t.startDate>td)badge=`還有 ${Math.round((parseD(t.startDate)-parseD(td))/864e5)} 天出發`;
-  else badge='旅程中';
+  if(t.endDate<td){badge=Lx('已過回程日','Past return date');od=true}
+  else if(t.startDate>td)badge=`${Lx('還有','In')} ${Math.round((parseD(t.startDate)-parseD(td))/864e5)} ${Lx('天出發','days')}`;
+  else badge=Lx('旅程中','On the trip');
   const c=countryOf(t),night=t.artVariant==='night',img=countryArt(c,night,artIndexOf(t));
   if(img){
-    const s=stats(t),se=tripSeasonOf(t,c),tag=preview?'div':'button',L=[...t.name].length,hs=L<=4?'':L<=7?' ac-h-m':' ac-h-s';
+    const s=stats(t),se=tripSeasonOf(t,c),tag=preview?'div':'button',L=[...tName(t)].length,hs=L<=4?'':L<=7?' ac-h-m':' ac-h-s';
     return `<${tag} class="tcard art-card${night?' night':''}" ${preview?'aria-hidden="true"':`data-act="${act}" data-id="${t.id}"`} style="background-image:url('${img}')">`+
-      `<span class="ac-txt"><span class="ac-k">${esc(c.name)}</span><b class="ac-h${hs}">${esc(t.name)}</b><span class="ac-amt">${esc(t.currency)} ${fmt(s.so)}</span><span class="ac-m">${nDays(t)} 天 · ${t.entries.length} 筆</span></span>`+
-      `${se?`<span class="ac-season" role="img" aria-label="季節：${se.label}" title="${se.label}">${SEASON_ICON[se.season]}</span>`:''}<span class="bdg ac-bdg ${od?'od':''}">${badge}</span></${tag}>`;
+      `<span class="ac-txt"><span class="ac-k">${esc(c.name)}</span><b class="ac-h${hs}">${esc(tName(t))}</b><span class="ac-amt">${esc(t.currency)} ${fmt(s.so)}</span><span class="ac-m">${nDays(t)} ${Lx('天 ·','days ·')} ${t.entries.length} ${Lx('筆','entries')}</span></span>`+
+      `${se?`<span class="ac-season" role="img" aria-label="${Lx('季節：','Season: ')}${se.label}" title="${se.label}">${SEASON_ICON[se.season]}</span>`:''}<span class="bdg ac-bdg ${od?'od':''}">${badge}</span></${tag}>`;
   }
-  return `<button class="tcard" data-act="${act}" data-id="${t.id}"><div class="hd-t"><b class="fit">${esc(t.name)}</b><small>${t.startDate.replace(/-/g,'.')}–${(t.startDate.slice(0,4)===t.endDate.slice(0,4)?t.endDate.slice(5):t.endDate).replace(/-/g,'.')} 共 ${nDays(t)} 天</small></div><span class="bdg ${od?'od':''}">${badge}</span></button>`;
+  return `<button class="tcard" data-act="${act}" data-id="${t.id}"><div class="hd-t"><b class="fit">${esc(tName(t))}</b><small>${t.startDate.replace(/-/g,'.')}–${(t.startDate.slice(0,4)===t.endDate.slice(0,4)?t.endDate.slice(5):t.endDate).replace(/-/g,'.')} ${Lx('共','')} ${nDays(t)} ${Lx('天','days')}</small></div><span class="bdg ${od?'od':''}">${badge}</span></button>`;
 }
 /* 目的地只選國家與幣別；城市或地方由用家自填，存在 t.name。每個國家三張景點圖，景點與日景／夜景由每趟旅程自選。 */
 /* 每國三張景點圖：[檔名, 景點名]；第一張是預設（旅程沒有 artIndex 時使用）。 */
 const COUNTRIES=[
-  ['JP','日本','JPY','日圓',[['jp-fuji','富士山'],['jp-kiyomizu','清水寺'],['jp-osaka-castle','大阪城']]],
-  ['TW','台灣','TWD','新台幣',[['tw-taipei-101','台北101'],['tw-jiufen','九份'],['tw-sun-moon-lake','日月潭']]],
-  ['KR','韓國','KRW','韓圜',[['kr-gyeongbokgung','景福宮'],['kr-n-seoul-tower','N首爾塔'],['kr-gamcheon','甘川洞']]],
-  ['TH','泰國','THB','泰銖',[['th-wat-arun','鄭王廟'],['th-ayutthaya','大城府'],['th-floating-market','水上市場']]],
-  ['SG','新加坡','SGD','新加坡元',[['sg-marina-bay-sands','濱海灣金沙'],['sg-merlion','魚尾獅'],['sg-shophouses','牛車水']]],
-  ['MY','馬來西亞','MYR','馬來西亞令吉',[['my-petronas-towers','雙子塔'],['my-melaka','馬六甲'],['my-kinabalu','京那巴魯山']]],
-  ['CN','中國內地','CNY','人民幣',[['cn-great-wall','萬里長城'],['cn-temple-of-heaven','天壇'],['cn-shanghai','上海外灘']]],
-  ['VN','越南','VND','越南盾',[['vn-ha-long-bay','下龍灣'],['vn-hoi-an','會安'],['vn-sapa-terraces','沙壩梯田']]],
-  ['PH','菲律賓','PHP','菲律賓披索',[['ph-chocolate-hills','巧克力山'],['ph-mayon','馬榮火山'],['ph-boracay','長灘島']]],
-  ['ID','印尼','IDR','印尼盾',[['id-pura-ulun-danu','水神廟'],['id-borobudur','婆羅浮屠'],['id-bromo','布羅莫火山']]],
-  ['IN','印度','INR','印度盧比',[['in-taj-mahal','泰姬瑪哈陵'],['in-hawa-mahal','風之宮'],['in-ganges','恆河']]],
-  ['GB','英國','GBP','英鎊',[['gb-big-ben','大笨鐘'],['gb-tower-bridge','倫敦塔橋'],['gb-stonehenge','巨石陣']]],
-  ['FR','法國','EUR','歐元',[['fr-eiffel-tower','艾菲爾鐵塔'],['fr-mont-saint-michel','聖米歇爾山'],['fr-arc-de-triomphe','凱旋門']]],
-  ['IT','意大利','EUR','歐元',[['it-colosseum','羅馬鬥獸場'],['it-pisa','比薩斜塔'],['it-venice','威尼斯']]],
-  ['DE','德國','EUR','歐元',[['de-neuschwanstein','新天鵝堡'],['de-brandenburg-gate','布蘭登堡門'],['de-cologne','科隆大教堂']]],
-  ['ES','西班牙','EUR','歐元',[['es-sagrada-familia','聖家堂'],['es-alhambra','阿罕布拉宮'],['es-giralda','吉拉達塔']]],
-  ['NL','荷蘭','EUR','歐元',[['nl-windmill','風車'],['nl-canal-houses','運河屋'],['nl-tulips','鬱金香花田']]],
-  ['CH','瑞士','CHF','瑞士法郎',[['ch-matterhorn','馬特洪峰'],['ch-chapel-bridge','卡貝爾橋'],['ch-jungfrau','少女峰']]],
-  ['TR','土耳其','TRY','土耳其里拉',[['tr-cappadocia','卡帕多奇亞'],['tr-blue-mosque','藍色清真寺'],['tr-pamukkale','棉堡']]],
-  ['EG','埃及','EGP','埃及鎊',[['eg-giza-pyramids','金字塔'],['eg-felucca','尼羅河帆船'],['eg-karnak','卡納克神廟']]],
-  ['US','美國','USD','美元',[['us-statue-of-liberty','自由女神像'],['us-golden-gate','金門大橋'],['us-grand-canyon','大峽谷']]],
-  ['CA','加拿大','CAD','加拿大元',[['ca-moraine-lake','夢蓮湖'],['ca-cn-tower','CN塔'],['ca-niagara','尼加拉瀑布']]],
-  ['AU','澳洲','AUD','澳元',[['au-sydney-opera-house','悉尼歌劇院'],['au-uluru','烏魯魯'],['au-gold-coast','黃金海岸']]],
-  ['NZ','紐西蘭','NZD','紐西蘭元',[['nz-milford-sound','米爾福德峽灣'],['nz-sky-tower','天空塔'],['nz-tekapo','蒂卡波湖']]]
+  ['JP',Lx('日本','Japan'),'JPY',Lx('日圓','Japanese yen'),[['jp-fuji',Lx('富士山','Mount Fuji')],['jp-kiyomizu',Lx('清水寺','Kiyomizu-dera')],['jp-osaka-castle',Lx('大阪城','Osaka Castle')]]],
+  ['TW',Lx('台灣','Taiwan'),'TWD',Lx('新台幣','New Taiwan dollar'),[['tw-taipei-101',Lx('台北101','Taipei 101')],['tw-jiufen',Lx('九份','Jiufen')],['tw-sun-moon-lake',Lx('日月潭','Sun Moon Lake')]]],
+  ['KR',Lx('韓國','South Korea'),'KRW',Lx('韓圜','Korean won'),[['kr-gyeongbokgung',Lx('景福宮','Gyeongbokgung')],['kr-n-seoul-tower',Lx('N首爾塔','N Seoul Tower')],['kr-gamcheon',Lx('甘川洞','Gamcheon Village')]]],
+  ['TH',Lx('泰國','Thailand'),'THB',Lx('泰銖','Thai baht'),[['th-wat-arun',Lx('鄭王廟','Wat Arun')],['th-ayutthaya',Lx('大城府','Ayutthaya')],['th-floating-market',Lx('水上市場','Floating market')]]],
+  ['SG',Lx('新加坡','Singapore'),'SGD',Lx('新加坡元','Singapore dollar'),[['sg-marina-bay-sands',Lx('濱海灣金沙','Marina Bay Sands')],['sg-merlion',Lx('魚尾獅','Merlion')],['sg-shophouses',Lx('牛車水','Chinatown')]]],
+  ['MY',Lx('馬來西亞','Malaysia'),'MYR',Lx('馬來西亞令吉','Malaysian ringgit'),[['my-petronas-towers',Lx('雙子塔','Petronas Towers')],['my-melaka',Lx('馬六甲','Malacca')],['my-kinabalu',Lx('京那巴魯山','Mount Kinabalu')]]],
+  ['CN',Lx('中國內地','Mainland China'),'CNY',Lx('人民幣','Renminbi'),[['cn-great-wall',Lx('萬里長城','Great Wall')],['cn-temple-of-heaven',Lx('天壇','Temple of Heaven')],['cn-shanghai',Lx('上海外灘','The Bund, Shanghai')]]],
+  ['VN',Lx('越南','Vietnam'),'VND',Lx('越南盾','Vietnamese dong'),[['vn-ha-long-bay',Lx('下龍灣','Ha Long Bay')],['vn-hoi-an',Lx('會安','Hoi An')],['vn-sapa-terraces',Lx('沙壩梯田','Sa Pa rice terraces')]]],
+  ['PH',Lx('菲律賓','Philippines'),'PHP',Lx('菲律賓披索','Philippine peso'),[['ph-chocolate-hills',Lx('巧克力山','Chocolate Hills')],['ph-mayon',Lx('馬榮火山','Mayon Volcano')],['ph-boracay',Lx('長灘島','Boracay')]]],
+  ['ID',Lx('印尼','Indonesia'),'IDR',Lx('印尼盾','Indonesian rupiah'),[['id-pura-ulun-danu',Lx('水神廟','Ulun Danu Beratan')],['id-borobudur',Lx('婆羅浮屠','Borobudur')],['id-bromo',Lx('布羅莫火山','Mount Bromo')]]],
+  ['IN',Lx('印度','India'),'INR',Lx('印度盧比','Indian rupee'),[['in-taj-mahal',Lx('泰姬瑪哈陵','Taj Mahal')],['in-hawa-mahal',Lx('風之宮','Hawa Mahal')],['in-ganges',Lx('恆河','Ganges')]]],
+  ['GB',Lx('英國','United Kingdom'),'GBP',Lx('英鎊','Pound sterling'),[['gb-big-ben',Lx('大笨鐘','Big Ben')],['gb-tower-bridge',Lx('倫敦塔橋','Tower Bridge')],['gb-stonehenge',Lx('巨石陣','Stonehenge')]]],
+  ['FR',Lx('法國','France'),'EUR',Lx('歐元','Euro'),[['fr-eiffel-tower',Lx('艾菲爾鐵塔','Eiffel Tower')],['fr-mont-saint-michel',Lx('聖米歇爾山','Mont-Saint-Michel')],['fr-arc-de-triomphe',Lx('凱旋門','Arc de Triomphe')]]],
+  ['IT',Lx('意大利','Italy'),'EUR',Lx('歐元','Euro'),[['it-colosseum',Lx('羅馬鬥獸場','Colosseum')],['it-pisa',Lx('比薩斜塔','Leaning Tower of Pisa')],['it-venice',Lx('威尼斯','Venice')]]],
+  ['DE',Lx('德國','Germany'),'EUR',Lx('歐元','Euro'),[['de-neuschwanstein',Lx('新天鵝堡','Neuschwanstein Castle')],['de-brandenburg-gate',Lx('布蘭登堡門','Brandenburg Gate')],['de-cologne',Lx('科隆大教堂','Cologne Cathedral')]]],
+  ['ES',Lx('西班牙','Spain'),'EUR',Lx('歐元','Euro'),[['es-sagrada-familia',Lx('聖家堂','Sagrada Família')],['es-alhambra',Lx('阿罕布拉宮','Alhambra')],['es-giralda',Lx('吉拉達塔','Giralda')]]],
+  ['NL',Lx('荷蘭','Netherlands'),'EUR',Lx('歐元','Euro'),[['nl-windmill',Lx('風車','Windmills')],['nl-canal-houses',Lx('運河屋','Canal houses')],['nl-tulips',Lx('鬱金香花田','Tulip fields')]]],
+  ['CH',Lx('瑞士','Switzerland'),'CHF',Lx('瑞士法郎','Swiss franc'),[['ch-matterhorn',Lx('馬特洪峰','Matterhorn')],['ch-chapel-bridge',Lx('卡貝爾橋','Chapel Bridge')],['ch-jungfrau',Lx('少女峰','Jungfrau')]]],
+  ['TR',Lx('土耳其','Türkiye'),'TRY',Lx('土耳其里拉','Turkish lira'),[['tr-cappadocia',Lx('卡帕多奇亞','Cappadocia')],['tr-blue-mosque',Lx('藍色清真寺','Blue Mosque')],['tr-pamukkale',Lx('棉堡','Pamukkale')]]],
+  ['EG',Lx('埃及','Egypt'),'EGP',Lx('埃及鎊','Egyptian pound'),[['eg-giza-pyramids',Lx('金字塔','Pyramids')],['eg-felucca',Lx('尼羅河帆船','Nile felucca')],['eg-karnak',Lx('卡納克神廟','Karnak Temple')]]],
+  ['US',Lx('美國','United States'),'USD',Lx('美元','US dollar'),[['us-statue-of-liberty',Lx('自由女神像','Statue of Liberty')],['us-golden-gate',Lx('金門大橋','Golden Gate Bridge')],['us-grand-canyon',Lx('大峽谷','Grand Canyon')]]],
+  ['CA',Lx('加拿大','Canada'),'CAD',Lx('加拿大元','Canadian dollar'),[['ca-moraine-lake',Lx('夢蓮湖','Moraine Lake')],['ca-cn-tower',Lx('CN塔','CN Tower')],['ca-niagara',Lx('尼加拉瀑布','Niagara Falls')]]],
+  ['AU',Lx('澳洲','Australia'),'AUD',Lx('澳元','Australian dollar'),[['au-sydney-opera-house',Lx('悉尼歌劇院','Sydney Opera House')],['au-uluru',Lx('烏魯魯','Uluru')],['au-gold-coast',Lx('黃金海岸','Gold Coast')]]],
+  ['NZ',Lx('紐西蘭','New Zealand'),'NZD',Lx('紐西蘭元','New Zealand dollar'),[['nz-milford-sound',Lx('米爾福德峽灣','Milford Sound')],['nz-sky-tower',Lx('天空塔','Sky Tower')],['nz-tekapo',Lx('蒂卡波湖','Lake Tekapo')]]]
 ].map(([id,name,currency,money,arts])=>({id,name,currency,money,arts:arts.map(([art,label])=>({art,label})),art:arts[0][0]}));
 /* 舊版以城市為目的地；保留對照，讓舊旅程也能找到國家。 */
 const LEGACY_DEST={tokyo:'JP',osaka:'JP',kyoto:'JP',fukuoka:'JP',sapporo:'JP',okinawa:'JP',taipei:'TW',taichung:'TW',tainan:'TW',seoul:'KR',busan:'KR',bangkok:'TH',chiangmai:'TH',phuket:'TH',singapore:'SG',kl:'MY',shanghai:'CN',shenzhen:'CN',london:'GB',paris:'FR'};
 const LEGACY_NAME={'東京':'JP','大阪':'JP','京都':'JP','福岡':'JP','札幌':'JP','沖繩':'JP','台北':'TW','台中':'TW','台南':'TW','首爾':'KR','釜山':'KR','曼谷':'TH','清邁':'TH','普吉':'TH','新加坡':'SG','吉隆坡':'MY','上海':'CN','深圳':'CN','倫敦':'GB','巴黎':'FR'};
 const countryById=id=>COUNTRIES.find(c=>c.id===id)||null;
+/* 旅程名稱留空時存的是當時語言的國家名；兩種語言的國家名都當作「用國家名」，顯示時跟隨目前語言 */
+const CNAME_BOTH={JP:['日本','Japan'],TW:['台灣','Taiwan'],KR:['韓國','South Korea'],TH:['泰國','Thailand'],SG:['新加坡','Singapore'],MY:['馬來西亞','Malaysia'],CN:['中國內地','Mainland China'],VN:['越南','Vietnam'],PH:['菲律賓','Philippines'],ID:['印尼','Indonesia'],IN:['印度','India'],GB:['英國','United Kingdom'],FR:['法國','France'],IT:['意大利','Italy'],DE:['德國','Germany'],ES:['西班牙','Spain'],NL:['荷蘭','Netherlands'],CH:['瑞士','Switzerland'],TR:['土耳其','Türkiye'],EG:['埃及','Egypt'],US:['美國','United States'],CA:['加拿大','Canada'],AU:['澳洲','Australia'],NZ:['紐西蘭','New Zealand']};
+const isCName=(c,n)=>!!c&&(n===c.name||(CNAME_BOTH[c.id]||[]).includes(n));
+function tName(t){if(!t)return '';if(t.sample)return Lx('京都','Kyoto');const c=countryOf(t);return c&&isCName(c,t.name)?c.name:t.name}
 /* 旅程的國家：新旅程存 t.country；舊旅程依舊目的地、名稱或唯一幣別推回（不寫入資料，舊備份重新匯入不會變成副本）。 */
 function countryOf(t){
   if(t.country)return countryById(t.country);
@@ -656,7 +689,7 @@ const placeMax=20;
 /* Original pen-and-watercolour-style destination illustrations. */
 function destinationArt(d){
   const photo=countryArt(d,false);
-  if(photo)return `<img class="dest-art dest-photo" src="${photo}" alt="${esc(d.name)}景點插畫">`;
+  if(photo)return `<img class="dest-art dest-photo" src="${photo}" alt="${esc(d.name)}${Lx('景點插畫','landmark illustration')}">`;
   const id=d.id||'legacy',seed=hash(id)%1000,ink='#4a5960',paper='#f5f1e6';
   const path=(p,fill='none',stroke=ink,w=1.15)=>`<path d="${p}" fill="${fill}" stroke="${stroke}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
   const rect=(x,y,w,h,fill,sw=1)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${ink}" stroke-width="${sw}"/>`;
@@ -721,19 +754,19 @@ function destinationArt(d){
   }else{back=skyline(265);art=tree(320,300,1.7);}
   const cloud=path('M48 71q15-19 32-6q7-28 34-18q21 1 24 18q24-8 38 9q-64 7-128-3z','#f3f0e4','none')+path('M471 64q21-15 38-3q12-20 31-3q21-6 35 11q-58 2-104-5z','#f1efe5','none');
   const base=ground==='water'?path('M0 269q280-9 640 0v91H0','#accbd0','none'):path('M0 280q220-19 640 0v80H0','#d7cfb9','none')+Array.from({length:11},(_,i)=>path(`M${-80+i*80} 360L${275+i*10} 279`,'none','#bcb9a8',.55)).join('')+path('M0 315h640M0 337h640','none','#bcb9a8',.55);
-  return `<svg class="dest-art" viewBox="0 0 640 360" role="img" aria-label="${esc(d.name)}旅遊手繪插畫" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wash-${id}" x2="0" y2="100%"><stop stop-color="${sky}"/><stop offset="1" stop-color="${paper}"/></linearGradient><filter id="pencil-${id}" x="-3%" y="-4%" width="106%" height="108%"><feTurbulence type="fractalNoise" baseFrequency=".025" numOctaves="2" seed="${seed}" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale=".65" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="paper-${id}"><feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="3" seed="7"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".09"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter></defs><g filter="url(#paper-${id})"><rect width="640" height="360" fill="url(#wash-${id})"/>${cloud}<g filter="url(#pencil-${id})">${back}${base}${art}${front}</g><path d="M18 16h64M18 16v18M622 344h-64M622 344v-18" fill="none" stroke="#778b8c" stroke-width=".7" opacity=".45"/></g></svg>`;
+  return `<svg class="dest-art" viewBox="0 0 640 360" role="img" aria-label="${esc(d.name)}${Lx('旅遊手繪插畫','travel illustration')}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wash-${id}" x2="0" y2="100%"><stop stop-color="${sky}"/><stop offset="1" stop-color="${paper}"/></linearGradient><filter id="pencil-${id}" x="-3%" y="-4%" width="106%" height="108%"><feTurbulence type="fractalNoise" baseFrequency=".025" numOctaves="2" seed="${seed}" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale=".65" xChannelSelector="R" yChannelSelector="G"/></filter><filter id="paper-${id}"><feTurbulence type="fractalNoise" baseFrequency=".72" numOctaves="3" seed="7"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".09"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter></defs><g filter="url(#paper-${id})"><rect width="640" height="360" fill="url(#wash-${id})"/>${cloud}<g filter="url(#pencil-${id})">${back}${base}${art}${front}</g><path d="M18 16h64M18 16v18M622 344h-64M622 344v-18" fill="none" stroke="#778b8c" stroke-width=".7" opacity=".45"/></g></svg>`;
 }
 
 function destinationSummary(d,action='changeDestination',img=null,note=''){
-  return `<div class="dest-summary">${img?`<img class="dest-art dest-photo" src="${img}" alt="">`:destinationArt(d)}<div class="dest-info"><b>${esc(d.name)}</b><small>${esc(d.money||d.currency)} · ${esc(d.currency)}</small>${note?`<small>${esc(note)}</small>`:''}</div><button data-act="${action}">更改</button></div>`;
+  return `<div class="dest-summary">${img?`<img class="dest-art dest-photo" src="${img}" alt="">`:destinationArt(d)}<div class="dest-info"><b>${esc(d.name)}</b><small>${esc(d.money||d.currency)} · ${esc(d.currency)}</small>${note?`<small>${esc(note)}</small>`:''}</div><button data-act="${action}">${Lx('更改','Change')}</button></div>`;
 }
 function destinationPicker(editing=false){
   const selected=countryById(editing?ui.pickDest:ui.destId);
-  return `<section class="start"><div class="dest-head">${editing?'<button class="ghost back" data-act="cancelPick">‹ 返回</button>':ui.planId?'<button class="ghost back" data-act="wizStep" data-v="2">‹ 返回</button><span class="step-label">修改行程 · 1 / 3</span>':'<span class="step-label">新增行程 · 1 / 3</span>'}</div><h1>下一站，去哪個國家？</h1><p class="sub">選擇國家，同時設定當地幣別。城市或地方在下一步自行填寫。</p><label for="destination-select">國家與幣別<select id="destination-select"><option value="" ${!selected?'selected':''}>請選擇國家</option>${COUNTRIES.map(c=>`<option value="${c.id}" ${selected&&selected.id===c.id?'selected':''}>${c.name} · ${c.currency}（${c.money}）</option>`).join('')}</select></label><div class="dest-preview" aria-live="polite">${selected?`${!editing&&countryArt(selected,false)?artCarousel(selected):destinationArt(selected)}<div class="preview-caption"><b>${selected.name}</b><span>${selected.money} · ${selected.currency}</span></div>`:'<div class="preview-empty">選擇國家後，這裡會顯示當地景點插畫。</div>'}</div><p class="budget-caption">${selected&&!editing?'左右滑動選擇旅程代表圖；之後可在記帳頁的「行程」更改。':`共 ${COUNTRIES.length} 個國家，每國 3 款景點圖可選；帳目以所選當地幣別記錄。`}</p><button class="primary" data-act="chooseDestination" ${!selected?'disabled':''}>${editing?'確認國家':ui.planId?'確定，回到旅程資料':'下一步：填寫旅程資料'}</button></section>`;
+  return `<section class="start"><div class="dest-head">${editing?'<button class="ghost back" data-act="cancelPick">'+Lx('‹ 返回','‹ Back')+'</button>':ui.planId?'<button class="ghost back" data-act="wizStep" data-v="2">'+Lx('‹ 返回','‹ Back')+'</button><span class="step-label">'+Lx('修改行程 · 1 / 3','Edit trip · 1 / 3')+'</span>':'<span class="step-label">'+Lx('新增行程 · 1 / 3','New trip · 1 / 3')+'</span>'}</div><h1>${Lx('下一站，去哪個國家？','Where to next?')}</h1><p class="sub">${Lx('選擇國家，同時設定當地幣別。城市或地方在下一步自行填寫。','Pick a country; this also sets the local currency. You can add a city or place in the next step.')}</p><label for="destination-select">${Lx('國家與幣別','Country & currency')}<select id="destination-select"><option value="" ${!selected?'selected':''}>${Lx('請選擇國家','Choose a country')}</option>${COUNTRIES.map(c=>`<option value="${c.id}" ${selected&&selected.id===c.id?'selected':''}>${c.name} · ${c.currency}${Lx('（',' (')}${c.money}${Lx('）',')')}</option>`).join('')}</select></label><div class="dest-preview" aria-live="polite">${selected?`${!editing&&countryArt(selected,false)?artCarousel(selected):destinationArt(selected)}<div class="preview-caption"><b>${selected.name}</b><span>${selected.money} · ${selected.currency}</span></div>`:'<div class="preview-empty">'+Lx('選擇國家後，這裡會顯示當地景點插畫。','Choose a country to see its landmark illustrations here.')+'</div>'}</div><p class="budget-caption">${selected&&!editing?Lx('左右滑動選擇旅程代表圖；之後可在記帳頁的「行程」更改。','Swipe left or right to pick the trip picture. You can change it later from “Edit trip” on the ledger page.'):`${Lx('共','')} ${COUNTRIES.length} ${Lx('個國家，每國 3 款景點圖可選；帳目以所選當地幣別記錄。','countries, each with 3 landmark pictures. Records are kept in the local currency you choose.')}`}</p><button class="primary" data-act="chooseDestination" ${!selected?'disabled':''}>${editing?Lx('確認國家','Confirm country'):ui.planId?Lx('確定，回到旅程資料','Done, back to trip details'):Lx('下一步：填寫旅程資料','Next: trip details')}</button></section>`;
 }
 function durationText(sd,ed){
-  if(!sd||!ed)return '選好日期，即可查看旅程天數';
-  return ed<sd?'回程日不能早於出發日':`共 ${Math.round((parseD(ed)-parseD(sd))/864e5)+1} 天（包括出發及回程日）`;
+  if(!sd||!ed)return Lx('選好日期，即可查看旅程天數','Pick your dates to see how many days the trip is');
+  return ed<sd?Lx('回程日不能早於出發日','Return date can’t be before departure date'):`${Lx('共','')} ${Math.round((parseD(ed)-parseD(sd))/864e5)+1} ${Lx('天（包括出發及回程日）','days (including departure and return days)')}`;
 }
 /* 建立旅程時選的景點只對當時的國家有效；換國家就回到第一張。 */
 const draftArtIndex=d=>ui.draft.artFor===d.id&&(ui.draft.artIndex===1||ui.draft.artIndex===2)?ui.draft.artIndex:0;
@@ -745,9 +778,9 @@ function setDraftArt(patch){
 function artCarousel(d){
   const idx=draftArtIndex(d),n=draftNight(d),N=d.arts.length;
   /* 無限循環：前面放最後一張的複製、後面放第一張的複製；真的第 i 張在位置 i+1 */
-  const slide=(a,i,clone)=>`<figure class="car-slide${clone?' clone':''}"${clone?' aria-hidden="true"':` aria-label="${i+1} / ${N}：${esc(a.label)}"`}><img src="${countryArt(d,n,i)}" alt="${clone?'':`${esc(d.name)} ${esc(a.label)}${n?'夜景':'日景'}插畫`}"${i!==idx||clone?' loading="lazy"':''}><figcaption>${esc(a.label)}</figcaption></figure>`;
+  const slide=(a,i,clone)=>`<figure class="car-slide${clone?' clone':''}"${clone?' aria-hidden="true"':` aria-label="${i+1} / ${N}${Lx('：',': ')}${esc(a.label)}"`}><img src="${countryArt(d,n,i)}" alt="${clone?'':`${esc(d.name)} ${esc(a.label)}${n?Lx('夜景','Night'):Lx('日景','Day')}${Lx('插畫','illustration')}`}"${i!==idx||clone?' loading="lazy"':''}><figcaption>${esc(a.label)}</figcaption></figure>`;
   const slides=(N>1?slide(d.arts[N-1],N-1,true):'')+d.arts.map((a,i)=>slide(a,i,false)).join('')+(N>1?slide(d.arts[0],0,true):'');
-  return `<div class="art-car"><button type="button" class="car-nav prev" data-act="draftArtStep" data-v="-1" aria-label="上一張">‹</button><div class="car-view"><div class="car-track" id="art-track" tabindex="0" role="group" aria-roledescription="輪播" aria-label="旅程代表圖，左右滑動選擇，可循環" data-i="${idx}" data-n="${N}">${slides}</div></div><button type="button" class="car-nav next" data-act="draftArtStep" data-v="1" aria-label="下一張">›</button></div><div class="car-dots" role="group" aria-label="選擇景點">${d.arts.map((a,i)=>`<button type="button" class="${i===idx?'on':''}" aria-pressed="${i===idx}" aria-label="${esc(a.label)}" data-act="draftArt" data-v="${i}"></button>`).join('')}</div><div class="art-car-ctl"><div class="seg art-seg" role="group" aria-label="日景或夜景"><button type="button" class="${n?'':'on'}" aria-pressed="${!n}" data-act="draftVariant" data-v="day">日景</button><button type="button" class="${n?'on':''}" aria-pressed="${n}" data-act="draftVariant" data-v="night">夜景</button></div></div>`;
+  return `<div class="art-car"><button type="button" class="car-nav prev" data-act="draftArtStep" data-v="-1" aria-label="${Lx('上一張','Previous')}">‹</button><div class="car-view"><div class="car-track" id="art-track" tabindex="0" role="group" aria-roledescription="${Lx('輪播','carousel')}" aria-label="${Lx('旅程代表圖，左右滑動選擇，可循環','Trip picture: swipe left or right to choose (loops)')}" data-i="${idx}" data-n="${N}">${slides}</div></div><button type="button" class="car-nav next" data-act="draftArtStep" data-v="1" aria-label="${Lx('下一張','Next')}">›</button></div><div class="car-dots" role="group" aria-label="${Lx('選擇景點','Choose landmark')}">${d.arts.map((a,i)=>`<button type="button" class="${i===idx?'on':''}" aria-pressed="${i===idx}" aria-label="${esc(a.label)}" data-act="draftArt" data-v="${i}"></button>`).join('')}</div><div class="art-car-ctl"><div class="seg art-seg" role="group" aria-label="${Lx('日景或夜景','Day or night')}"><button type="button" class="${n?'':'on'}" aria-pressed="${!n}" data-act="draftVariant" data-v="day">${Lx('日景','Day')}</button><button type="button" class="${n?'on':''}" aria-pressed="${n}" data-act="draftVariant" data-v="night">${Lx('夜景','Night')}</button></div></div>`;
 }
 /* 輪播：render 後捲到目前那張（不用動畫）；滑動停下後只更新圓點，不整頁重繪。
    停在頭尾的複製張時，瞬間跳回對應的真實那張，看起來就是無限循環。 */
@@ -779,12 +812,12 @@ function wizDest(){
   const t=ui.planId&&tripById(ui.planId);
   return t&&!countryOf(t)?{id:null,name:t.name,currency:t.currency,money:t.currency,art:'generic',arts:[]}:null;
 }
-function dateField(id,label,v){return `<label>${label}<span class="date-box${v?'':' is-empty'}"><input id="${id}" type="date" min="1900-01-01" max="2199-12-31" value="${esc(v)}"><span class="date-ph" aria-hidden="true">選擇日期</span></span></label>`}
+function dateField(id,label,v){return `<label>${label}<span class="date-box${v?'':' is-empty'}"><input id="${id}" type="date" min="1900-01-01" max="2199-12-31" value="${esc(v)}"><span class="date-ph" aria-hidden="true">${Lx('選擇日期','Pick a date')}</span></span></label>`}
 function wizLoad(t){
   const c=countryOf(t);
   ui.tab='trip';ui.planId=t.id;ui.newStep=2;ui.destId=c?c.id:null;ui.pickFor=null;
   const plan={...(t.plan||{})},planOn={};Object.keys(plan).forEach(k=>{if(String(plan[k]).trim())planOn[k]=true});
-  ui.draft={place:c&&t.name===c.name?'':t.name,start:t.startDate,end:t.endDate,budget:cents(t.budget),dailyBudget:cents(t.dailyBudget),rate:t.hkdRate??'',artFor:c?c.id:null,artIndex:artIndexOf(t),night:t.artVariant==='night',plan,planOn};
+  ui.draft={place:c&&isCName(c,t.name)?'':t.name,start:t.startDate,end:t.endDate,budget:cents(t.budget),dailyBudget:cents(t.dailyBudget),rate:t.hkdRate??'',artFor:c?c.id:null,artIndex:artIndexOf(t),night:t.artVariant==='night',plan,planOn};
 }
 /* 舊資料可能有超過兩位小數的預算；載入精靈時四捨五入到兩位，避免無法儲存 */
 function cents(x){return x==null||x===''||!Number.isFinite(Number(x))?'':String(Math.round(Number(x)*100)/100)}
@@ -793,15 +826,15 @@ function newTripDetails(){
   const d=wizDest(),v=ui.draft,edit=!!ui.planId,t=edit&&tripById(ui.planId);
   if(!d){ui.newStep=1;return edit?destinationPicker():planningView()}
   const img=countryArt(d,draftNight(d),draftArtIndex(d));
-  return `<section class="start"><div class="dest-head"><button class="ghost back" data-act="${edit?'planBack':'changeDestination'}">‹ 返回</button><span class="step-label">${edit?'修改行程 · 2 / 3':'新增行程 · 2 / 3'}</span></div><h1>${edit?'修改旅程資料':'安排這趟旅程'}</h1>${destinationSummary(d,'changeDestination',img,img?`代表圖：${d.arts[draftArtIndex(d)].label} · ${draftNight(d)?'夜景':'日景'}`:'')}<h2 class="sec">城市或地方</h2><label>自行填寫（選填）<input id="f-place" maxlength="${placeMax}" value="${esc(v.place||'')}" placeholder="例如：城市、景區或小鎮名稱" autocomplete="off"></label><p class="budget-caption">會顯示為旅程卡片的大標題；留空就用「${esc(d.name)}」。</p><h2 class="sec">旅程時長</h2><div class="two">${dateField('f-start','出發日',v.start)}${dateField('f-end','回程日',v.end)}</div><p class="duration" id="duration">${durationText(v.start,v.end)}</p><h2 class="sec">旅行預算</h2><p class="budget-caption">以${esc(d.money||d.currency)}（${esc(d.currency)}）計算，皆可留空。</p><div class="two"><label>總預算（選填）<input id="f-bud" inputmode="decimal" value="${esc(v.budget)}" placeholder="不填也可以" autocomplete="off"></label><label>每日預算（選填）<input id="f-dbud" inputmode="decimal" value="${esc(v.dailyBudget)}" placeholder="不填也可以" autocomplete="off"></label></div>${d.currency==='HKD'?'':`<label>港幣參考匯率（選填）<span class="rate-label">1 ${esc(d.currency)} ＝ 多少 HKD？手動匯率，只作參考。</span><input id="f-rate" inputmode="decimal" value="${esc(v.rate??'')}" placeholder="輸入你兌換時的匯率" autocomplete="off"></label>`}<button class="primary" data-act="wizNext">下一步：每日行程</button></section>`;
+  return `<section class="start"><div class="dest-head"><button class="ghost back" data-act="${edit?'planBack':'changeDestination'}">${Lx('‹ 返回','‹ Back')}</button><span class="step-label">${edit?Lx('修改行程 · 2 / 3','Edit trip · 2 / 3'):Lx('新增行程 · 2 / 3','New trip · 2 / 3')}</span></div><h1>${edit?Lx('修改旅程資料','Edit trip details'):Lx('安排這趟旅程','Plan this trip')}</h1>${destinationSummary(d,'changeDestination',img,img?`${Lx('代表圖：','Picture: ')}${d.arts[draftArtIndex(d)].label} · ${draftNight(d)?Lx('夜景','Night'):Lx('日景','Day')}`:'')}<h2 class="sec">${Lx('城市或地方','City or place')}</h2><label>${Lx('自行填寫（選填）','Your own wording (optional)')}<input id="f-place" maxlength="${placeMax}" value="${esc(v.place||'')}" placeholder="${Lx('例如：城市、景區或小鎮名稱','e.g. a city, scenic area or town')}" autocomplete="off"></label><p class="budget-caption">${Lx('會顯示為旅程卡片的大標題；留空就用「','Shown as the big title on the trip card. Leave blank to use “')}${esc(d.name)}${Lx('」。','”.')}</p><h2 class="sec">${Lx('旅程時長','Trip dates')}</h2><div class="two">${dateField('f-start',Lx('出發日','Departure'),v.start)}${dateField('f-end',Lx('回程日','Return'),v.end)}</div><p class="duration" id="duration">${durationText(v.start,v.end)}</p><h2 class="sec">${Lx('旅行預算','Budget')}</h2><p class="budget-caption">${Lx('以','In ')}${esc(d.money||d.currency)}${Lx('（',' (')}${esc(d.currency)}${Lx('）計算，皆可留空。','). Both are optional.')}</p><div class="two"><label>${Lx('總預算（選填）','Total budget (optional)')}<input id="f-bud" inputmode="decimal" value="${esc(v.budget)}" placeholder="${Lx('不填也可以','Optional')}" autocomplete="off"></label><label>${Lx('每日預算（選填）','Daily budget (optional)')}<input id="f-dbud" inputmode="decimal" value="${esc(v.dailyBudget)}" placeholder="${Lx('不填也可以','Optional')}" autocomplete="off"></label></div>${d.currency==='HKD'?'':`<label>${Lx('港幣參考匯率（選填）','HKD reference rate (optional)')}<span class="rate-label">1 ${esc(d.currency)} ${Lx('＝ 多少 HKD？手動匯率，只作參考。','= how many HKD? Manual rate, for reference only.')}</span><input id="f-rate" inputmode="decimal" value="${esc(v.rate??'')}" placeholder="${Lx('輸入你兌換時的匯率','Rate you exchanged at')}" autocomplete="off"></label>`}<button class="primary" data-act="wizNext">${Lx('下一步：每日行程','Next: daily plan')}</button></section>`;
 }
 function planStep(){
   const d=wizDest(),v=ui.draft,edit=!!ui.planId;
   if(!d||!TravelCore.validDate(v.start)||!TravelCore.validDate(v.end)||v.end<v.start){ui.newStep=2;return newTripDetails()}
   const T={startDate:v.start,endDate:v.end};
-  const rows=dayList(T).map(day=>{const on=!!v.planOn[day];return `<div class="pday${on?' on':''}"><label class="pday-h"><b>第 ${idxOf(T,day)} 天 ${dLabel(day)}</b><span class="pday-ck"><small>${on?'有安排':'寫安排'}</small><input type="checkbox" data-plancheck="${day}" ${on?'checked':''} aria-label="第 ${idxOf(T,day)} 天寫行程安排"></span></label><textarea data-dnote="${day}" rows="2" maxlength="200" placeholder="這天想去哪裡、做什麼" ${on?'':'hidden'}>${esc(v.plan[day]||'')}</textarea></div>`}).join('');
+  const rows=dayList(T).map(day=>{const on=!!v.planOn[day];return `<div class="pday${on?' on':''}"><label class="pday-h"><b>${Lx('第','Day')} ${idxOf(T,day)} ${Lx('天','·')} ${dLabel(day)}</b><span class="pday-ck"><small>${on?Lx('有安排','Planned'):Lx('寫安排','Add plan')}</small><input type="checkbox" data-plancheck="${day}" ${on?'checked':''} aria-label="${Lx('第','Day')} ${idxOf(T,day)} ${Lx('天寫行程安排','– add a plan')}"></span></label><textarea data-dnote="${day}" rows="2" maxlength="200" placeholder="${Lx('這天想去哪裡、做什麼','Where to go, what to do this day')}" ${on?'':'hidden'}>${esc(v.plan[day]||'')}</textarea></div>`}).join('');
   const place=[...String(v.place||'').trim()].slice(0,placeMax).join('')||d.name;
-  return `<section class="start plan"><div class="dest-head"><button class="ghost back" data-act="wizStep" data-v="2">‹ 返回</button><span class="step-label">${edit?'修改行程 · 3 / 3':'新增行程 · 3 / 3'}</span></div><h1>每日行程</h1><p class="plan-meta">${esc(place)} · ${v.start} — ${v.end} · ${dayList(T).length} 天</p><p class="budget-caption">全部選填。想安排的日子在右邊打勾再填寫；不填也不影響記帳。</p>${legacyRangeNote(T)}${rows}<button class="primary" data-act="saveTrip">${edit?'儲存行程':'建立行程'}</button><p class="budget-caption center">${edit?'按下後才會套用這次的修改。':'按下後才會建立這趟旅程。'}</p></section>`;
+  return `<section class="start plan"><div class="dest-head"><button class="ghost back" data-act="wizStep" data-v="2">${Lx('‹ 返回','‹ Back')}</button><span class="step-label">${edit?Lx('修改行程 · 3 / 3','Edit trip · 3 / 3'):Lx('新增行程 · 3 / 3','New trip · 3 / 3')}</span></div><h1>${Lx('每日行程','Daily plan')}</h1><p class="plan-meta">${esc(place)} · ${v.start} — ${v.end} · ${dayList(T).length} ${Lx('天','days')}</p><p class="budget-caption">${Lx('全部選填。想安排的日子在右邊打勾再填寫；不填也不影響記帳。','All optional. Tick a day on the right to write a plan; leaving it blank won’t affect your ledger.')}</p>${legacyRangeNote(T)}${rows}<button class="primary" data-act="saveTrip">${edit?Lx('儲存行程','Save trip'):Lx('建立行程','Create trip')}</button><p class="budget-caption center">${edit?Lx('按下後才會套用這次的修改。','Changes are applied only when you tap this.'):Lx('按下後才會建立這趟旅程。','The trip is created only when you tap this.')}</p></section>`;
 }
 function wizardView(){return ui.newStep===1?destinationPicker():ui.newStep===3?planStep():newTripDetails()}
 /* 從表單讀回 draft（測試或瀏覽器自動填入時，input 事件不一定觸發） */
@@ -811,11 +844,11 @@ function wizRead(){
 }
 function wizCheck(){
   const v=ui.draft,sd=v.start,ed=v.end;
-  if(!TravelCore.validDate(sd)||!TravelCore.validDate(ed))return '請選擇出發日和回程日（1900 至 2199 年）';
-  if(ed<sd)return '回程日不能早於出發日';
-  const old=ui.planId&&tripById(ui.planId);if((parseD(ed)-parseD(sd))/864e5+1>120&&!(old&&old.startDate===sd&&old.endDate===ed))return '一趟旅程最長 120 天';
-  if(Number.isNaN(budNum(v.budget))||Number.isNaN(budNum(v.dailyBudget)))return '預算請輸入正數，最多兩位小數及九位整數';
-  const r=String(v.rate??'').trim();if(r!==''&&!(Number(r)>0&&Number(r)<=1000000))return '請輸入大於 0 的有效匯率';
+  if(!TravelCore.validDate(sd)||!TravelCore.validDate(ed))return Lx('請選擇出發日和回程日（1900 至 2199 年）','Please choose departure and return dates (years 1900–2199)');
+  if(ed<sd)return Lx('回程日不能早於出發日','Return date can’t be before departure date');
+  const old=ui.planId&&tripById(ui.planId);if((parseD(ed)-parseD(sd))/864e5+1>120&&!(old&&old.startDate===sd&&old.endDate===ed))return Lx('一趟旅程最長 120 天','A trip can be at most 120 days');
+  if(Number.isNaN(budNum(v.budget))||Number.isNaN(budNum(v.dailyBudget)))return Lx('預算請輸入正數，最多兩位小數及九位整數','Budget must be a positive number with up to 9 digits and 2 decimals');
+  const r=String(v.rate??'').trim();if(r!==''&&!(Number(r)>0&&Number(r)<=1000000))return Lx('請輸入大於 0 的有效匯率','Please enter a valid rate above 0');
   return '';
 }
 function wizPlan(){
@@ -826,14 +859,14 @@ function wizPlan(){
 function saveTrip(confirmed){
   if(ui.newStep!==3)wizRead();
   const err=wizCheck();if(err){toast(err);ui.newStep=2;render();return}
-  const v=ui.draft,d=wizDest();if(!d){toast('先選國家');ui.newStep=1;render();return}
+  const v=ui.draft,d=wizDest();if(!d){toast(Lx('先選國家','Choose a country first'));ui.newStep=1;render();return}
   const place=[...String(v.place||'').trim()].slice(0,placeMax).join(''),r=String(v.rate??'').trim(),rate=r===''?null:Number(r);
   let t;
   if(ui.planId){
     t=tripById(ui.planId);if(!t){wizReset();render();return}
-    if(d.id&&t.entries.length&&t.currency!==d.currency){toast('已有帳目，只能更改為相同幣別的國家');ui.newStep=2;render();return}
+    if(d.id&&t.entries.length&&t.currency!==d.currency){toast(Lx('已有帳目，只能更改為相同幣別的國家','This trip already has records, so you can only switch to a country with the same currency'));ui.newStep=2;render();return}
     const affected=t.entries.filter(x=>{const day=entryDay(x);return day<v.start||day>v.end});
-    if(!confirmed&&(v.start!==t.startDate||v.end!==t.endDate)&&affected.length){dialog('調整旅程日期？',`有 ${affected.length} 筆帳目在新旅程日期以外。確認後會保留原日期，列於「行前支出」或「回程後記錄」，仍計入總額；不會移動或刪除帳目。`,'保留帳目並儲存','confirmSaveTrip',t.id);return}
+    if(!confirmed&&(v.start!==t.startDate||v.end!==t.endDate)&&affected.length){dialog(Lx('調整旅程日期？','Change trip dates?'),`${Lx('有','')} ${affected.length} ${Lx('筆帳目在新旅程日期以外。確認後會保留原日期，列於「行前支出」或「回程後記錄」，仍計入總額；不會移動或刪除帳目。','records fall outside the new dates. They keep their original dates, are listed under “Pre-trip” or “After trip”, and still count towards totals. Nothing is moved or deleted.')}`,Lx('保留帳目並儲存','Keep records and save'),'confirmSaveTrip',t.id);return}
     if(d.id){t.country=d.id;t.currency=d.currency;if(draftArtIndex(d))t.artIndex=draftArtIndex(d);else delete t.artIndex;if(draftNight(d))t.artVariant='night';else delete t.artVariant}
     t.name=place||d.name;
     if(v.start!==t.startDate||v.end!==t.endDate){t.startDate=v.start;t.endDate=v.end;t.start=parseD(v.start);if(t.status==='done')t.end=parseD(v.end);t.snoozeUntil=0;delete ui.asked[t.id]}
@@ -848,24 +881,24 @@ function saveTrip(confirmed){
   const edit=!!ui.planId;save();hideLayer();wizReset();
   const live=t.status!=='done'&&t.startDate<=today()&&today()<=t.endDate;
   if(live||(edit&&t.status!=='done')){ui.home=false;ui.ledgerId=t.id;ui.overviewId=t.id;ui.dayFor=null}else{ui.home=true;ui.ledgerId=null} /* 修改從記帳頁「行程」進入，儲存後回到同一趟的記帳頁 */
-  render();window.scrollTo(0,0);toast(edit?'行程已儲存':'行程已建立');
+  render();window.scrollTo(0,0);toast(edit?Lx('行程已儲存','Trip saved'):Lx('行程已建立','Trip created'));
 }
 function chooseTripView(){
   const L=liveTrips();
-  return `<section class="start choose-trip"><h1>今天有 ${L.length} 段旅程</h1><p class="sub">選一段開始記帳。之後可以在記帳頁上方切換。</p>${L.map(t=>tripCard(t,false,'ledger')).join('')}<div class="foot"><button class="ghost" data-act="home">規劃其他行程</button></div></section>`;
+  return `<section class="start choose-trip"><h1>${Lx('今天有','')} ${L.length} ${Lx('段旅程','trips today')}</h1><p class="sub">${Lx('選一段開始記帳。之後可以在記帳頁上方切換。','Pick one to start recording. You can switch later at the top of the ledger page.')}</p>${L.map(t=>tripCard(t,false,'ledger')).join('')}<div class="foot"><button class="ghost" data-act="home">${Lx('規劃其他行程','Plan another trip')}</button></div></section>`;
 }
 function planningView(){
   if(ui.newStep===2)return newTripDetails();
   if(ui.newStep===3)return planStep();
   const live=S.trips.filter(t=>t.status!=='done'&&t.startDate<=today()&&today()<=t.endDate);
   const list=(title,arr)=>arr.length?`<h2 class="sec">${title}</h2>${arr.map(t=>tripCard(t,false,'ledger')).join('')}`:'';
-  const existing=`${live.length?`<button class="primary" data-act="ledger" data-id="${live[0].id}">回到今天的記帳</button>`:''}${list('旅程中',live)}${list('待完結',overdue())}${list('即將出發',upcoming())}`;
-  return (existing?`<section class="start"><h1>我的旅程</h1>${existing}</section>`:'')+destinationPicker();
+  const existing=`${live.length?`<button class="primary" data-act="ledger" data-id="${live[0].id}">${Lx('回到今天的記帳','Back to today’s ledger')}</button>`:''}${list(Lx('旅程中','On the trip now'),live)}${list(Lx('待完結','To finish'),overdue())}${list(Lx('即將出發','Coming up'),upcoming())}`;
+  return (existing?`<section class="start"><h1>${Lx('我的旅程','My trips')}</h1>${existing}</section>`:'')+destinationPicker();
 }
 const rowOf=(e,editable,t)=>{
   const c=catOf(e.cat);
-  if(t&&t.sample)return `<div class="entry-row"><div class="entry-main"><span class="ic">${c.e}</span><span class="tx"><b>${esc(e.note||c.n)}</b><small>${c.n} ${timeLabel(e.ts)}</small></span><span class="entry-amount"><b class="am ${e.type}">${e.type==='in'?'+':'−'}${fmt(e.amt)}</b>${hkd(t,e.amt)}</span></div></div>`;
-  return `<div class="entry-row"><button class="entry-main" data-act="editEntry" data-id="${e.id}" data-tid="${t?t.id:''}" aria-label="編輯：${esc(e.note||c.n)}"><span class="ic">${c.e}</span><span class="tx"><b>${esc(e.note||c.n)}</b><small>${c.n} ${timeLabel(e.ts)} · 點按修改</small></span><span class="entry-amount"><b class="am ${e.type}">${e.type==='in'?'+':'−'}${fmt(e.amt)}</b>${t?hkd(t,e.amt):''}</span></button>${editable?`<button class="del" data-act="del" data-id="${e.id}" aria-label="刪除這筆">×</button>`:''}</div>`;
+  if(t&&t.sample)return `<div class="entry-row"><div class="entry-main"><span class="ic">${c.e}</span><span class="tx"><b>${esc(e.note||c.n)}</b><small>${e.type==='in'?'':c.n+' '}${timeLabel(e.ts)}</small></span><span class="entry-amount"><b class="am ${e.type}">${e.type==='in'?'+':'−'}${fmt(e.amt)}</b>${hkd(t,e.amt)}</span></div></div>`;
+  return `<div class="entry-row"><button class="entry-main" data-act="editEntry" data-id="${e.id}" data-tid="${t?t.id:''}" aria-label="${Lx('編輯：','Edit: ')}${esc(e.note||c.n)}"><span class="ic">${c.e}</span><span class="tx"><b>${esc(e.note||c.n)}</b><small>${e.type==='in'?'':c.n+' '}${timeLabel(e.ts)} ${Lx('· 點按修改','· tap to edit')}</small></span><span class="entry-amount"><b class="am ${e.type}">${e.type==='in'?'+':'−'}${fmt(e.amt)}</b>${t?hkd(t,e.amt):''}</span></button>${editable?`<button class="del" data-act="del" data-id="${e.id}" aria-label="${Lx('刪除這筆','Delete this entry')}">×</button>`:''}</div>`;
 };
 function rows(t,del){
   let h='',last='';
@@ -884,16 +917,16 @@ function overviewTrip(){
   return tripById(ui.overviewId)||tripById(ui.ledgerId)||tripById(ui.planId)||inProg()||upcoming()[0]||overdue()[0]||S.trips[0];
 }
 function dailyTotals(t){return TravelCore.daily(t)}
-function phaseLabel(t,d){return d<t.startDate?'行前支出':d>t.endDate?'回程後記錄':`第 ${idxOf(t,d)} 天`}
+function phaseLabel(t,d){return d<t.startDate?Lx('行前支出','Pre-trip'):d>t.endDate?Lx('回程後記錄','After trip'):`${Lx('第','Day')} ${idxOf(t,d)} ${Lx('天','')}`}
 function categoryBars(t){
   const s=stats(t);
   return CATS.filter(c=>s.by[c.k]).sort((a,b)=>s.by[b.k]-s.by[a.k]).map(c=>`<div class="br"><span>${c.e} ${c.n}</span><div class="tr"><i style="width:${s.by[c.k]/s.so*100}%;background:${c.c}"></i></div><b class="num">${fmt(s.by[c.k])}</b></div>`).join('');
 }
 function categoryStack(t){
-  const s=stats(t);if(!(s.so>0))return '<p class="muted">還沒有支出。</p>';
+  const s=stats(t);if(!(s.so>0))return '<p class="muted">'+Lx('還沒有支出。','No spending yet.')+'</p>';
   const cs=CATS.filter(c=>s.by[c.k]>0).sort((a,b)=>s.by[b.k]-s.by[a.k]);
   const pct=c=>s.by[c.k]/s.so*100,lab=c=>{const p=pct(c);return p>=1?Math.round(p)+'%':'<1%'};
-  return `<div class="cat-stack" role="img" aria-label="支出分類佔比：${cs.map(c=>c.n+' '+lab(c)).join('、')}">${cs.map(c=>`<i style="flex-grow:${s.by[c.k]};background:${c.c}" title="${c.n} ${lab(c)}">${pct(c)>=12?lab(c):''}</i>`).join('')}</div><ul class="cat-legend">${cs.map(c=>`<li><span class="dot" style="background:${c.c}"></span>${c.e} ${c.n}<b>${lab(c)}</b><small class="num">${fmt(s.by[c.k])}</small></li>`).join('')}</ul>`;
+  return `<div class="cat-stack" role="img" aria-label="${Lx('支出分類佔比：','Spending by category: ')}${cs.map(c=>c.n+' '+lab(c)).join(Lx('、',', '))}">${cs.map(c=>`<i style="flex-grow:${s.by[c.k]};background:${c.c}" title="${c.n} ${lab(c)}">${pct(c)>=12?lab(c):''}</i>`).join('')}</div><ul class="cat-legend">${cs.map(c=>`<li><span class="dot" style="background:${c.c}"></span>${c.e} ${c.n}<b>${lab(c)}</b><small class="num">${fmt(s.by[c.k])}</small></li>`).join('')}</ul>`;
 }
 function budgetView(t){
   const s=stats(t),r=t.budget==null?null:Math.round((t.budget-s.so)*100)/100;
@@ -901,33 +934,57 @@ function budgetView(t){
   const spentToDate=sum(t.entries.filter(e=>e.type==='out'&&entryDay(e)>=t.startDate&&entryDay(e)<=today()&&entryDay(e)<=t.endDate));
   const futureKnown=Math.max(0,s.during-spentToDate);
   const forecast=elapsed&&remain&&t.startDate<=today()&&today()<=t.endDate?s.before+s.after+spentToDate+Math.max(futureKnown,spentToDate/elapsed*remain):null;
-  return `<section class="budget-summary"><h2>預算進度</h2>${r===null?`<p class="muted">尚未設定總預算。<button class="text-action" data-act="plan" data-id="${t.id}">設定預算</button></p>`:`<div class="budget-line"><span>已用 ${fmt(s.so)}／${fmt(t.budget)} ${esc(t.currency)}</span><b class="${r<0?'over':''}">${r<0?'超支':'剩餘'} ${fmt(Math.abs(r))}</b></div><div class="budget-meter" role="progressbar" aria-label="總預算使用率" aria-valuenow="${Math.min(100,Math.round(s.so/t.budget*100))}" aria-valuemin="0" aria-valuemax="100"><i class="${r<0?'overfill':''}" style="width:${Math.min(100,s.so/t.budget*100)}%"></i></div>${hkd(t,Math.abs(r),r<0?'約超支':'約剩餘')}${forecast!==null?`<p class="muted">按已過 ${elapsed} 天的旅途中支出推算，全程約 ${esc(t.currency)} ${fmt(forecast)}${forecast>t.budget?'，可能超出預算':''}。只作參考，今天尚未完結。</p>`:''}`}${t.dailyBudget?`<p class="muted">每日預算 ${esc(t.currency)} ${fmt(t.dailyBudget)}；不套用於行前／回程後記錄。</p>`:''}<p class="muted">總預算按支出計算，不以收入抵銷。</p></section>`;
+  return `<section class="budget-summary"><h2>${Lx('預算進度','Budget progress')}</h2>${r===null?`<p class="muted">${Lx('尚未設定總預算。','No total budget set.')}<button class="text-action" data-act="plan" data-id="${t.id}">${Lx('設定預算','Set budget')}</button></p>`:`<div class="budget-line"><span>${Lx('已用','Used')} ${fmt(s.so)}${Lx('／',' / ')}${fmt(t.budget)} ${esc(t.currency)}</span><b class="${r<0?'over':''}">${r<0?Lx('超支','Over by'):Lx('剩餘','Left')} ${fmt(Math.abs(r))}</b></div><div class="budget-meter" role="progressbar" aria-label="${Lx('總預算使用率','Total budget used')}" aria-valuenow="${Math.min(100,Math.round(s.so/t.budget*100))}" aria-valuemin="0" aria-valuemax="100"><i class="${r<0?'overfill':''}" style="width:${Math.min(100,s.so/t.budget*100)}%"></i></div>${hkd(t,Math.abs(r),r<0?Lx('約超支','≈ over by'):Lx('約剩餘','≈ left'))}${forecast!==null?`<p class="muted">${Lx('按已過','Based on spending over the past')} ${elapsed} ${Lx('天的旅途中支出推算，全程約','trip days, the whole trip will be about')} ${esc(t.currency)} ${fmt(forecast)}${forecast>t.budget?Lx('，可能超出預算',', possibly over budget'):''}${Lx('。只作參考，今天尚未完結。','. For reference only; today isn’t over yet.')}</p>`:''}`}${t.dailyBudget?`<p class="muted">${Lx('每日預算','Daily budget')} ${esc(t.currency)} ${fmt(t.dailyBudget)}${Lx('；不套用於行前／回程後記錄。','; not applied to pre-trip / after-trip records.')}</p>`:''}<p class="muted">${Lx('總預算按支出計算，不以收入抵銷。','The total budget counts spending only; income doesn’t offset it.')}</p></section>`;
+}
+/* 總覽的旅程選單：一趟旅程一項，「國家‧出發日至回程日」；每日收支在頁內「每日收支」查看 */
+function tripOptLabel(x){const c=countryOf(x);return `${c?c.name:tName(x)}‧${x.startDate} ${Lx('至','to')} ${x.endDate}${x.status==='done'?Lx('（已完結）',' (finished)'):''}`}
+/* 每日收支（試作 daily-1）：每天一行＝支出＋幣別＋每日預算條；點一下就地展開當天明細，記帳要另按「到這天記帳」；未到的日子只顯示灰色「未到」 */
+function ovDayList(t,days){
+  const T=today(),cur=esc(t.currency),db=t.dailyBudget>0?t.dailyBudget:null,open=ui.ovOpen||{};
+  return `<section class="ovd-list" aria-label="${Lx('每日收支','Daily totals')}">${days.map(r=>{
+    const lab=`<span class="ovd-l"><b>${phaseLabel(t,r.day)}</b><small>${dLabel(r.day)}${r.day===T?Lx('・今天',' · today'):''}</small></span>`;
+    if(r.day>T&&!r.count)return `<div id="day-${r.day}" class="ovd ovd-future">${lab}<span class="ovd-r"><em>${Lx('未到','Not yet')}</em></span></div>`;
+    const useB=db&&r.phase==='during',over=useB&&r.out>db,diff=useB?Math.round(Math.abs(db-r.out)*100)/100:0;
+    const cnt=r.count?`${r.count} ${Lx('筆',r.count===1?'entry':'entries')}`:Lx('沒有記錄','No records');
+    const sub=useB?`<span class="ovd-bar ${over?'over':''}" role="img" aria-label="${Lx('每日預算使用','Daily budget used')} ${Math.round(r.out/db*100)}%"><i style="width:${Math.min(100,r.out/db*100)}%"></i></span><small class="ovd-s ${over?'over':''}">${over?Lx('超出 ','Over by ')+fmt(diff):Lx('預算內 · 剩 ','Within budget · ')+fmt(diff)+Lx('',' left')}</small>`:`<small class="ovd-s">${cnt}</small>`;
+    const ents=t.entries.filter(e=>entryDay(e)===r.day).sort((x,y)=>x.ts-y.ts);
+    const rec=t.status!=='done'&&r.day<=T&&canRec(t,r.day)?`<button class="ghost ovd-rec" data-act="overviewDay" data-id="${t.id}" data-day="${r.day}">${Lx('到這天記帳 ›','Record for this day ›')}</button>`:'';
+    const ins=ents.filter(e=>e.type==='in'),outs=ents.filter(e=>e.type!=='in');
+    const cell=e=>{const c=catOf(e.cat),nm=esc(e.note||c.n),inner=`<span class="ic">${c.e}</span><span class="tt-tx"><span class="tt-top"><b>${nm}</b><b class="am ${e.type}">${e.type==='in'?'+':'−'}${fmt(e.amt)}</b></span><small>${e.type==='in'?'':c.n+' '}${timeLabel(e.ts)}</small></span>`;return t.sample?`<div class="tt-c">${inner}</div>`:`<button class="tt-c" data-act="editEntry" data-id="${e.id}" data-tid="${t.id}" aria-label="${Lx('編輯：','Edit: ')}${nm}">${inner}</button>`};
+    const col=(arr,k)=>`<div class="tt-col tt-${k}"><div class="tt-h">${k==='in'?'💰 '+Lx('收入','Income'):'🧾 '+Lx('支出','Spent')}</div>${arr.map(cell).join('')}<div class="tt-f"><span>${Lx('合計','Total')}</span><b class="am ${k==='in'?'in':'out'}">${k==='in'?'+':'−'}${fmt(k==='in'?r.income:r.out)}</b></div></div>`;
+    const both=ins.length&&outs.length;
+    const tt=ents.length?`<div class="tt ${both?'tt-2':'tt-1'}">${ins.length?col(ins,'in'):''}${outs.length?col(outs,'out'):''}</div>`:`<p class="ov-note">${Lx('這天沒有記錄。','No records this day.')}</p>`;
+    const netL=both?`<p class="tt-net"><span>${Lx('當日總計','Day total')}</span><b>${r.income-r.out>0?'+':''}${fmt(Math.round((r.income-r.out)*100)/100)} <small>${cur}</small></b></p>`:'';
+    const meta=r.out?`<p class="tt-meta">${Lx('支出','Spent')} ${cur} ${fmt(r.out)}${hkd(t,r.out)}${useB?`<small>${Lx('每日預算','Daily budget')} ${cur} ${fmt(db)}</small>`:''}</p>`:'';
+    const body=`<div class="ovd-body">${tt}${netL}${meta}${t.plan&&t.plan[r.day]?`<p class="ov-note">${Lx('行程：','Plan: ')}${esc(t.plan[r.day])}</p>`:''}${rec}</div>`;
+    return `<details id="day-${r.day}" class="ovd ${r.day===T?'is-today':''} ${r.phase!=='during'?'outside-day':''} ${over?'is-over':''}" data-day="${r.day}" ${open[t.id+'|'+r.day]?'open':''}><summary><span class="ovd-1">${lab}<span class="ovd-r">${r.income?`<span class="ovd-in">💰+${fmt(r.income)}</span>`:''}<b>${fmt(r.out)}</b><small>${cur}</small></span></span><span class="ovd-2">${sub}</span></summary>${body}</details>`;
+  }).join('')}</section>`;
 }
 function overviewView(){
   const t=overviewTrip();
-  if(!t)return `<section class="start"><h1>收支總覽</h1><p class="sub">先建立一趟旅程，就能在旅程期間記帳和查看預算。</p><button class="primary" data-act="overviewHome">建立旅程</button></section>`;
+  if(!t)return `<section class="start"><h1>${Lx('收支總覽','Overview')}</h1><p class="sub">${Lx('先建立一趟旅程，就能在旅程期間記帳和查看預算。','Create a trip first, then you can record spending and track your budget during the trip.')}</p><button class="primary" data-act="overviewHome">${Lx('建立旅程','Create trip')}</button></section>`;
   ui.overviewId=t.id;
   const totals=stats(t),days=dailyTotals(t),net=Math.round((totals.si-totals.so)*100)/100,hasIncome=totals.si>0;
-  const money=(income,out,balance)=>`<div class="ov-money ${hasIncome?'':'expense-only'}">${hasIncome?`<div><small>收入</small><b>${fmt(income)}</b></div>`:''}<div><small>支出</small><b>${fmt(out)}</b></div>${hasIncome?`<div><small>淨收支</small><b>${balance>0?'+':''}${fmt(balance)}</b></div>`:''}</div>`;
-  return `<header class="ov-head"><h1>收支總覽</h1><label class="field">旅程<select id="overview-trip">${S.trips.map(x=>`<option value="${x.id}" ${x.id===t.id?'selected':''}>${esc(x.name)} · ${x.startDate}${x.status==='done'?'（已完結）':''}</option>`).join('')}</select></label><p>${esc(t.currency)} · ${t.startDate} — ${t.endDate}</p></header><details id="ov-all" class="ov-total" ${ui.ovAll!==false?'open':''}><summary><span class="ov-sum-t">旅程累計</span><span class="ov-sum-v">支出 ${esc(t.currency)} ${fmt(totals.so)}${t.budget!=null&&totals.so>t.budget?' <b class="over">· 已超預算</b>':''}</span></summary>${money(totals.si,totals.so,net)}${hkd(t,totals.so)}<p class="ov-note">包含行前與回程後所有記錄。${hasIncome?'淨收支不代表剩餘預算。':''}</p><h3 class="cat-h">支出分類</h3>${categoryStack(t)}${budgetView(t)}</details><details id="ov-days" class="ov-total ov-days" ${ui.ovDays?'open':''}><summary><span class="ov-sum-t">每日收支</span><span class="ov-sum-v">旅程 ${nDays(t)} 天</span></summary>${days.some(r=>r.day===today())?'<div class="ov-key"><span></span><button class="text-action" data-act="jumpToday">前往今天</button></div>':''}${legacyRangeNote(t)}<section aria-label="每日收支">${days.map(row=>`<button id="day-${row.day}" class="ov-day ${row.day===today()?'is-today':''} ${row.phase!=='during'?'outside-day':''}" data-act="overviewDay" data-id="${t.id}" data-day="${row.day}"><div class="ov-date"><b>${phaseLabel(t,row.day)} · ${dLabel(row.day)}${row.day===today()?'（今天）':''}</b><span>${row.day>today()?'未到日期':(row.count?row.count+' 筆':'尚無記錄')+' ›'}</span></div>${money(row.income,row.out,row.net)}${t.plan[row.day]?`<p class="ov-note">${esc(t.plan[row.day])}</p>`:''}</button>`).join('')}</section></details>`;
+  const money=(income,out,balance)=>`<div class="ov-money ${hasIncome?'':'expense-only'}">${hasIncome?`<div><small>${Lx('收入','Income')}</small><b>${fmt(income)}</b></div>`:''}<div><small>${Lx('支出','Spent')}</small><b>${fmt(out)}</b></div>${hasIncome?`<div><small>${Lx('旅程總計','Trip net')}</small><b>${balance>0?'+':''}${fmt(balance)}</b></div>`:''}</div>`;
+  return `<header class="ov-head"><h1>${Lx('收支總覽','Overview')}</h1><label class="field">${Lx('旅程','Trip')}<select id="overview-trip">${S.trips.map(x=>`<option value="${x.id}" ${x.id===t.id?'selected':''}>${esc(tripOptLabel(x))}</option>`).join('')}</select></label><p>${esc(t.currency)} · ${t.startDate} — ${t.endDate}</p></header><details id="ov-all" class="ov-total" ${ui.ovAll!==false?'open':''}><summary><span class="ov-sum-t">${Lx('旅程累計','Trip total')}</span><span class="ov-sum-v">${Lx('支出','Spent')} ${esc(t.currency)} ${fmt(totals.so)}${t.budget!=null&&totals.so>t.budget?' <b class="over">'+Lx('· 已超預算','· over budget')+'</b>':''}</span></summary>${money(totals.si,totals.so,net)}${hkd(t,totals.so)}<p class="ov-note">${Lx('包含行前與回程後所有記錄。','Includes all pre-trip and after-trip records.')}${hasIncome?Lx('「旅程總計」不代表剩餘預算。','"Trip net" is not the same as budget left.'):''}</p><h3 class="cat-h">${Lx('支出分類','Spending by category')}</h3>${categoryStack(t)}${budgetView(t)}</details><details id="ov-days" class="ov-total ov-days" ${ui.ovDays?'open':''}><summary><span class="ov-sum-t">${Lx('每日收支','Daily totals')}</span><span class="ov-sum-v">${Lx('旅程','Trip')} ${nDays(t)} ${Lx('天','days')}</span></summary>${days.some(r=>r.day===today())?'<div class="ov-key"><span></span><button class="text-action" data-act="jumpToday">'+Lx('前往今天','Go to today')+'</button></div>':''}${legacyRangeNote(t)}${ovDayList(t,days)}</details>`;
 }
 function switchBar(t){
   const o=liveTrips().filter(x=>x.id!==t.id);if(!o.length||!liveTrips().some(x=>x.id===t.id))return '';
-  return `<button class="ghost switch-trip" data-act="switchTrip">今天還有${o.length===1?`「${esc(o[0].name)}」`:` ${o.length} 段旅程`} · 切換</button>`;
+  return `<button class="ghost switch-trip" data-act="switchTrip">${Lx('今天還有','Also today:')}${o.length===1?`${Lx('「','“')}${esc(tName(o[0]))}${Lx('」','”')}`:` ${o.length} ${Lx('段旅程','trips today')}`} ${Lx('· 切換','· Switch')}</button>`;
 }
 function budgetBars(t,day,dout,din,inDates){
-  const c=esc(t.currency),lb=day===today()?'今天':'當天',pc=(a,b)=>Math.round(a/b*100);
+  const c=esc(t.currency),lb=day===today()?Lx('今天','Today'):Lx('當天','Day'),pc=(a,b)=>Math.round(a/b*100);
   const meter=(used,cap,label)=>`<div class="bb-meter${used>cap?' over':''}" role="progressbar" aria-label="${label}" aria-valuenow="${pc(used,cap)}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.min(100,used/cap*100)}%"></i></div>`;
   const db=inDates&&t.dailyBudget?t.dailyBudget:null;
-  const left=`<div class="bb"><div class="bb-t"><span>${lb}支出</span><b>${c} ${fmt(dout)}</b></div>${db?`${meter(dout,db,lb+'預算使用率')}<small>每日預算 ${fmt(db)} · 已用 ${pc(dout,db)}%</small>`:''}${din?`<small>收入 ${fmt(din)}</small>`:''}${hkd(t,dout)}${db&&dout>db?`<p class="bb-warn" role="alert">⚠ 超出${lb}預算 ${fmt(Math.round((dout-db)*100)/100)}</p>`:''}</div>`;
+  const left=`<div class="bb"><div class="bb-t"><span>${lb}${Lx('支出',' spent')}</span><b>${c} ${fmt(dout)}</b></div>${db?`${meter(dout,db,lb+Lx('預算使用率',' budget used'))}<small>${Lx('每日預算','Daily budget')} ${fmt(db)} ${Lx('· 已用','· used')} ${pc(dout,db)}%</small>`:''}${din?`<small>${Lx('收入','Income')} ${fmt(din)}</small>`:''}${hkd(t,dout)}${db&&dout>db?`<p class="bb-warn" role="alert">${EN?`⚠ Over ${day===today()?'today’s':'the day’s'} budget by`:`⚠ 超出${lb}預算`} ${fmt(Math.round((dout-db)*100)/100)}</p>`:''}</div>`;
   let right='';
-  if(t.budget){const so=stats(t).so;right=`<div class="bb bb-r"><div class="bb-t"><span>總預算</span><b>${fmt(so)}／${fmt(t.budget)}</b></div>${meter(so,t.budget,'總預算使用率')}<small>已用 ${pc(so,t.budget)}%</small>${so>t.budget?`<p class="bb-warn" role="alert">⚠ 超出總預算 ${fmt(Math.round((so-t.budget)*100)/100)}</p>`:''}</div>`}
+  if(t.budget){const so=stats(t).so;right=`<div class="bb bb-r"><div class="bb-t"><span>${Lx('總預算','Total budget')}</span><b>${fmt(so)}${Lx('／',' / ')}${fmt(t.budget)}</b></div>${meter(so,t.budget,Lx('總預算使用率','Total budget used'))}<small>${Lx('已用','Used')} ${pc(so,t.budget)}%</small>${so>t.budget?`<p class="bb-warn" role="alert">${Lx('⚠ 超出總預算','⚠ Over total budget by')} ${fmt(Math.round((so-t.budget)*100)/100)}</p>`:''}</div>`}
   return `<div class="bud-row${right?'':' one'}">${left}${right}</div>`;
 }
 function notStartedView(t){
   const n=Math.round((parseD(t.startDate)-parseD(today()))/864e5);
-  return `<section class="ledger"><header class="hd"><div class="hd-t"><h1 class="fit">${esc(t.name)}</h1><p>旅程共 ${nDays(t)} 天</p></div><button class="ghost nowrap" data-act="plan" data-id="${t.id}">修改行程</button></header>
-  ${switchBar(t)}<section class="pad not-started"><h2>旅程還未開始</h2><p>出發日 ${dLabel(t.startDate)}（還有 ${n} 天）。</p><p class="muted">記帳只限旅程期間，出發當天起就可以記帳。</p></section><div class="foot"><button class="ghost" data-act="home">規劃其他行程</button></div></section>`;
+  return `<section class="ledger"><header class="hd"><div class="hd-t"><h1 class="fit">${esc(tName(t))}</h1><p>${Lx('旅程共','Trip:')} ${nDays(t)} ${Lx('天','days')}</p></div><button class="ghost nowrap" data-act="plan" data-id="${t.id}">${Lx('修改行程','Edit trip')}</button></header>
+  ${switchBar(t)}<section class="pad not-started"><h2>${Lx('旅程還未開始','Trip hasn’t started yet')}</h2><p>${Lx('出發日','Departure:')} ${dLabel(t.startDate)}${Lx('（還有',' (in')} ${n} ${Lx('天）。','days).')}</p><p class="muted">${Lx('記帳只限旅程期間，出發當天起就可以記帳。','You can record spending only during the trip, starting on the departure day.')}</p></section><div class="foot"><button class="ghost" data-act="home">${Lx('規劃其他行程','Plan another trip')}</button></div></section>`;
 }
 function ledgerView(t){
   const td=today(),hi=recMax(t);
@@ -938,15 +995,16 @@ function ledgerView(t){
   const note=t.plan[day]||'',inDates=TravelCore.phase(t,day)==='during';
   const chips=CATS.map(x=>`<button class="chip ${ui.cat===x.k?'on':''}" aria-pressed="${ui.cat===x.k}" data-act="cat" data-k="${x.k}"><span>${x.e}</span>${x.n}</button>`).join('');
   const keys=['1','2','3','4','5','6','7','8','9','.','0','00'].map(k=>`<button class="key" data-act="key" data-k="${k}">${k}</button>`).join('');
-  return `<section class="ledger"><header class="hd"><div class="hd-t"><h1 class="fit">${esc(t.name)}</h1><p>${phaseLabel(t,day)} · 旅程共 ${nDays(t)} 天</p></div><button class="ghost nowrap" data-act="plan" data-id="${t.id}">修改行程</button></header>
-  ${switchBar(t)}<div class="date-strip"><button class="ghost" data-act="day" data-d="-1" aria-label="前一天" ${day<=t.startDate?'disabled':''}>‹</button><label><span class="sr-only">記帳日期</span><input id="ledger-date" type="date" min="${t.startDate}" max="${hi}" value="${day}"></label><button class="ghost" data-act="day" data-d="1" aria-label="後一天" ${day>=hi?'disabled':''}>›</button></div>
+  return `<section class="ledger"><header class="hd"><div class="hd-t"><h1 class="fit">${esc(tName(t))}</h1><p>${phaseLabel(t,day)} ${Lx('· 旅程共','· Trip:')} ${nDays(t)} ${Lx('天','days')}</p></div><button class="ghost nowrap" data-act="plan" data-id="${t.id}">${Lx('修改行程','Edit trip')}</button></header>
+  ${switchBar(t)}<div class="date-strip"><button class="ghost" data-act="day" data-d="-1" aria-label="${Lx('前一天','Previous day')}" ${day<=t.startDate?'disabled':''}>‹</button><label><span class="sr-only">${Lx('記帳日期','Ledger date')}</span><input id="ledger-date" type="date" min="${t.startDate}" max="${hi}" value="${day}"></label><button class="ghost" data-act="day" data-d="1" aria-label="${Lx('後一天','Next day')}" ${day>=hi?'disabled':''}>›</button></div>
   ${budgetBars(t,day,dout,din,inDates)}
-  <section class="pad"><div class="seg"><button class="${ui.type==='out'?'on':''}" data-act="type" data-k="out">支出</button><button class="${ui.type==='in'?'on':''}" data-act="type" data-k="in">收入</button></div>
+  <section class="pad"><div class="seg"><button class="${ui.type==='out'?'on':''}" data-act="type" data-k="out">${Lx('支出','Expense')}</button><button class="${ui.type==='in'?'on':''}" data-act="type" data-k="in">${Lx('收入','Income')}</button></div>
   <div class="amount-line"><div class="disp ${ui.amt?'':'empty'}"><small>${c}</small><b id="amtv">${ui.amt?fmtTyping(ui.amt):'0'}</b></div><div id="typing-hkd" class="typing-hkd">${hkd(t,Number(ui.amt)||0)}</div></div>
-  <div class="chips" ${ui.type==='in'?'hidden':''}>${chips}</div><input class="note" id="note" maxlength="500" placeholder="備註（選填）" value="${esc(ui.note)}" autocomplete="off">
-  <div class="keys"><div class="kp">${keys}</div><div class="side"><button class="bs" data-act="key" data-k="b" aria-label="刪除一位數">⌫</button><button class="add" data-act="add">記一筆</button></div></div></section>
-  <details class="dn"><summary>${inDates?'這天的行程備註（選填）':'行前／回程後記錄說明'}</summary><p class="muted">${inDates?'補記其他日子的帳目時，時間預設為 12:00，可點記錄修改。':'這些記錄計入總預算、總支出及分類，但不計入旅程日均支出。'}</p>${inDates?`<textarea data-note="${day}" data-tid="${t.id}" rows="2" maxlength="200" placeholder="（選填）這天想去哪裡、做什麼">${esc(note)}</textarea>`:''}</details>
-  <section class="list">${es.length?[...es].sort((a,b)=>b.ts-a.ts).map(e=>rowOf(e,true,t)).join(''):'<p class="empty-note">輸入金額、選分類，按「記一筆」。</p>'}</section><div class="foot"><button class="ghost" data-act="finish" data-id="${t.id}">完結旅程</button><button class="ghost" data-act="home">規劃其他行程</button></div></section>`;
+  <div class="chips" ${ui.type==='in'?'hidden':''}>${chips}</div><div class="note-row"><input class="note" id="note" maxlength="500" placeholder="${ui.type==='in'?inNotePh():Lx('備註（選填）','Note (optional)')}" value="${esc(ui.note)}" autocomplete="off"><button class="aa-tg ${ui.aa?'on':''}" id="aa-tg" data-act="aa" aria-pressed="${!!ui.aa}" aria-expanded="${!!ui.aa}" ${ui.type==='in'?'hidden':''}>👥 AA</button></div>
+  <div class="aa-row" id="aa-row" ${ui.aa&&ui.type!=='in'?'':'hidden'}><span class="aa-step"><button data-act="aaN" data-d="-1" aria-label="${Lx('少一人','One fewer person')}">−</button><b id="aa-n">${ui.aa||2} ${Lx('人','ppl')}</b><button data-act="aaN" data-d="1" aria-label="${Lx('多一人','One more person')}">+</button></span><button class="aa-use" id="aa-use" data-act="aaUse" aria-live="polite" ${Number(ui.amt)>0?'':'disabled'}>${aaShareText()}</button><small>${Lx('替大家付了就記總額；已分好才記每人份額。','Paid for everyone? Add the total. Already split? Use one share.')}</small></div>
+  <div class="keys"><div class="kp">${keys}</div><div class="side"><button class="bs" data-act="key" data-k="b" aria-label="${Lx('刪除一位數','Delete one digit')}">⌫</button><button class="add" data-act="add">${Lx('記一筆','Add')}</button></div></div></section>
+  <details class="dn"><summary>${inDates?Lx('這天的行程備註（選填）','Plan note for this day (optional)'):Lx('行前／回程後記錄說明','About pre-trip / after-trip records')}</summary><p class="muted">${inDates?Lx('補記其他日子的帳目時，時間預設為 12:00，可點記錄修改。','Entries added for another day default to 12:00; tap an entry to change it.'):Lx('這些記錄計入總預算、總支出及分類，但不計入旅程日均支出。','These records count towards the total budget, total spending and categories, but not the daily average.')}</p>${inDates?`<textarea data-note="${day}" data-tid="${t.id}" rows="2" maxlength="200" placeholder="${Lx('（選填）這天想去哪裡、做什麼','(Optional) Where to go, what to do this day')}">${esc(note)}</textarea>`:''}</details>
+  <section class="list">${es.length?[...es].sort((a,b)=>b.ts-a.ts).map(e=>rowOf(e,true,t)).join(''):'<p class="empty-note">'+Lx('輸入金額、選分類，按「記一筆」。','Enter an amount, pick a category, then tap “Add”.')+'</p>'}</section><div class="foot"><button class="ghost" data-act="finish" data-id="${t.id}">${Lx('完結旅程','Finish trip')}</button><button class="ghost" data-act="home">${Lx('規劃其他行程','Plan another trip')}</button></div></section>`;
 }
 
 const doneTrips=()=>S.trips.filter(t=>t.status==='done').sort((a,b)=>a.start-b.start);
@@ -966,7 +1024,7 @@ const pageCount=()=>Math.max(1,Math.ceil(bookGroups().length/2));
 const pageOfTrip=id=>{const i=bookGroups().findIndex(g=>g.trips.some(t=>t.id===id));return i<0?pageCount():Math.floor(i/2)+1};
 const EQ_K={2:.74,3:.64,4:.56},MAIN_K=.66,SUB_K=.45;
 function groupSlot(g){
-  if(g.trips.length===1){const t=g.trips[0];return t.sample?`<div class="slot is-sample"><button data-act="open" data-id="${t.id}" aria-label="範例旅程：${esc(t.name)}">${sticker(t)}<span class="smp-tag">範例</span></button><p class="grp-cap">範例旅程・只供參考，不計入你的記錄；點開可刪除</p></div>`:`<div class="slot"><button data-act="open" data-id="${t.id}" aria-label="${esc(t.name)}">${sticker(t)}</button></div>`}
+  if(g.trips.length===1){const t=g.trips[0];return t.sample?`<div class="slot is-sample"><button data-act="open" data-id="${t.id}" aria-label="${Lx('範例旅程：','Sample trip: ')}${esc(tName(t))}">${sticker(t)}<span class="smp-tag">${Lx('範例','Sample')}</span></button><p class="grp-cap">${Lx('範例旅程・只供參考，不計入你的記錄；點開可刪除','Sample trip · for reference only, not counted in your records. Open it to delete.')}</p></div>`:`<div class="slot"><button data-act="open" data-id="${t.id}" aria-label="${esc(tName(t))}">${sticker(t)}</button></div>`}
   const md=d=>d.slice(5).replace('-','.'),it=[];
   if(!g.sub.length){
     const n=g.main.length,k=EQ_K[Math.min(n,4)],st=(1-k)/(n-1);
@@ -977,8 +1035,8 @@ function groupSlot(g){
     const spots=[[sx,sy],[sx,sy-H-.5],[sx-W-.5,sy]];
     g.sub.forEach((t,j)=>{const p=spots[j]||[sx-(j-2)*1.2,sy-(j-2)*1.2];it.push([t,SUB_K,p[0],p[1],1])});
   }
-  const btn=it.map(([t,k,x,y,sub])=>`<button class="${sub?'sub':''}" data-act="open" data-id="${t.id}" aria-label="${esc(t.name)}" style="--k:${k};left:calc(var(--u) * ${x.toFixed(2)});top:calc(var(--u) * ${y.toFixed(2)})">${sticker(t)}</button>`).join('');
-  const cap=g.sub.length?`${esc(g.main.map(t=>t.name).join('、'))} ${md(g.start)}–${md(g.end)} · 含 ${g.sub.length} 段旅程`:`同期 ${g.main.length} 段旅程 · ${md(g.start)}–${md(g.end)}`;
+  const btn=it.map(([t,k,x,y,sub])=>`<button class="${sub?'sub':''}" data-act="open" data-id="${t.id}" aria-label="${esc(tName(t))}" style="--k:${k};left:calc(var(--u) * ${x.toFixed(2)});top:calc(var(--u) * ${y.toFixed(2)})">${sticker(t)}</button>`).join('');
+  const cap=g.sub.length?`${esc(g.main.map(t=>tName(t)).join(Lx('、',', ')))} ${md(g.start)}–${md(g.end)} ${Lx('· 含','· includes')} ${g.sub.length} ${Lx('段旅程','trips today')}`:`${Lx('同期','')} ${g.main.length} ${Lx('段旅程 ·','overlapping trips ·')} ${md(g.start)}–${md(g.end)}`;
   return `<div class="slot multi"><div class="grp">${btn}</div><p class="grp-cap">${cap}</p></div>`;
 }
 function bookView(){
@@ -986,68 +1044,68 @@ function bookView(){
   if(ui.page<=0||(!d.length&&!smp)){
     ui.page=0;
     return `<section class="bk">
-      <button class="cover" data-act="openBook" ${d.length||smp?'':'disabled'} aria-label="翻開貼紙簿">
+      <button class="cover" data-act="openBook" ${d.length||smp?'':'disabled'} aria-label="${Lx('翻開貼紙簿','Open sticker book')}">
         <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20"/><ellipse cx="24" cy="24" rx="8" ry="20"/><path d="M4 24h40M7 14h34M7 34h34"/></svg>
-        <b class="ct">旅貼</b><span class="cs">旅程帳本</span>
-        <span class="cc">${d.length?`已收藏 ${d.length} 趟，點一下翻開`:smp?'內附 1 段範例，點一下翻開':'還沒有旅程'}</span>
+        <b class="ct">${Lx('旅貼','Lvtie')}</b><span class="cs">${Lx('旅程帳本','Travel ledger')}</span>
+        <span class="cc">${d.length?`${Lx('已收藏','')} ${d.length} ${Lx('趟，點一下翻開','trips collected · tap to open')}`:smp?Lx('內附 1 段範例，點一下翻開','Includes 1 sample · tap to open'):Lx('還沒有旅程','No trips yet')}</span>
       </button>
-      ${d.length?'':`<div class="blank"><h2>這本冊子還是空的</h2><p class="sub">完結一趟旅程，它就會貼在這裡。${smp?'第 1 頁有一段標明「範例」的旅程，可以先看看完結後的樣子；不需要時可以點開範例刪除。':''}</p></div>`}
+      ${d.length?'':`<div class="blank"><h2>${Lx('這本冊子還是空的','This book is still empty')}</h2><p class="sub">${Lx('完結一趟旅程，它就會貼在這裡。','Finish a trip and its sticker will be stuck here.')}${smp?Lx('第 1 頁有一段標明「範例」的旅程，可以先看看完結後的樣子；不需要時可以點開範例刪除。','Page 1 has a trip marked “Sample” so you can see what a finished trip looks like. Open it to delete when you no longer need it.'):''}</p></div>`}
     </section>`;
   }
   const total=pageCount();
   ui.page=Math.min(ui.page,total);
   const pg=ui.page,items=bookGroups().slice((pg-1)*2,pg*2);
   const slots=items.map(groupSlot);
-  if(items.length<2)slots.push('<div class="slot empty">下一趟旅程會貼在這裡</div>');
+  if(items.length<2)slots.push('<div class="slot empty">'+Lx('下一趟旅程會貼在這裡','Your next trip goes here')+'</div>');
   const cls=ui.turn?'turn-'+ui.turn:'';ui.turn=null;
   return `<section class="bk">
-    <div class="page ${cls}"><span class="pt">旅程紀錄</span><span class="pn">${String(pg).padStart(2,'0')}</span>${slots.join('')}</div>
-    <div class="pg"><button data-act="page" data-d="-1" aria-label="上一頁">‹</button><p>第 ${pg} 頁，共 ${total} 頁</p><button data-act="page" data-d="1" aria-label="下一頁" ${pg>=total?'disabled':''}>›</button></div>
+    <div class="page ${cls}"><span class="pt">${Lx('旅程紀錄','TRIP LOG')}</span><span class="pn">${String(pg).padStart(2,'0')}</span>${slots.join('')}</div>
+    <div class="pg"><button data-act="page" data-d="-1" aria-label="${Lx('上一頁','Previous page')}">‹</button><p>${Lx('第','Page')} ${pg} ${Lx('頁，共','of')} ${total} ${Lx('頁','')}</p><button data-act="page" data-d="1" aria-label="${Lx('下一頁','Next page')}" ${pg>=total?'disabled':''}>›</button></div>
   </section>`;
 }
 function dayBlocks(t){
   const rows=dailyTotals(t),mx=Math.max(1,...rows.map(r=>r.out));
-  return rows.map(r=>{const es=t.entries.filter(e=>entryDay(e)===r.day);return `<div class="dayh"><b>${phaseLabel(t,r.day)} ${dLabel(r.day)}</b><span>支出 ${fmt(r.out)}${r.income?' 收入 '+fmt(r.income):''}</span></div><div class="dbar"><i style="width:${r.out/mx*100}%"></i></div>${t.plan[r.day]?`<p class="dnote">行程：${esc(t.plan[r.day])}</p>`:''}${es.length?es.sort((a,b)=>a.ts-b.ts).map(e=>rowOf(e,false,t)).join(''):'<p class="empty-day">沒有記錄</p>'}`}).join('');
+  return rows.map(r=>{const es=t.entries.filter(e=>entryDay(e)===r.day);return `<div class="dayh"><b>${phaseLabel(t,r.day)} ${dLabel(r.day)}</b><span>${Lx('支出','Spent')} ${fmt(r.out)}${r.income?' '+Lx('收入','Income')+' '+fmt(r.income):''}</span></div><div class="dbar"><i style="width:${r.out/mx*100}%"></i></div>${t.plan[r.day]?`<p class="dnote">${Lx('行程：','Plan: ')}${esc(t.plan[r.day])}</p>`:''}${es.length?es.sort((a,b)=>a.ts-b.ts).map(e=>rowOf(e,false,t)).join(''):'<p class="empty-day">'+Lx('沒有記錄','No records')+'</p>'}`}).join('');
 }
 function detailView(t){
   const s=stats(t),canReopen=true;
   const br=CATS.filter(c=>s.by[c.k]).sort((a,b)=>s.by[b.k]-s.by[a.k]).map(c=>`<div class="br"><span>${c.e} ${c.n}</span><div class="tr"><i style="width:${s.by[c.k]/s.so*100}%;background:${c.c}"></i></div><b class="num">${fmt(s.by[c.k])}</b></div>`).join('');
   return `<div class="sheet"><div class="wrap">
-    <div class="top"><button class="ghost" data-act="close">關閉</button></div>
-    ${t.sample?'<p class="smp-note"><b>範例旅程</b>只供參考：示範完結後的貼紙、預算與每日詳情。不計入你的收支，也不能修改。不需要時可在最底下刪除。</p>':''}
-    <div class="stage">${sticker(t,15)}${t.sample?'<span class="smp-tag">範例</span>':''}</div>
+    <div class="top"><button class="ghost" data-act="close">${Lx('關閉','Close')}</button></div>
+    ${t.sample?'<p class="smp-note"><b>'+Lx('範例旅程','Sample trip')+'</b>'+Lx('只供參考：示範完結後的貼紙、預算與每日詳情。不計入你的收支，也不能修改。不需要時可在最底下刪除。','For reference only: shows a finished trip’s sticker, budget and daily details. It isn’t counted in your totals and can’t be edited. Delete it at the bottom when you don’t need it.')+'</p>':''}
+    <div class="stage">${sticker(t,15)}${t.sample?'<span class="smp-tag">'+Lx('範例','Sample')+'</span>':''}</div>
     <div class="panel">
-      <div class="kv"><span>總支出</span><b class="num">${esc(t.currency)} ${fmt(s.so)}</b></div>
-      <div class="kv"><span>總收入</span><b class="num">${esc(t.currency)} ${fmt(s.si)}</b></div>
-      <div class="kv"><span>旅程天數</span><b>${s.days} 天</b></div>
-      <div class="kv"><span>旅途中日均支出</span><b class="num">${esc(t.currency)} ${fmt(s.avg)}</b></div>
-      ${t.budget?`<div class="kv"><span>總預算</span><b class="num">${esc(t.currency)} ${fmt(t.budget)}</b></div><div class="kv"><span>${s.so<=t.budget?'預算結餘':'超出預算'}</span><b class="num">${esc(t.currency)} ${fmt(Math.abs(t.budget-s.so))}</b></div>`:''}
+      <div class="kv"><span>${Lx('總支出','Total spent')}</span><b class="num">${esc(t.currency)} ${fmt(s.so)}</b></div>
+      <div class="kv"><span>${Lx('總收入','Total income')}</span><b class="num">${esc(t.currency)} ${fmt(s.si)}</b></div>
+      <div class="kv"><span>${Lx('旅程天數','Trip length')}</span><b>${s.days} ${Lx('天','days')}</b></div>
+      <div class="kv"><span>${Lx('旅途中日均支出','Daily average on the trip')}</span><b class="num">${esc(t.currency)} ${fmt(s.avg)}</b></div>
+      ${t.budget?`<div class="kv"><span>${Lx('總預算','Total budget')}</span><b class="num">${esc(t.currency)} ${fmt(t.budget)}</b></div><div class="kv"><span>${s.so<=t.budget?Lx('預算結餘','Under budget'):Lx('超出預算','Over budget')}</span><b class="num">${esc(t.currency)} ${fmt(Math.abs(t.budget-s.so))}</b></div>`:''}
     </div>
-    <p class="muted">日均不含行前及回程後支出；總支出包含所有帳目。</p>${hkd(t,s.so)}
+    <p class="muted">${Lx('日均不含行前及回程後支出；總支出包含所有帳目。','The daily average excludes pre-trip and after-trip spending; total spent includes everything.')}</p>${hkd(t,s.so)}
     ${br?`<div class="panel">${br}</div>`:''}
-    <h2 class="dh">每日詳情</h2>
+    <h2 class="dh">${Lx('每日詳情','Daily details')}</h2>
     ${legacyRangeNote(t)}${dayBlocks(t)}
-    ${t.sample?`<div class="acts"><button class="ghost danger" data-act="askdelsample">刪除範例旅程</button></div><p class="muted">刪除後可以在貼紙簿的「備份與設定」重新顯示。</p>`:`<div class="acts">
-      ${canReopen?`<button class="ghost" data-act="reopen" data-id="${t.id}">繼續記帳</button>`:''}
-      <button class="ghost danger" data-act="askdel" data-id="${t.id}">刪除這張貼紙</button>
+    ${t.sample?`<div class="acts"><button class="ghost danger" data-act="askdelsample">${Lx('刪除範例旅程','Delete sample trip')}</button></div><p class="muted">${Lx('刪除後可以在貼紙簿的「備份與設定」重新顯示。','You can bring it back from “Backup & Settings” in the sticker book.')}</p>`:`<div class="acts">
+      ${canReopen?`<button class="ghost" data-act="reopen" data-id="${t.id}">${Lx('繼續記帳','Keep recording')}</button>`:''}
+      <button class="ghost danger" data-act="askdel" data-id="${t.id}">${Lx('刪除這張貼紙','Delete this sticker')}</button>
     </div>`}
   </div></div>`;
 }
 
 /* ---------- layer / toast ---------- */
 let layerFocus=null;
-const showLayer=h=>{const l=$('#layer');if(!l.classList.contains('show'))layerFocus=document.activeElement;l.innerHTML=h;l.classList.add('show');l.setAttribute('role','dialog');l.setAttribute('aria-modal','true');l.setAttribute('aria-label','旅貼對話視窗');document.body.classList.add('modal-open');$('#view').inert=true;$('.tabs').inert=true;const first=l.querySelector('button,input,select');if(first)first.focus({preventScroll:true})};
+const showLayer=h=>{const l=$('#layer');if(!l.classList.contains('show'))layerFocus=document.activeElement;l.innerHTML=plur(h);l.classList.add('show');l.setAttribute('role','dialog');l.setAttribute('aria-modal','true');l.setAttribute('aria-label',Lx('旅貼對話視窗','Lvtie dialog'));document.body.classList.add('modal-open');$('#view').inert=true;$('.tabs').inert=true;const first=l.querySelector('button,input,select');if(first)first.focus({preventScroll:true})};
 const hideLayer=()=>{const l=$('#layer');l.classList.remove('show');l.innerHTML='';document.body.classList.remove('modal-open');$('#view').inert=false;$('.tabs').inert=false;ui.editId=null;ui.editTid=null;ui.pendingImport=null;ui.pendingDates=null;ui.detailId=null;if(layerFocus&&layerFocus.isConnected)layerFocus.focus({preventScroll:true})};
 
 let tt;
 function toast(msg,undo){
   const el=$('#toast');
-  el.innerHTML=esc(msg)+(undo?'<button data-act="undo">復原</button>':'');
+  el.innerHTML=plur(esc(msg))+(undo?'<button data-act="undo">'+Lx('復原','Undo')+'</button>':'');
   el.classList.add('show');clearTimeout(tt);
   tt=setTimeout(()=>el.classList.remove('show'),undo?4500:1600);
 }
 function dialog(title,text,okLabel,okAct,id,danger){
-  showLayer(`<div class="dialog"><div class="dlg"><h2>${title}</h2><p>${text}</p><div class="two"><button class="ghost" data-act="close">取消</button><button class="primary" ${danger?'style="background:#B3261E;color:#fff"':''} data-act="${okAct}" ${id?`data-id="${id}"`:''}>${okLabel}</button></div></div></div>`);
+  showLayer(`<div class="dialog"><div class="dlg"><h2>${title}</h2><p>${text}</p><div class="two"><button class="ghost" data-act="close">${Lx('取消','Cancel')}</button><button class="primary" ${danger?'style="background:#B3261E;color:#fff"':''} data-act="${okAct}" ${id?`data-id="${id}"`:''}>${okLabel}</button></div></div></div>`);
 }
 
 /* ---------- render ---------- */
@@ -1059,7 +1117,7 @@ function render(){
   else if(ui.pickFor)h=destinationPicker(true);
   else if(ui.planId&&tripById(ui.planId))h=wizardView();
   else{ui.planId=null;const t=curTrip();h=t?ledgerView(t):(!ui.home&&liveTrips().length>1?chooseTripView():planningView())}
-  $('#view').innerHTML='<div id="storage-notice" role="alert"></div><div id="net-chip" class="net-chip" role="status" hidden></div>'+h+'<footer class="app-foot"><p id="net-line" class="net-line" aria-live="polite"></p>'+(ui.tab==='book'?'<button class="ghost settings-btn" data-act="settings">備份與設定</button>':'')+'</footer>';
+  $('#view').innerHTML=plur('<div id="storage-notice" role="alert"></div><div id="net-chip" class="net-chip" role="status" hidden></div>'+h+'<footer class="app-foot"><p id="net-line" class="net-line" aria-live="polite"></p>'+(ui.tab==='book'?'<button class="ghost settings-btn" data-act="settings">'+Lx('備份與設定','Backup & Settings')+'</button>':'')+'</footer>');
   updateStorageNotice();
   if(window.updatePwaUI)window.updatePwaUI();
   syncCarousel();
@@ -1092,12 +1150,19 @@ function key(k){
   $('#amtv').textContent=a?fmtTyping(a):'0';
   $('#amtv').parentElement.classList.toggle('empty',!a);
   const h=$('#typing-hkd');if(h)h.innerHTML=hkd(curTrip(),Number(a)||0);
+  aaUpd();
 }
+/* AA 計算機（總額是整數時份額取整數，例如 1,000÷3＝333）：只幫忙算每人份額，不另存欄位。先替大家付了就記總額；已分好就按「記每人份額」把金額換成一份。 */
+function aaShareC(){const a=Math.round((Number(ui.amt)||0)*100),n=ui.aa||2;return {a,n,m:a%100?Math.round(a/n):Math.round(a/n/100)*100}}
+function aaShareText(){const {a,m}=aaShareC();if(!a)return Lx('先輸入總額','Enter the total first');return `${Lx('改記每人','Use one share:')} <b>${fmt(m/100)}</b>`}
+function aaUpd(){const u=$('#aa-use');if(u){u.innerHTML=aaShareText();u.disabled=!(Number(ui.amt)>0)}}
+function showAmt(){const a=ui.amt;$('#amtv').textContent=a?fmtTyping(a):'0';$('#amtv').parentElement.classList.toggle('empty',!a);const h=$('#typing-hkd');if(h)h.innerHTML=hkd(curTrip(),Number(a)||0)}
+function aaShow(){const g=$('#aa-tg'),w=$('#aa-row'),on=!!ui.aa&&ui.type!=='in';if(g){g.hidden=ui.type==='in';g.classList.toggle('on',!!ui.aa);g.setAttribute('aria-pressed',String(!!ui.aa));g.setAttribute('aria-expanded',String(!!ui.aa))}if(w)w.hidden=!on;const nb=$('#aa-n');if(nb)nb.textContent=(ui.aa||2)+' '+Lx('人','ppl');aaUpd()}
 function checkOverdue(){
   const t=overdue().find(x=>!(ui.asked[x.id]>Date.now())&&!(x.snoozeUntil>Date.now()));
   if(!t||document.querySelector('#layer').classList.contains('show'))return;
   ui.asked[t.id]=Date.now()+864e5;
-  showLayer(`<div class="dialog"><div class="dlg"><h2>「${esc(t.name)}」已經結束</h2><p>回程日 ${t.endDate.replace(/-/g,'.')} 已過，要完結這趟旅程並生成貼紙嗎？選「明天再提醒」，24 小時內不會再彈出；行程仍會留在「待完結」。</p><div class="two"><button class="ghost" data-act="snooze" data-id="${t.id}">明天再提醒</button><button class="primary" data-act="confirmFinish" data-id="${t.id}">完結並生成貼紙</button></div></div></div>`);
+  showLayer(`<div class="dialog"><div class="dlg"><h2>${Lx('「','“')}${esc(tName(t))}${Lx('」已經結束','” has ended')}</h2><p>${Lx('回程日','Return date')} ${t.endDate.replace(/-/g,'.')} ${Lx('已過，要完結這趟旅程並生成貼紙嗎？選「明天再提醒」，24 小時內不會再彈出；行程仍會留在「待完結」。','has passed. Finish this trip and make its sticker? If you choose “Remind me tomorrow”, this won’t pop up again for 24 hours and the trip stays under “To finish”.')}</p><div class="two"><button class="ghost" data-act="snooze" data-id="${t.id}">${Lx('明天再提醒','Remind me tomorrow')}</button><button class="primary" data-act="confirmFinish" data-id="${t.id}">${Lx('完結並生成貼紙','Finish and make sticker')}</button></div></div></div>`);
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b)return;
@@ -1111,21 +1176,21 @@ document.addEventListener('click',e=>{
       const t=tripById(id),day=b.dataset.day;
       if(!t||!TravelCore.validDate(day))return;
       if(t.status==='done'){ui.detailId=t.id;showLayer(detailView(t));return}
-      if(day>today()){toast('還未到這一天，只能記今天或之前的帳');return}
+      if(day>today()){toast(Lx('還未到這一天，只能記今天或之前的帳','That day hasn’t come yet; you can only record today or earlier'));return}
       if(!canRec(t,day)){showLayer(outsideDayView(t,day));return}
-      ui.tab='trip';ui.planId=null;ui.pickFor=null;ui.home=false;ui.ledgerId=t.id;ui.dayFor=t.id;ui.day=day;ui.amt='';ui.note='';render();window.scrollTo(0,0);break;
+      ui.tab='trip';ui.planId=null;ui.pickFor=null;ui.home=false;ui.ledgerId=t.id;ui.dayFor=t.id;ui.day=day;ui.amt='';ui.note='';ui.aa=0;render();window.scrollTo(0,0);break;
     }
     case 'chooseDestination':{
-      const d=countryById(ui.pickFor?ui.pickDest:ui.destId);if(!d){toast('先選國家');return}
+      const d=countryById(ui.pickFor?ui.pickDest:ui.destId);if(!d){toast(Lx('先選國家','Choose a country first'));return}
       if(ui.pickFor){const t=tripById(ui.pickFor);if(!t)return;
-        if(t.entries.length&&t.currency!==d.currency){toast('已有帳目，只能更改為相同幣別的國家');return}
+        if(t.entries.length&&t.currency!==d.currency){toast(Lx('已有帳目，只能更改為相同幣別的國家','This trip already has records, so you can only switch to a country with the same currency'));return}
         if(t.currency!==d.currency)t.hkdRate=d.currency==='HKD'?1:null;
-        const old=countryOf(t);if(!t.name.trim()||(old&&t.name===old.name))t.name=d.name;
+        const old=countryOf(t);if(!t.name.trim()||(old&&isCName(old,t.name)))t.name=d.name;
         if(!old||old.id!==d.id)delete t.artIndex; /* 換國家：景點圖不同，回到第一張 */
         t.country=d.id;t.currency=d.currency;save();ui.pickFor=null;
       }else{
         const t=ui.planId&&tripById(ui.planId);
-        if(t&&t.entries.length&&t.currency!==d.currency){toast('已有帳目，只能更改為相同幣別的國家');return}
+        if(t&&t.entries.length&&t.currency!==d.currency){toast(Lx('已有帳目，只能更改為相同幣別的國家','This trip already has records, so you can only switch to a country with the same currency'));return}
         if(t&&t.currency!==d.currency)ui.draft.rate='';
         ui.destId=d.id;ui.newStep=2}
       render();window.scrollTo(0,0);break;
@@ -1153,35 +1218,38 @@ document.addEventListener('click',e=>{
     case 'artVariant':{const t=tripById(id);if(!t)return;if(b.dataset.v==='night')t.artVariant='night';else delete t.artVariant;save();render();break}
     case 'plan':{const t=tripById(id);if(!t)return;hideLayer();wizLoad(t);render();window.scrollTo(0,0);break}
     case 'planBack':wizReset();render();window.scrollTo(0,0);break;
-    case 'ledger':if(tripById(id)?.status==='done'){ui.detailId=id;showLayer(detailView(tripById(id)));break}ui.planId=null;ui.home=false;ui.ledgerId=id;ui.overviewId=id;ui.dayFor=null;ui.amt='';ui.note='';render();window.scrollTo(0,0);break;
+    case 'ledger':if(tripById(id)?.status==='done'){ui.detailId=id;showLayer(detailView(tripById(id)));break}ui.planId=null;ui.home=false;ui.ledgerId=id;ui.overviewId=id;ui.dayFor=null;ui.amt='';ui.note='';ui.aa=0;render();window.scrollTo(0,0);break;
     case 'home':ui.home=true;ui.ledgerId=null;render();window.scrollTo(0,0);break;
     case 'switchTrip':ui.home=false;ui.ledgerId=null;ui.planId=null;render();window.scrollTo(0,0);break;
     case 'day':{
       const t=curTrip();if(!t)return;
       const nd=iso(parseD(ui.day)+(+b.dataset.d)*864e5+432e5);
       if(!TravelCore.validDate(nd))return;
-      if(nd<t.startDate){toast('已是旅程第一天');return}
-      if(nd>recMax(t)){toast(nd>today()?'只能記今天或之前的帳':'已是旅程最後一天');return}
+      if(nd<t.startDate){toast(Lx('已是旅程第一天','This is the first day of the trip'));return}
+      if(nd>recMax(t)){toast(nd>today()?Lx('只能記今天或之前的帳','You can only record today or earlier'):Lx('已是旅程最後一天','This is the last day of the trip'));return}
       ui.day=nd;render();break;
     }
     case 'key':key(b.dataset.k);break;
-    case 'type':ui.type=b.dataset.k;document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x.dataset.k===ui.type));$('.chips').hidden=ui.type==='in';break;
+    case 'aa':ui.aa=ui.aa?0:(ui.aaN||2);aaShow();break;
+    case 'aaN':ui.aa=Math.min(50,Math.max(2,(ui.aa||2)+Number(b.dataset.d)));ui.aaN=ui.aa;aaShow();break;
+    case 'aaUse':{const {m}=aaShareC();if(!m)break;ui.amt=String(m/100);ui.aa=0;showAmt();aaShow();toast(Lx('金額已改為每人份額','Amount set to one share'));break}
+    case 'type':ui.type=b.dataset.k;document.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x.dataset.k===ui.type));$('.chips').hidden=ui.type==='in';aaShow();{const n=$('#note');if(n)n.placeholder=ui.type==='in'?inNotePh():Lx('備註（選填）','Note (optional)')}break;
     case 'cat':ui.cat=b.dataset.k;document.querySelectorAll('.chip').forEach(x=>{x.classList.toggle('on',x.dataset.k===ui.cat);x.setAttribute('aria-pressed',String(x.dataset.k===ui.cat))});break;
     case 'add':{
       const t=curTrip(),v=parseFloat(ui.amt);
       if(!t)return;
-      if(!(v>0)){toast('先輸入金額');return}
-      if(!canRec(t,ui.day)){toast('只能記旅程期間、今天或之前的帳');ui.dayFor=null;render();return}
+      if(!(v>0)){toast(Lx('先輸入金額','Enter an amount first'));return}
+      if(!canRec(t,ui.day)){toast(Lx('只能記旅程期間、今天或之前的帳','You can only record days within the trip, up to today'));ui.dayFor=null;render();return}
       const now=Date.now();
       t.entries.push({id:uid(),type:ui.type,amt:v,cat:ui.type==='in'?'in':ui.cat,note:ui.note.trim(),date:ui.day,ts:ui.day===today()?now:new Date(ui.day+'T12:00:00').getTime()});
-      ui.amt='';ui.note='';save();render();toast('已記一筆');break;
+      ui.amt='';ui.note='';ui.aa=0;save();render();toast(Lx('已記一筆','Added'));break;
     }
     case 'del':{
       const t=curTrip();if(!t)return;
       const i=t.entries.findIndex(x=>x.id===id);
       if(i<0)return;
       lastDel={tid:t.id,entry:t.entries[i],i};
-      t.entries.splice(i,1);save();render();toast('已刪除',true);break;
+      t.entries.splice(i,1);save();render();toast(Lx('已刪除','Deleted'),true);break;
     }
     case 'undo':{
       if(!lastDel)return;
@@ -1191,7 +1259,7 @@ document.addEventListener('click',e=>{
     }
     case 'finish':{
       const t=tripById(id),n=t.entries.length;
-      dialog('完結這趟旅程？',n?`共 ${n} 筆記錄，完結後會變成一張貼紙。之後可以在貼紙簿裡繼續記帳。`:'這趟還沒有任何記錄，仍要完結嗎？','完結並生成貼紙','confirmFinish',id);break;
+      dialog(Lx('完結這趟旅程？','Finish this trip?'),n?`${Lx('共','')} ${n} ${Lx('筆記錄，完結後會變成一張貼紙。之後可以在貼紙簿裡繼續記帳。','records. Finishing turns the trip into a sticker; you can still keep recording from the sticker book.')}`:Lx('這趟還沒有任何記錄，仍要完結嗎？','This trip has no records yet. Finish it anyway?'),Lx('完結並生成貼紙','Finish and make sticker'),'confirmFinish',id);break;
     }
     case 'confirmFinish':{
       const t=tripById(id);if(!t)return;
@@ -1200,7 +1268,7 @@ document.addEventListener('click',e=>{
       t.end=parseD(t.endDate);
       ui.planId=null;ui.ledgerId=null;ui.asked[id]=1;save();render();
       const s=stats(t);
-      showLayer(`<div class="reveal"><h2>旅程完結</h2><div class="stamp">${sticker(t,15)}</div><p>${esc(t.name)} 共 ${s.days} 天，支出 ${esc(t.currency)} ${fmt(s.so)}</p><button class="primary" data-act="toBook" data-id="${t.id}">收進貼紙簿</button></div>`);break;
+      showLayer(`<div class="reveal"><h2>${Lx('旅程完結','Trip finished')}</h2><div class="stamp">${sticker(t,15)}</div><p>${esc(tName(t))} ${Lx('共','·')} ${s.days} ${Lx('天，支出','days, spent')} ${esc(t.currency)} ${fmt(s.so)}</p><button class="primary" data-act="toBook" data-id="${t.id}">${Lx('收進貼紙簿','Put in sticker book')}</button></div>`);break;
     }
     case 'toBook':hideLayer();ui.tab='book';ui.page=pageOfTrip(id);ui.turn='n';render();window.scrollTo(0,0);break;
     case 'open':{const t=bookTrip(id);if(!t)return;ui.detailId=t.sample?null:id;showLayer(detailView(t));break}
@@ -1208,8 +1276,9 @@ document.addEventListener('click',e=>{
     case 'snooze':{const t=tripById(id);if(t){t.snoozeUntil=Date.now()+864e5;save()}hideLayer();break}
     case 'jumpToday':if(!ui.ovDays){ui.ovDays=true;render()}document.getElementById('day-'+today())?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});break;
     case 'settings':settingsView();break;
+    case 'setLang':{const v=b.dataset.v==='en'?'en':'zh';if(v===(EN?'en':'zh')){hideLayer();break}try{localStorage.setItem('lvtie.lang',v)}catch(e){toast(Lx('瀏覽器不允許儲存語言設定','This browser won’t let us save the language setting'));break}location.reload();break}
     case 'exportJSON':exportJSON();break;
-    case 'exportCSV':downloadFile(TravelCore.csv(S),'旅貼帳目-'+today()+'.csv','text/csv;charset=utf-8');toast('已建立 CSV，請確認已儲存檔案');break;
+    case 'exportCSV':downloadFile(TravelCore.csv(S),Lx('旅貼帳目-','lvtie-records-')+today()+'.csv','text/csv;charset=utf-8');toast(Lx('已建立 CSV，請確認已儲存檔案','CSV created. Please check the file was saved.'));break;
     case 'exportRaw':exportRaw();break;
     case 'persist':requestPersistence();break;
     case 'confirmImport':confirmImport();break;
@@ -1218,13 +1287,13 @@ document.addEventListener('click',e=>{
     case 'saveEntry':saveEntry();break;
     case 'reopen':{
       const t=tripById(id);t.status='planned';delete t.end;t.snoozeUntil=Date.now()+864e5;ui.asked[id]=t.snoozeUntil;save();
-      hideLayer();ui.tab='trip';ui.planId=null;ui.home=false;ui.ledgerId=id;ui.dayFor=null;render();window.scrollTo(0,0);toast('已繼續記帳');break;
+      hideLayer();ui.tab='trip';ui.planId=null;ui.home=false;ui.ledgerId=id;ui.dayFor=null;render();window.scrollTo(0,0);toast(Lx('已繼續記帳','Recording resumed'));break;
     }
-    case 'askdel':dialog('刪除這張貼紙？','旅程和所有記錄都會一併刪除，無法復原。','刪除','delTrip',id,true);break;
-    case 'askdelplan':dialog('刪除這個行程？','行程和所有記帳都會一併刪除，無法復原。','刪除','delTrip',id,true);break;
-    case 'askdelsample':dialog('刪除範例旅程？','範例只供參考，刪除不會影響你的旅程和帳目。之後可以在「備份與設定」重新顯示。','刪除範例','delSample',null,true);break;
-    case 'delSample':S.hideSample=true;save();hideLayer();ui.page=Math.min(ui.page,pageCount());if(!doneTrips().length)ui.page=0;render();toast('已刪除範例旅程');break;
-    case 'restoreSample':delete S.hideSample;save();hideLayer();render();toast('已重新顯示範例旅程，在貼紙簿第 1 頁');break;
+    case 'askdel':dialog(Lx('刪除這張貼紙？','Delete this sticker?'),Lx('旅程和所有記錄都會一併刪除，無法復原。','The trip and all its records will be deleted. This can’t be undone.'),Lx('刪除','Delete'),'delTrip',id,true);break;
+    case 'askdelplan':dialog(Lx('刪除這個行程？','Delete this trip?'),Lx('行程和所有記帳都會一併刪除，無法復原。','The trip and all its records will be deleted. This can’t be undone.'),Lx('刪除','Delete'),'delTrip',id,true);break;
+    case 'askdelsample':dialog(Lx('刪除範例旅程？','Delete the sample trip?'),Lx('範例只供參考，刪除不會影響你的旅程和帳目。之後可以在「備份與設定」重新顯示。','The sample is for reference only; deleting it won’t affect your trips or records. You can bring it back from “Backup & Settings”.'),Lx('刪除範例','Delete sample'),'delSample',null,true);break;
+    case 'delSample':S.hideSample=true;save();hideLayer();ui.page=Math.min(ui.page,pageCount());if(!doneTrips().length)ui.page=0;render();toast(Lx('已刪除範例旅程','Sample trip deleted'));break;
+    case 'restoreSample':delete S.hideSample;save();hideLayer();render();toast(Lx('已重新顯示範例旅程，在貼紙簿第 1 頁','Sample trip restored on page 1 of the sticker book'));break;
     case 'delTrip':
       S.trips=S.trips.filter(t=>t.id!==id);
       if(ui.planId===id)wizReset();
@@ -1245,23 +1314,27 @@ document.addEventListener('input',e=>{
     if(t){t.plan[el.dataset.note]=el.value;save()}
   }
 });
-document.addEventListener('toggle',e=>{const el=e.target;if(el.id==='ov-all')ui.ovAll=el.open;else if(el.id==='ov-days')ui.ovDays=el.open},true);
+document.addEventListener('toggle',e=>{const el=e.target;if(el.id==='ov-all')ui.ovAll=el.open;else if(el.id==='ov-days')ui.ovDays=el.open;else if(el.classList&&el.classList.contains('ovd')&&el.dataset.day){(ui.ovOpen=ui.ovOpen||{})[ui.overviewId+'|'+el.dataset.day]=el.open}},true);
 document.addEventListener('change',e=>{
   const el=e.target,f=el.dataset&&el.dataset.f;
   if(el.id==='destination-select'){
     const d=countryById(el.value);
     if(ui.pickFor)ui.pickDest=d?d.id:null;else ui.destId=d?d.id:null;
-    render();const select=$('#destination-select');if(select)select.focus();return;
+    /* 只換預覽、說明和按鈕，不重建 select：重建後再 focus 會令手機再彈一次選單 */
+    const sec=el.closest&&el.closest('section.start'),tmp=sec&&document.createElement('div');if(tmp)tmp.innerHTML=destinationPicker(!!ui.pickFor);
+    if(tmp&&tmp.firstElementChild){['.dest-preview','.budget-caption','[data-act="chooseDestination"]'].forEach(q=>{const o=sec.querySelector(q),n=tmp.querySelector(q);if(o&&n)o.replaceWith(n)});syncCarousel()}else render();
+    return;
   }
+  if(el.id==='edit-type'){const isIn=el.value==='in',cf=$('#edit-cat-f'),h=$('#edit-in-hint'),n=$('#edit-note');if(cf)cf.hidden=isIn;if(h)h.hidden=!isIn;if(n)n.placeholder=isIn?inNotePh():'';return}
   if(el.id==='overview-trip'){ui.overviewId=el.value;render();return}
   if(el.dataset&&el.dataset.plancheck){
     const day=el.dataset.plancheck,on=!!el.checked;ui.draft.planOn[day]=on;
     const row=el.closest?el.closest('.pday'):null;
-    if(row){row.classList.toggle('on',on);const ta=row.querySelector('textarea');if(ta){ta.hidden=!on;if(on)ta.focus()}const sm=row.querySelector('.pday-ck small');if(sm)sm.textContent=on?'有安排':'寫安排'}
+    if(row){row.classList.toggle('on',on);const ta=row.querySelector('textarea');if(ta){ta.hidden=!on;if(on)ta.focus()}const sm=row.querySelector('.pday-ck small');if(sm)sm.textContent=on?Lx('有安排','Planned'):Lx('寫安排','Add plan')}
     return;
   }
   if((el.id==='f-start'||el.id==='f-end')&&el.parentElement)el.parentElement.classList.toggle('is-empty',!el.value);
-  if(el.id==='ledger-date'){const t=curTrip();if(!t)return;if(!TravelCore.validDate(el.value)){toast('請選有效日期')}else if(el.value>today()){toast('只能記今天或之前的帳')}else if(!canRec(t,el.value)){toast(`只能記旅程期間（${t.startDate} 至 ${recMax(t)}）的帳`)}else ui.day=el.value;render();return}
+  if(el.id==='ledger-date'){const t=curTrip();if(!t)return;if(!TravelCore.validDate(el.value)){toast(Lx('請選有效日期','Please choose a valid date'))}else if(el.value>today()){toast(Lx('只能記今天或之前的帳','You can only record today or earlier'))}else if(!canRec(t,el.value)){toast(`${Lx('只能記旅程期間（','You can only record within the trip (')}${t.startDate} ${Lx('至','to')} ${recMax(t)}${Lx('）的帳',')')}`)}else ui.day=el.value;render();return}
   if(el.id==='backup-file'){readImport(el.files&&el.files[0]);return}
   /* 2026-10-24 wizard-1：行程資料只在精靈按「建立／儲存行程」時寫入，不再即改即存 */
 });
@@ -1277,73 +1350,73 @@ document.addEventListener('visibilitychange',()=>{
   checkOverdue();
 });
 /* Core improvements: local-only backups, explicit dates, rates and editing. */
-function hkd(t,n,prefix='約'){
+function hkd(t,n,prefix=Lx('約','≈')){
   if(!t||t.currency==='HKD'||!(t.hkdRate>0))return '';
   return `<small class="hkd">${prefix} HKD ${fmt(Math.round(n*t.hkdRate*100)/100)}</small>`;
 }
-function rateField(t){return t.currency==='HKD'?'<p class="budget-caption">本旅程已用港幣記帳，毋須換算。</p>':`<label>港幣參考匯率（選填）<span class="rate-label">1 ${esc(t.currency)} ＝ 多少 HKD？</span><input data-f="hkdRate" inputmode="decimal" value="${t.hkdRate??''}" placeholder="輸入你兌換時的匯率" autocomplete="off"></label><p class="budget-caption">手動匯率，非即時報價。只作參考，不改動原帳；更新匯率會重算整趟旅程的港幣參考值。清空即可關閉。</p>`}
+function rateField(t){return t.currency==='HKD'?'<p class="budget-caption">'+Lx('本旅程已用港幣記帳，毋須換算。','This trip is already recorded in HKD; no conversion needed.')+'</p>':`<label>${Lx('港幣參考匯率（選填）','HKD reference rate (optional)')}<span class="rate-label">1 ${esc(t.currency)} ${Lx('＝ 多少 HKD？','= how many HKD?')}</span><input data-f="hkdRate" inputmode="decimal" value="${t.hkdRate??''}" placeholder="${Lx('輸入你兌換時的匯率','Rate you exchanged at')}" autocomplete="off"></label><p class="budget-caption">${Lx('手動匯率，非即時報價。只作參考，不改動原帳；更新匯率會重算整趟旅程的港幣參考值。清空即可關閉。','Manual rate, not a live quote. For reference only and doesn’t change your records; updating it recalculates the HKD reference for the whole trip. Clear it to turn off.')}</p>`}
 function updateStorageNotice(){
   const el=$('#storage-notice');if(!el)return;
-  el.innerHTML=window.lvtieStorageError?`<p class="storage-alert">${window.lvtieLoadError?'無法讀取原有帳目，已停止覆寫，請先匯出原始資料。':'未能儲存在本機；請勿關閉頁面，先匯出備份。'}<button class="text-action" data-act="settings">開啟備份設定</button></p>`:'';
+  el.innerHTML=window.lvtieStorageError?`<p class="storage-alert">${window.lvtieLoadError?Lx('無法讀取原有帳目，已停止覆寫，請先匯出原始資料。','Could not read your existing records; saving has been stopped. Please export the raw data first.'):Lx('未能儲存在本機；請勿關閉頁面，先匯出備份。','Could not save on this device. Don’t close the page; export a backup first.')}<button class="text-action" data-act="settings">${Lx('開啟備份設定','Open backup settings')}</button></p>`:'';
 }
 function applyDates(){
   const change=ui.pendingDates;if(!change)return;const t=tripById(change.id);if(!t)return;
   t.startDate=change.startDate;t.endDate=change.endDate;t.start=parseD(t.startDate);if(t.status==='done')t.end=parseD(t.endDate);
-  t.snoozeUntil=0;delete ui.asked[t.id];save();hideLayer();render();toast('日期已修改，所有帳目已保留');
+  t.snoozeUntil=0;delete ui.asked[t.id];save();hideLayer();render();toast(Lx('日期已修改，所有帳目已保留','Dates changed; all records kept'));
 }
 function openEditor(tid,eid){
   const t=tripById(tid),e=t&&t.entries.find(x=>x.id===eid);if(!e)return;
   ui.editId=eid;ui.editTid=tid;
-  showLayer(`<div class="sheet"><div class="wrap editor"><div class="hd"><h1>修改記錄</h1><button class="ghost" data-act="close">取消</button></div><p class="muted">${esc(t.name)} · ${esc(t.currency)}。修改只影響這一筆。</p><div class="two"><label class="field">類型<select id="edit-type"><option value="out" ${e.type==='out'?'selected':''}>支出</option><option value="in" ${e.type==='in'?'selected':''}>收入</option></select></label><label class="field">分類<select id="edit-cat">${CATS.map(c=>`<option value="${c.k}" ${c.k===e.cat?'selected':''}>${c.n}</option>`).join('')}</select></label></div><p class="muted">選擇收入時，分類會自動設為「收入」。</p><label class="field">金額（${esc(t.currency)}）<input id="edit-amount" inputmode="decimal" value="${e.amt}"></label><div class="two"><label class="field">日期<input id="edit-date" type="date" min="${entryDay(e)<t.startDate?entryDay(e):t.startDate}" max="${entryDay(e)>recMax(t)?entryDay(e):recMax(t)}" value="${entryDay(e)}"></label><label class="field">時間<input id="edit-time" type="time" value="${timeLabel(e.ts)}"></label></div><label class="field">備註<input id="edit-note" maxlength="500" value="${esc(e.note)}"></label><p class="muted">旅程範圍：${t.startDate} 至 ${t.endDate}。日期只能改到旅程期間；以前留下的範圍外帳目仍會保留及計入總額。</p><p id="edit-error" class="over" role="alert"></p><button class="primary" data-act="saveEntry">儲存修改</button></div></div>`);
+  showLayer(`<div class="sheet"><div class="wrap editor"><div class="hd"><h1>${Lx('修改記錄','Edit entry')}</h1><button class="ghost" data-act="close">${Lx('返回','Back')}</button></div><p class="muted">${esc(tName(t))} · ${esc(t.currency)}${Lx('。修改只影響這一筆。','. Changes affect this entry only.')}</p><div class="two"><label class="field">${Lx('類型','Type')}<select id="edit-type"><option value="out" ${e.type==='out'?'selected':''}>${Lx('支出','Expense')}</option><option value="in" ${e.type==='in'?'selected':''}>${Lx('收入','Income')}</option></select></label><label class="field" id="edit-cat-f" ${e.type==='in'?'hidden':''}>${Lx('分類','Category')}<select id="edit-cat">${CATS.map(c=>`<option value="${c.k}" ${c.k===e.cat?'selected':''}>${c.n}</option>`).join('')}</select></label></div><p class="muted" id="edit-in-hint" ${e.type==='in'?'':'hidden'}>${Lx('收入不用分類，請在備註寫明來源，例如退稅、朋友還錢。','Income has no category. Use the note to say where it came from, e.g. tax refund.')}</p><label class="field">${Lx('金額（','Amount (')}${esc(t.currency)}${Lx('）',')')}<input id="edit-amount" inputmode="decimal" value="${e.amt}"></label><div class="two"><label class="field">${Lx('日期','Date')}<input id="edit-date" type="date" min="${entryDay(e)<t.startDate?entryDay(e):t.startDate}" max="${entryDay(e)>recMax(t)?entryDay(e):recMax(t)}" value="${entryDay(e)}"></label><label class="field">${Lx('時間','Time')}<input id="edit-time" type="time" value="${timeLabel(e.ts)}"></label></div><label class="field">${Lx('備註','Note')}<input id="edit-note" maxlength="500" placeholder="${e.type==='in'?inNotePh():''}" value="${esc(e.note)}"></label><p class="muted">${Lx('旅程範圍：','Trip dates: ')}${t.startDate} ${Lx('至','to')} ${t.endDate}${Lx('。日期只能改到旅程期間；以前留下的範圍外帳目仍會保留及計入總額。','. Dates can only be moved within the trip; older entries outside the trip are kept and still count towards totals.')}</p><p id="edit-error" class="over" role="alert"></p><button class="primary" data-act="saveEntry">${Lx('儲存修改','Save changes')}</button></div></div>`);
 }
 function outsideDayView(t,day){
   const es=t.entries.filter(e=>entryDay(e)===day).sort((a,b)=>a.ts-b.ts);
-  return `<div class="sheet"><div class="wrap editor"><div class="hd"><h1>${phaseLabel(t,day)} · ${dLabel(day)}</h1><button class="ghost" data-act="close">關閉</button></div><p class="muted">這天不在旅程期間，不能新增記帳。以下是以前留下的記錄，仍計入總額，可點按修改日期或內容。</p><section class="list">${es.map(e=>rowOf(e,false,t)).join('')||'<p class="empty-note">沒有記錄</p>'}</section></div></div>`;
+  return `<div class="sheet"><div class="wrap editor"><div class="hd"><h1>${phaseLabel(t,day)} · ${dLabel(day)}</h1><button class="ghost" data-act="close">${Lx('關閉','Close')}</button></div><p class="muted">${Lx('這天不在旅程期間，不能新增記帳。以下是以前留下的記錄，仍計入總額，可點按修改日期或內容。','This day is outside the trip, so you can’t add entries. These older records still count towards totals; tap one to change its date or details.')}</p><section class="list">${es.map(e=>rowOf(e,false,t)).join('')||'<p class="empty-note">'+Lx('沒有記錄','No records')+'</p>'}</section></div></div>`;
 }
 function saveEntry(){
   const t=tripById(ui.editTid),e=t&&t.entries.find(x=>x.id===ui.editId);if(!e)return;
   const amount=budNum($('#edit-amount').value),date=$('#edit-date').value,time=$('#edit-time').value;
   const error=$('#edit-error');
-  if(!(amount>0)){error.textContent='請輸入大於 0 的金額，最多兩位小數及九位整數。';return}
-  if(!TravelCore.validDate(date)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){error.textContent='請填寫有效日期和時間。';return}
-  if(date>today()){error.textContent='只能記今天或之前的帳。';return}
-  if(date!==entryDay(e)&&!canRec(t,date)){error.textContent=`日期只能改到旅程期間（${t.startDate} 至 ${recMax(t)}）。`;return}
-  const ts=new Date(date+'T'+time+':00').getTime();if(iso(ts)!==date||timeLabel(ts)!==time){error.textContent='此時間在裝置時區不存在，請選另一個時間。';return}
+  if(!(amount>0)){error.textContent=Lx('請輸入大於 0 的金額，最多兩位小數及九位整數。','Enter an amount above 0, with up to 9 digits and 2 decimals.');return}
+  if(!TravelCore.validDate(date)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)){error.textContent=Lx('請填寫有效日期和時間。','Please enter a valid date and time.');return}
+  if(date>today()){error.textContent=Lx('只能記今天或之前的帳。','You can only record today or earlier.');return}
+  if(date!==entryDay(e)&&!canRec(t,date)){error.textContent=`${Lx('日期只能改到旅程期間（','The date can only be within the trip (')}${t.startDate} ${Lx('至','to')} ${recMax(t)}${Lx('）。',').')}`;return}
+  const ts=new Date(date+'T'+time+':00').getTime();if(iso(ts)!==date||timeLabel(ts)!==time){error.textContent=Lx('此時間在裝置時區不存在，請選另一個時間。','This time doesn’t exist in your device’s time zone; please choose another.');return}
   const detail=ui.detailId,type=$('#edit-type').value;
   Object.assign(e,{amt:amount,date,ts,type,cat:type==='in'?'in':$('#edit-cat').value,note:$('#edit-note').value.trim()});
-  if(ui.ledgerId===t.id){ui.day=date;ui.dayFor=t.id}lastDel=null;save();hideLayer();render();if(detail){ui.detailId=detail;showLayer(detailView(t))}toast('記錄已修改');
+  if(ui.ledgerId===t.id){ui.day=date;ui.dayFor=t.id}lastDel=null;save();hideLayer();render();if(detail){ui.detailId=detail;showLayer(detailView(t))}toast(Lx('記錄已修改','Entry updated'));
 }
 function downloadFile(content,name,mime){
   const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
 function exportJSON(){
   const data={format:'lvtie-backup',version:1,exportedAt:new Date().toISOString(),data:S};
-  downloadFile(JSON.stringify(data),'旅貼備份-'+today()+'.json','application/json');
-  toast('已建立備份，請確認已儲存檔案');
+  downloadFile(JSON.stringify(data),Lx('旅貼備份-','lvtie-backup-')+today()+'.json','application/json');
+  toast(Lx('已建立備份，請確認已儲存檔案','Backup created. Please check the file was saved.'));
 }
 function exportRaw(){
-  try{const raw=localStorage.getItem(KEY);if(raw===null){toast('找不到原始儲存資料');return}downloadFile(raw,'旅貼原始資料-'+today()+'.txt','text/plain;charset=utf-8')}catch(e){toast('瀏覽器不允許讀取原始儲存資料')}
+  try{const raw=localStorage.getItem(KEY);if(raw===null){toast(Lx('找不到原始儲存資料','No raw saved data found'));return}downloadFile(raw,Lx('旅貼原始資料-','lvtie-raw-')+today()+'.txt','text/plain;charset=utf-8')}catch(e){toast(Lx('瀏覽器不允許讀取原始儲存資料','The browser doesn’t allow reading the raw saved data'))}
 }
 function settingsView(){
-  showLayer(`<div class="sheet"><div class="wrap settings"><div class="hd"><h1>備份與設定</h1><button class="ghost" data-act="close">關閉</button></div><p>帳目只在這個瀏覽器保存，沒有雲端同步。換裝置或清除網站資料前，先存一份 JSON 備份。</p><section><h2>把旅程帶走</h2><div class="acts"><button class="primary" data-act="exportJSON">匯出 JSON 備份</button><button class="ghost" data-act="exportCSV">匯出 CSV 帳目</button></div><p class="muted">JSON 可還原帳目與行程；CSV 適合試算表，不支援還原。匯出後請確認檔案已存好，內容包含你的私人旅程資料。</p></section><section><h2>從備份帶回來</h2><label class="field">選擇 JSON 備份<input id="backup-file" type="file" accept=".json,application/json"></label><p class="muted">先驗證，再確認合併。不覆蓋現有旅程；相同資料不重複加入，有衝突則保留為另一趟旅程。上限 50 MB。</p><p id="import-error" class="over" role="alert"></p></section><section><h2>本機儲存</h2><p id="persist-status" class="muted">持久儲存可減少系統自動回收資料的機會，但不能代替備份。</p><button class="ghost" data-act="persist">申請持久儲存</button>${window.lvtieLoadError?'<p class="storage-alert">原有資料讀取失敗，為避免覆寫，已暫停儲存及匯入。請匯出原始檔並保留，再尋求協助；不要清除網站資料。</p><button class="ghost" data-act="exportRaw">匯出原始資料</button>':''}</section>${S.hideSample?'<section><h2>範例旅程</h2><p class="muted">範例旅程已刪除。重新顯示後會放回貼紙簿第 1 頁，只供參考，不計入你的記錄。</p><button class="ghost" data-act="restoreSample">重新顯示範例旅程</button></section>':''}<aside id="pwa-info" class="pwa-info" aria-live="polite"></aside><p class="muted">旅貼 · 2026-10-24 fit-1</p></div></div>`);
+  showLayer(`<div class="sheet"><div class="wrap settings"><div class="hd"><h1>${Lx('備份與設定','Backup & Settings')}</h1><button class="ghost" data-act="close">${Lx('關閉','Close')}</button></div><section class="lang-set"><h2>語言 · Language</h2><div class="acts"><button class="${EN?'ghost':'primary'}" data-act="setLang" data-v="zh" aria-pressed="${!EN}">中文</button><button class="${EN?'primary':'ghost'}" data-act="setLang" data-v="en" aria-pressed="${EN}">English</button></div><p class="muted">${Lx('切換後頁面會重新載入，已儲存的帳目不受影響。','The page reloads after switching. Saved records are not affected.')}</p></section><p>${Lx('帳目只在這個瀏覽器保存，沒有雲端同步。換裝置或清除網站資料前，先存一份 JSON 備份。','Records are saved only in this browser, with no cloud sync. Save a JSON backup before switching devices or clearing site data.')}</p><section><h2>${Lx('把旅程帶走','Take your trips with you')}</h2><div class="acts"><button class="primary" data-act="exportJSON">${Lx('匯出 JSON 備份','Export JSON backup')}</button><button class="ghost" data-act="exportCSV">${Lx('匯出 CSV 帳目','Export CSV records')}</button></div><p class="muted">${Lx('JSON 可還原帳目與行程；CSV 適合試算表，不支援還原。匯出後請確認檔案已存好，內容包含你的私人旅程資料。','JSON can restore records and trips; CSV is for spreadsheets and can’t be restored. After exporting, check the file was saved — it contains your private trip data.')}</p></section><section><h2>${Lx('從備份帶回來','Restore from a backup')}</h2><label class="field">${Lx('選擇 JSON 備份','Choose JSON backup')}<input id="backup-file" type="file" accept=".json,application/json"></label><p class="muted">${Lx('先驗證，再確認合併。不覆蓋現有旅程；相同資料不重複加入，有衝突則保留為另一趟旅程。上限 50 MB。','The file is checked first, then you confirm the merge. Existing trips are never overwritten; identical data isn’t added twice, and conflicts are kept as a separate trip. Max 50 MB.')}</p><p id="import-error" class="over" role="alert"></p></section><section><h2>${Lx('本機儲存','Storage on this device')}</h2><p id="persist-status" class="muted">${Lx('持久儲存可減少系統自動回收資料的機會，但不能代替備份。','Persistent storage makes it less likely the system clears your data, but it doesn’t replace backups.')}</p><button class="ghost" data-act="persist">${Lx('申請持久儲存','Request persistent storage')}</button>${window.lvtieLoadError?'<p class="storage-alert">'+Lx('原有資料讀取失敗，為避免覆寫，已暫停儲存及匯入。請匯出原始檔並保留，再尋求協助；不要清除網站資料。','Your existing data couldn’t be read, so saving and importing are paused to avoid overwriting it. Export the raw file and keep it, then get help. Don’t clear site data.')+'</p><button class="ghost" data-act="exportRaw">'+Lx('匯出原始資料','Export raw data')+'</button>':''}</section>${S.hideSample?'<section><h2>'+Lx('範例旅程','Sample trip')+'</h2><p class="muted">'+Lx('範例旅程已刪除。重新顯示後會放回貼紙簿第 1 頁，只供參考，不計入你的記錄。','The sample trip was deleted. If restored, it goes back to page 1 of the sticker book, for reference only and not counted in your records.')+'</p><button class="ghost" data-act="restoreSample">'+Lx('重新顯示範例旅程','Restore sample trip')+'</button></section>':''}<aside id="pwa-info" class="pwa-info" aria-live="polite"></aside><p class="muted">${Lx('旅貼','Lvtie')} · 2026-11-01 aa-1</p></div></div>`);
   if(window.updatePwaUI)window.updatePwaUI();
-  if(navigator.storage?.persisted)navigator.storage.persisted().then(ok=>{const el=$('#persist-status');if(el)el.textContent=ok?'此瀏覽器已授予持久儲存。手動清除資料或換裝置仍會遺失帳目，請定期備份。':'尚未獲授持久儲存，可在下方申請。是否批准由瀏覽器決定，請定期備份。'}).catch(()=>{});
+  if(navigator.storage?.persisted)navigator.storage.persisted().then(ok=>{const el=$('#persist-status');if(el)el.textContent=ok?Lx('此瀏覽器已授予持久儲存。手動清除資料或換裝置仍會遺失帳目，請定期備份。','This browser has granted persistent storage. Clearing data manually or switching devices will still lose your records, so back up regularly.'):Lx('尚未獲授持久儲存，可在下方申請。是否批准由瀏覽器決定，請定期備份。','Persistent storage hasn’t been granted; you can request it below. The browser decides whether to approve, so back up regularly.')}).catch(()=>{});
 }
 async function requestPersistence(){
   const el=$('#persist-status');if(!el)return;
-  if(!navigator.storage?.persist){el.textContent='此瀏覽器不提供持久儲存申請，請使用 JSON 備份。';return}
-  try{const ok=await navigator.storage.persist();el.textContent=ok?'已獲授持久儲存；手動清除資料仍會刪除帳目，請定期備份。':'瀏覽器未批准申請；帳目仍使用一般本機儲存，請匯出 JSON 備份。'}catch(e){el.textContent='未能申請持久儲存，請使用 JSON 備份。'}
+  if(!navigator.storage?.persist){el.textContent=Lx('此瀏覽器不提供持久儲存申請，請使用 JSON 備份。','This browser doesn’t support persistent storage requests; please use JSON backups.');return}
+  try{const ok=await navigator.storage.persist();el.textContent=ok?Lx('已獲授持久儲存；手動清除資料仍會刪除帳目，請定期備份。','Persistent storage granted. Clearing data manually will still delete records, so back up regularly.'):Lx('瀏覽器未批准申請；帳目仍使用一般本機儲存，請匯出 JSON 備份。','The browser didn’t approve the request; records still use normal local storage. Please export a JSON backup.')}catch(e){el.textContent=Lx('未能申請持久儲存，請使用 JSON 備份。','Couldn’t request persistent storage; please use JSON backups.')}
 }
 async function readImport(file){
   if(!file)return;const error=$('#import-error');
-  if(window.lvtieLoadError){if(error)error.textContent='原有資料讀取失敗，請先匯出原始資料，現在不能合併。';return}
+  if(window.lvtieLoadError){if(error)error.textContent=Lx('原有資料讀取失敗，請先匯出原始資料，現在不能合併。','Your existing data couldn’t be read. Export the raw data first; merging isn’t possible right now.');return}
   try{
-    if(file.size>50*1024*1024)throw Error('檔案超過 50 MB 上限');
+    if(file.size>50*1024*1024)throw Error(Lx('檔案超過 50 MB 上限','The file is over the 50 MB limit'));
     const text=await file.text(),data=TravelCore.validateBackup(JSON.parse(text.replace(/^﻿/,'')));
     const result=TravelCore.merge(S,data,uid);ui.pendingImport=data;
     const n=data.trips.reduce((n,t)=>n+t.entries.length,0);
-    dialog('合併這份備份？',`包含 ${data.trips.length} 趟旅程、${n} 筆帳目。將加入 ${result.added} 趟，略過 ${result.skipped} 趟相同資料；其中 ${result.copies} 趟同 ID 的不同版本會以副本保留。原有旅程不會被覆蓋。`,'確認合併','confirmImport');
-  }catch(e){ui.pendingImport=null;if(error&&error.isConnected)error.textContent='未有更改帳目。'+(e instanceof SyntaxError?'檔案不是有效 JSON。':e.message);const input=$('#backup-file');if(input)input.value=''}
+    dialog(Lx('合併這份備份？','Merge this backup?'),`${Lx('包含','Contains')} ${data.trips.length} ${Lx('趟旅程、','trips and')}${n} ${Lx('筆帳目。將加入','records. Will add')} ${result.added} ${Lx('趟，略過','trips and skip')} ${result.skipped} ${Lx('趟相同資料；其中','identical ones;')} ${result.copies} ${Lx('趟同 ID 的不同版本會以副本保留。原有旅程不會被覆蓋。','with the same ID but different content will be kept as copies. Existing trips won’t be overwritten.')}`,Lx('確認合併','Confirm merge'),'confirmImport');
+  }catch(e){ui.pendingImport=null;if(error&&error.isConnected)error.textContent=Lx('未有更改帳目。','No records were changed.')+(e instanceof SyntaxError?Lx('檔案不是有效 JSON。','The file isn’t valid JSON.'):e.message);const input=$('#backup-file');if(input)input.value=''}
 }
 function confirmImport(){
   if(!ui.pendingImport||window.lvtieLoadError)return;
@@ -1351,11 +1424,11 @@ function confirmImport(){
     const result=TravelCore.merge(S,ui.pendingImport,uid);
     // Commit only after the complete new state has been written successfully.
     localStorage.setItem(KEY,JSON.stringify(result.data));S=result.data;mem=S;window.lvtieStorageError=false;lastDel=null;
-    hideLayer();render();settingsView();const msg=$('#import-error');if(msg){msg.className='import-success';msg.textContent=`合併完成：加入 ${result.added} 趟，略過 ${result.skipped} 趟相同資料。`}
-  }catch(e){showLayer(`<div class="dialog"><div class="dlg"><h2>未能匯入</h2><p>沒有更改原有帳目。瀏覽器儲存可能已滿或被封鎖，請先匯出現有資料。</p><button class="ghost" data-act="settings">返回備份設定</button></div></div>`)}
+    hideLayer();render();settingsView();const msg=$('#import-error');if(msg){msg.className='import-success';msg.textContent=`${Lx('合併完成：加入','Merge done: added')} ${result.added} ${Lx('趟，略過','trips and skip')} ${result.skipped} ${Lx('趟相同資料。','identical ones.')}`}
+  }catch(e){showLayer(`<div class="dialog"><div class="dlg"><h2>${Lx('未能匯入','Couldn’t import')}</h2><p>${Lx('沒有更改原有帳目。瀏覽器儲存可能已滿或被封鎖，請先匯出現有資料。','Your existing records weren’t changed. Browser storage may be full or blocked; please export your current data first.')}</p><button class="ghost" data-act="settings">${Lx('返回備份設定','Back to backup settings')}</button></div></div>`)}
 }
 
-function legacyRangeNote(t){return nDays(t)>120?'<p class="budget-caption">舊旅程超過 120 天；顯示最初 120 天及所有有帳目或行程備註的日期。日均按完整旅程天數計算，所有帳目均保留。</p>':''}
+function legacyRangeNote(t){return nDays(t)>120?'<p class="budget-caption">'+Lx('舊旅程超過 120 天；顯示最初 120 天及所有有帳目或行程備註的日期。日均按完整旅程天數計算，所有帳目均保留。','This older trip is longer than 120 days. Showing the first 120 days plus every day with records or plan notes. The daily average uses the full trip length, and all records are kept.')+'</p>':''}
 
 ui.lastToday=today();
 render();

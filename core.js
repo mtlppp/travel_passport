@@ -1,6 +1,7 @@
 /* Travel accounting + backup format. No DOM, network or storage side effects. */
 (function(root){
 'use strict';
+const Lx=(typeof self!=='undefined'&&typeof self.Lx==='function')?self.Lx:(z=>z);
 const pad=n=>String(n).padStart(2,'0');
 const iso=ts=>{const d=new Date(ts);return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`};
 function validDate(s){
@@ -33,41 +34,41 @@ function stats(t){
 }
 const obj=x=>x&&typeof x==='object'&&!Array.isArray(x);
 function validateBackup(input){
-  const fail=s=>{throw Error('備份格式不正確：'+s)};
-  if(!obj(input))fail('需要 JSON 物件');
-  if(input.format!==undefined&&(input.format!=='lvtie-backup'||input.version!==1))fail('不支援此備份版本');
+  const fail=s=>{throw Error(Lx('備份格式不正確：','Invalid backup format: ')+s)};
+  if(!obj(input))fail(Lx('需要 JSON 物件','a JSON object is required'));
+  if(input.format!==undefined&&(input.format!=='lvtie-backup'||input.version!==1))fail(Lx('不支援此備份版本','unsupported backup version'));
   const data=input.format?input.data:input;
-  if(!obj(data)||!Array.isArray(data.trips)||data.trips.length>1000)fail('旅程清單不正確或超過 1,000 趟');
+  if(!obj(data)||!Array.isArray(data.trips)||data.trips.length>1000)fail(Lx('旅程清單不正確或超過 1,000 趟','trip list is invalid or over 1,000 trips'));
   const str=(v,label,max=200)=>{if(typeof v!=='string'||v.length>max)fail(label);return v};
-  const id=v=>{if(typeof v!=='string'||! /^[a-zA-Z0-9_-]{1,100}$/.test(v))fail('記錄 ID');return v};
-  const money=(v,optional=false)=>{if(optional&&(v==null||v===''))return null;if(typeof v!=='number'||!Number.isFinite(v)||v<=0||v>999999999.99||Math.abs(v*100-Math.round(v*100))>0.0001)fail('金額必須為正數，最多兩位小數');return v};
-  const budget=v=>{if(v==null||v==='')return null;if(typeof v!=='number'||!Number.isFinite(v)||v<=0)fail('預算必須是有效正數');return v};
+  const id=v=>{if(typeof v!=='string'||! /^[a-zA-Z0-9_-]{1,100}$/.test(v))fail(Lx('記錄 ID','record ID'));return v};
+  const money=(v,optional=false)=>{if(optional&&(v==null||v===''))return null;if(typeof v!=='number'||!Number.isFinite(v)||v<=0||v>999999999.99||Math.abs(v*100-Math.round(v*100))>0.0001)fail(Lx('金額必須為正數，最多兩位小數','amounts must be positive with up to 2 decimals'));return v};
+  const budget=v=>{if(v==null||v==='')return null;if(typeof v!=='number'||!Number.isFinite(v)||v<=0)fail(Lx('預算必須是有效正數','budget must be a valid positive number'));return v};
   const ids=new Set();let count=0;
   const trips=data.trips.map(raw=>{
-    if(!obj(raw))fail('旅程');const tid=id(raw.id);if(ids.has(tid))fail('旅程 ID 重複');ids.add(tid);
-    const name=str(raw.name,'旅程名稱');if(!name.trim())fail('旅程名稱不能留空');
-    const currency=str(raw.currency,'幣別',3);if(!/^[A-Z]{3}$/.test(currency))fail('幣別需為三個大寫英文字母');
+    if(!obj(raw))fail(Lx('旅程','Trip'));const tid=id(raw.id);if(ids.has(tid))fail(Lx('旅程 ID 重複','duplicate trip ID'));ids.add(tid);
+    const name=str(raw.name,Lx('旅程名稱','trip name'));if(!name.trim())fail(Lx('旅程名稱不能留空','trip name can’t be blank'));
+    const currency=str(raw.currency,Lx('幣別','Currency'),3);if(!/^[A-Z]{3}$/.test(currency))fail(Lx('幣別需為三個大寫英文字母','currency must be three capital letters'));
     const sd=raw.startDate||iso(raw.start),ed=raw.endDate||iso(raw.end||raw.start);
-    if(!validDate(sd)||!validDate(ed)||ed<sd)fail('旅程日期或時長');
-    if(!['planned','done','active'].includes(raw.status))fail('旅程狀態');
-    if(!Array.isArray(raw.entries)||(count+=raw.entries.length)>100000)fail('記錄數量超過上限');
+    if(!validDate(sd)||!validDate(ed)||ed<sd)fail(Lx('旅程日期或時長','trip dates or length'));
+    if(!['planned','done','active'].includes(raw.status))fail(Lx('旅程狀態','trip status'));
+    if(!Array.isArray(raw.entries)||(count+=raw.entries.length)>100000)fail(Lx('記錄數量超過上限','too many records'));
     const eids=new Set(),entries=raw.entries.map(e=>{
-      if(!obj(e))fail('帳目');const eid=id(e.id);if(eids.has(eid))fail('帳目 ID 重複');eids.add(eid);
-      if(!['in','out'].includes(e.type))fail('收入／支出類型');
-      if(!(e.type==='in'?e.cat==='in':['food','move','stay','shop','play','other'].includes(e.cat)))fail('分類');
-      if(typeof e.ts!=='number'||!Number.isFinite(e.ts)||!validDate(iso(e.ts)))fail('記帳時間');
-      const date=e.date===undefined?iso(e.ts):e.date;if(!validDate(date))fail('記帳日期');
-      return {id:eid,type:e.type,amt:money(e.amt),cat:e.cat,note:str(e.note??'','備註',500),ts:e.ts,date};
+      if(!obj(e))fail(Lx('帳目','record'));const eid=id(e.id);if(eids.has(eid))fail(Lx('帳目 ID 重複','duplicate record ID'));eids.add(eid);
+      if(!['in','out'].includes(e.type))fail(Lx('收入／支出類型','income/expense type'));
+      if(!(e.type==='in'?e.cat==='in':['food','move','stay','shop','play','other'].includes(e.cat)))fail(Lx('分類','Category'));
+      if(typeof e.ts!=='number'||!Number.isFinite(e.ts)||!validDate(iso(e.ts)))fail(Lx('記帳時間','record time'));
+      const date=e.date===undefined?iso(e.ts):e.date;if(!validDate(date))fail(Lx('記帳日期','record date'));
+      return {id:eid,type:e.type,amt:money(e.amt),cat:e.cat,note:str(e.note??'',Lx('備註','Note'),500),ts:e.ts,date};
     });
-    const plan={};if(raw.plan!=null&&!obj(raw.plan))fail('每日行程');
-    for(const [d,note] of Object.entries(raw.plan||{})){if(!validDate(d))fail('行程日期');plan[d]=str(note,'行程備註',2000)}
-    const rate=raw.hkdRate??null;if(rate!==null&&(typeof rate!=='number'||!Number.isFinite(rate)||rate<=0||rate>1000000))fail('港幣匯率');
+    const plan={};if(raw.plan!=null&&!obj(raw.plan))fail(Lx('每日行程','Daily plan'));
+    for(const [d,note] of Object.entries(raw.plan||{})){if(!validDate(d))fail(Lx('行程日期','plan date'));plan[d]=str(note,Lx('行程備註','plan note'),2000)}
+    const rate=raw.hkdRate??null;if(rate!==null&&(typeof rate!=='number'||!Number.isFinite(rate)||rate<=0||rate>1000000))fail(Lx('港幣匯率','HKD rate'));
     const t={id:tid,name,currency,start:new Date(sd+'T00:00:00').getTime(),startDate:sd,endDate:ed,status:raw.status==='active'?'planned':raw.status,entries,plan,budget:budget(raw.budget),dailyBudget:budget(raw.dailyBudget),hkdRate:currency==='HKD'?1:rate,snoozeUntil:0};
     if(typeof raw.snoozeUntil==='number'&&Number.isFinite(raw.snoozeUntil)&&raw.snoozeUntil>0)t.snoozeUntil=raw.snoozeUntil;
     if(raw.destinationId!==undefined)t.destinationId=id(raw.destinationId);
-    if(raw.country!==undefined){if(typeof raw.country!=='string'||!/^[A-Z]{2}$/.test(raw.country))fail('國家代碼');t.country=raw.country}
-    if(raw.artIndex!==undefined){if(![0,1,2].includes(raw.artIndex))fail('卡片景點');if(raw.artIndex)t.artIndex=raw.artIndex}
-    if(raw.artVariant!==undefined){if(!['day','night'].includes(raw.artVariant))fail('卡片日夜設定');if(raw.artVariant==='night')t.artVariant='night'}
+    if(raw.country!==undefined){if(typeof raw.country!=='string'||!/^[A-Z]{2}$/.test(raw.country))fail(Lx('國家代碼','country code'));t.country=raw.country}
+    if(raw.artIndex!==undefined){if(![0,1,2].includes(raw.artIndex))fail(Lx('卡片景點','card landmark'));if(raw.artIndex)t.artIndex=raw.artIndex}
+    if(raw.artVariant!==undefined){if(!['day','night'].includes(raw.artVariant))fail(Lx('卡片日夜設定','card day/night setting'));if(raw.artVariant==='night')t.artVariant='night'}
     if(t.status==='done')t.end=new Date(ed+'T00:00:00').getTime();
     return t;
   });
@@ -81,9 +82,9 @@ function merge(current,incoming,newId){
 }
 function csvCell(value){let s=String(value??'');if(/^[\s]*[=+@-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
 function csv(data){
-  const lines=[['旅程','幣別','日期','時間','階段','收支','分類','金額','備註','港幣參考（非實際結算）','手動匯率（1 當地幣＝HKD）']];
-  const labels={food:'餐飲',move:'交通',stay:'住宿',shop:'購物',play:'玩樂',other:'其他',in:'收入'};
-  data.trips.forEach(t=>t.entries.forEach(e=>{const d=new Date(e.ts),rate=t.currency==='HKD'?1:t.hkdRate;lines.push([t.name,t.currency,dateOf(e),pad(d.getHours())+':'+pad(d.getMinutes()),{before:'行前',during:'旅途中',after:'回程後'}[phase(t,dateOf(e))],e.type==='in'?'收入':'支出',labels[e.cat]||e.cat,e.amt,e.note,rate?(e.amt*rate).toFixed(2):'',rate||''])}));
+  const lines=[[Lx('旅程','Trip'),Lx('幣別','Currency'),Lx('日期','Date'),Lx('時間','Time'),Lx('階段','Phase'),Lx('收支','Type'),Lx('分類','Category'),Lx('金額','Amount'),Lx('備註','Note'),Lx('港幣參考（非實際結算）','HKD reference (not actual settlement)'),Lx('手動匯率（1 當地幣＝HKD）','Manual rate (1 local = HKD)')]];
+  const labels={food:Lx('餐飲','Food'),move:Lx('交通','Transport'),stay:Lx('住宿','Stay'),shop:Lx('購物','Shopping'),play:Lx('玩樂','Fun'),other:Lx('其他','Other'),in:Lx('收入','Income')};
+  data.trips.forEach(t=>t.entries.forEach(e=>{const d=new Date(e.ts),rate=t.currency==='HKD'?1:t.hkdRate;lines.push([t.name,t.currency,dateOf(e),pad(d.getHours())+':'+pad(d.getMinutes()),{before:Lx('行前','Pre-trip'),during:Lx('旅途中','During trip'),after:Lx('回程後','After trip')}[phase(t,dateOf(e))],e.type==='in'?Lx('收入','Income'):Lx('支出','Expense'),labels[e.cat]||e.cat,e.amt,e.note,rate?(e.amt*rate).toFixed(2):'',rate||''])}));
   return '﻿'+lines.map(r=>r.map(csvCell).join(',')).join('\r\n');
 }
 const api={validDate,ordinal,dateOf,total,days,phase,daily,stats,validateBackup,merge,csv,csvCell};
