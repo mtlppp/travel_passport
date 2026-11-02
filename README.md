@@ -1,10 +1,38 @@
 # 旅貼 — 核心改善版
 
-版本：2026-11-02-gear-1（前一版 aa-1）。這一版由 2026-10-23-core-2（P0＋P1）加上「日本復古示範版」（lvtie-japan-retro）的全部改動組成，當時兩個資料夾的程式檔現在相同。新增的功能有：24 國國家／幣別、自填地方、各國景點卡片（每國 3 個景點 × 日景／夜景，共 144 張 WebP）、季節徽章、建立旅程時左右滑動選代表圖、離線狀態列，以及把「備份與設定」移到貼紙簿頁。修改前的 core-2 完整備份在 `agent-state/app-backup/lvtie-updated_pre-port_20261024113605/`。
+版本：2026-11-02-feedback-1（前一版 launch-1）。這一版由 2026-10-23-core-2（P0＋P1）加上「日本復古示範版」（lvtie-japan-retro）的全部改動組成，當時兩個資料夾的程式檔現在相同。新增的功能有：24 國國家／幣別、自填地方、各國景點卡片（每國 3 個景點 × 日景／夜景，共 144 張 WebP）、季節徽章、建立旅程時左右滑動選代表圖、離線狀態列，以及把「備份與設定」移到貼紙簿頁。修改前的 core-2 完整備份在 `agent-state/app-backup/lvtie-updated_pre-port_20261024113605/`。
 
 圖片審核狀態：144 張中，各國第 1 個景點的日景／夜景（48 張）已經由使用者審核通過；第 2、3 個景點（96 張）只通過程式的數值檢查，還沒有經過使用者審核。
 
 各版本的改動紀錄如下，越新的越前面。
+
+## 2026-11-02 贊助第二入口、意見回饋、連線狀態用字（版本 2026-11-02-feedback-1）
+
+使用者說「預估用家 90% 不會訪問到設定頁的底端」，所以在 ⚙ 設定頁語言項下方加了「支持與回饋」區塊：「☕ 贊助旅貼」連結和「💬 意見回饋」按鈕。底部原有的贊助區塊保留。修改前的備份在 `agent-state/app-backup/lvtie-updated_pre-feedback_20261102/`。
+
+- 意見回饋表單：類型（問題／建議／其他）、內容（必填，最多 2000 字）、名字和國家或地區（選填，最多 40 字）。不收 email，也不附版本或帳目。未連線時「送出」停用並顯示紅字提示；連線恢復會自動啟用。送到 `FEEDBACK_URL`（Cloudflare Worker，存在 D1）。後台和讀取方法見根目錄的 `feedback-worker/讀取回饋.md`。
+- 底部狀態列改成只講「現在能不能連線」：綠點「已連線」；灰點「未連線（可離線使用）」、「未連線（無法離線使用）」或「未連線（正在檢查能否離線使用…）」。英文是 Online／Offline (works offline) 等。斷線時的提示泡泡是「未連線 · 照常記帳」或「未連線 · 無法離線使用」。
+- privacy.html 加了意見回饋的說明（中英）。
+- 驗證：art 26、core 29（香港、紐約）、runtime 38（香港、紐約）、i18n PASS（44 個畫面）、SW 7、狀態列 5、回饋 Worker 11。手機尺寸代測有 54 個情境、27 頁，新增的 p24–p27 都截圖看過了。我這邊連不到 workers.dev，所以沒有實際送出過回饋。這些都不是真機驗收。
+
+## 2026-11-02 上線準備（版本 2026-11-02-launch-1）
+
+這一版是為了「實驗性正式上線到 Vercel 免費網址」而做，所有新增都不花錢。部署步驟見根目錄的 `上線到Vercel步驟.md`。修改前的備份在 `agent-state/app-backup/lvtie-updated_pre-launch_20261102/`。
+
+- 新增 `privacy.html`，是中英雙語的隱私說明。⚙ 設定頁底部有連結（英文介面會跳到 `#en`）。sw.js 有預先快取它，離線也打得開；sw 的導航處理用 `PAGES` 白名單，其他網址一律回 index.html。
+- 備份提醒：設定頁「把旅程帶走」顯示上次匯出 JSON 的時間（存在 localStorage `lvtie.lastBackup`）。完結旅程的畫面，如果最後一筆帳比上次備份新，會在「收進貼紙簿」下方顯示一句提示和「匯出 JSON 備份」按鈕。不會彈窗。
+- 商店版：網址加 `?src=store` 就不顯示贊助區塊，並記在 localStorage `lvtie.store`，所以從隱私說明頁返回也照樣隱藏。
+- 匿名統計：pwa.js 會在 HTTPS、而且不是 github.io 或 localhost 的網址上載入 `/_vercel/insights/script.js`。要到 Vercel 後台啟用 Analytics 才有數據。不用 cookie。
+- `vercel.json`：設定 sw.js、首頁、privacy.html、manifest 用 `no-cache`；manifest 的 Content-Type；加 nosniff、Referrer-Policy、X-Frame-Options DENY、Permissions-Policy。沒有加 CSP，因為無法用真瀏覽器測試。`.vercelignore` 把 README.md 排除在網站之外。
+- 贊助網址已填：`SPONSOR_URL='https://ko-fi.com/lvtie_'`，所以設定頁底部會顯示「支持旅貼」。`window.LVTIE_SPONSOR_URL` 只要是字串就會覆蓋這個網址，空字串等於隱藏，測試用。
+- 其他：加 meta description（中英）；manifest 加 categories travel／finance。
+- 驗證：art 26、core 29（香港、紐約）、runtime 33、i18n PASS（40 個畫面）、SW 7。手機尺寸代測有 46 個情境、23 頁，新增的 p21–p23 都截圖看過了。另外請了獨立代理人審查，它找到的商店版旗標丟失問題已經修好。這些都不是真機驗收。
+
+## 2026-11-02 贊助入口（版本 2026-11-02-sponsor-1）
+
+- ⚙ 設定頁底部、版本號上方加「支持旅貼／Support Lvtie」區塊：一句說明、「☕ 贊助旅貼」連結（新分頁開啟，rel=noopener）、需要網絡的提示。
+- 網址填在 index.html 的 `const SPONSOR_URL='';`（搜尋 SPONSOR_URL）。**留空時整個區塊不顯示**；只接受 https:// 開頭的網址。測試可用 `window.LVTIE_SPONSOR_URL` 覆蓋。
+- 不加任何彈窗或提示，其他頁面沒有贊助入口。
 
 ## 2026-11-02 設定齒輪、固定簿框（版本 2026-11-02-gear-1）
 

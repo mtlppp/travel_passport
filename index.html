@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#14213D">
+<meta name="description" content="旅貼：離線記錄旅程收支，收藏每趟旅程的紀念貼紙。帳目只存在你的裝置。Lvtie: an offline travel ledger with a sticker book. Your records stay on your device.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="旅貼">
@@ -277,11 +278,18 @@ h1,h2,h3,p{margin:0}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
 .muted,.rate-label{font-size:13px;line-height:1.6;color:var(--mute);overflow-wrap:anywhere}.rate-label{font-weight:500}
 .hkd{display:block;color:var(--mute);font-size:12px;font-weight:600;line-height:1.45;font-variant-numeric:tabular-nums}
+.foot-links a{color:var(--ink);font-weight:700}
+.support-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 16px;border:2px solid var(--ink);border-radius:12px;font-weight:800;font-size:15px;color:var(--ink);text-decoration:none;background:var(--sun,#FFC93C)}
+.fb-kinds button{width:100%;height:auto;min-height:44px;padding:10px 14px;margin-top:0;font-size:14px;border-radius:12px;box-shadow:none}.feedback textarea{font:inherit;font-size:16px;width:100%;min-width:0;border:2px solid var(--line);border-radius:12px;padding:9px;background:#fff;color:var(--ink);resize:vertical}
+.fb-trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.feedback [data-act=sendFeedback]:disabled{opacity:.45}
+.backup-nudge{display:grid;gap:8px;justify-items:center;text-align:center;max-width:300px}.backup-nudge p{font-size:14px;color:rgba(255,255,255,.85);margin:0}.backup-nudge .ghost{border-color:#fff;color:#fff;min-height:44px}
+.sponsor a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border:2px solid var(--ink);border-radius:12px;font-weight:800;font-size:15px;color:var(--ink);text-decoration:none;background:#fff}
 .settings-link{padding-top:22px;text-align:center}.settings-link .ghost{font-size:13px;border:0;color:var(--mute);text-decoration:underline}
 .app-foot{padding:22px 0 4px;text-align:center;display:grid;gap:10px;justify-items:center}
 .app-foot .settings-btn{font-size:14px;font-weight:800;min-height:44px;padding:0 22px}
 .net-line{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 8px;font-size:12px;color:var(--mute);line-height:1.5;margin:0}
-.net-line i{width:8px;height:8px;border-radius:50%;background:#b9b2a3;flex:none}.net-line[data-state=ok] i{background:#3c8b5a}.net-line[data-state=off] i{background:#d08a1c}
+.net-line i{width:8px;height:8px;border-radius:50%;background:#9AA3B2;flex:none}.net-line[data-state=on] i{background:#3c8b5a}
 .net-line button{font-size:12px;font-weight:800;text-decoration:underline;min-height:44px;padding:0 6px;color:var(--ink)}.net-line small{flex-basis:100%;font-size:11px}
 .net-chip{position:sticky;top:8px;z-index:30;margin:0 auto 10px;width:max-content;max-width:100%;display:flex;align-items:center;gap:8px;padding:0 14px;min-height:36px;border-radius:999px;background:#2f2a24;color:#fff;font-size:12.5px;font-weight:700;box-shadow:0 3px 10px rgba(0,0,0,.18)}
 .net-chip button{color:#ffd77a;font-weight:800;text-decoration:underline;font-size:12.5px;min-height:44px}
@@ -399,6 +407,14 @@ details.ovd>summary .ovd-r::after{content:'▾';font-size:12px;color:var(--mute)
 /* 語言：i18n.js 提供 Lx；未載入（例如測試）時一律中文 */
 if(typeof Lx!=='function')var Lx=z=>z;
 const EN=Lx('zh','en')==='en',LOC=EN?'en-GB':'zh-HK';
+/* 贊助連結：開好 Ko-fi 等帳號後把網址填進引號；留空時設定頁不顯示贊助區塊 */
+const SPONSOR_URL='https://ko-fi.com/lvtie_';
+/* 商店版（Microsoft Store、Galaxy Store 等）的開啟網址加 ?src=store：不顯示贊助區塊，避免違反商店的付款規定 */
+/* 意見回饋接收器（Cloudflare Worker＋D1，原始碼在 feedback-worker/）；只在連線時能送出 */
+const FEEDBACK_URL='https://lvtie-feedback.mtlppp.workers.dev/feedback';
+const FB_KINDS=[['bug','問題','Problem'],['idea','建議','Suggestion'],['other','其他','Other']];
+const storeBuild=()=>{if(/[?&]src=store(&|$)/.test(globalThis.location?.search||'')){try{localStorage.setItem('lvtie.store','1')}catch(e){}return true}try{return localStorage.getItem('lvtie.store')==='1'}catch(e){return false}};/* 記住商店版：從隱私說明頁返回（網址沒有 ?src=store）也不顯示贊助 */
+const sponsorUrl=()=>{if(storeBuild())return '';const u=typeof window.LVTIE_SPONSOR_URL==='string'?window.LVTIE_SPONSOR_URL:SPONSOR_URL;return /^https:\/\/[^\s"'<>]+$/.test(u)?u:''};
 /* 英文單數：「1 days」→「1 day」（只在英文介面） */
 const PLUR={days:'day',entries:'entry',trips:'trip',records:'record',countries:'country','trips collected':'trip collected','trips today':'trip today','overlapping trips':'overlapping trip'};
 const plur=h=>EN?String(h).replace(/(^|[^\d.,])1 (trips collected|trips today|overlapping trips|days|entries|trips|records|countries)\b/g,(m,p,w)=>p+'1 '+PLUR[w]):h;
@@ -1294,7 +1310,7 @@ document.addEventListener('click',e=>{
       t.end=parseD(t.endDate);
       ui.planId=null;ui.ledgerId=null;ui.asked[id]=1;save();render();
       const s=stats(t);
-      showLayer(`<div class="reveal"><h2>${Lx('旅程完結','Trip finished')}</h2><div class="stamp">${sticker(t,15)}</div><p>${esc(tName(t))} ${Lx('共','·')} ${s.days} ${Lx('天，支出','days, spent')} ${esc(t.currency)} ${fmt(s.so)}</p><button class="primary" data-act="toBook" data-id="${t.id}">${Lx('收進貼紙簿','Put in sticker book')}</button></div>`);break;
+      showLayer(`<div class="reveal"><h2>${Lx('旅程完結','Trip finished')}</h2><div class="stamp">${sticker(t,15)}</div><p>${esc(tName(t))} ${Lx('共','·')} ${s.days} ${Lx('天，支出','days, spent')} ${esc(t.currency)} ${fmt(s.so)}</p><button class="primary" data-act="toBook" data-id="${t.id}">${Lx('收進貼紙簿','Put in sticker book')}</button>${needsBackup(t)?'<div class="backup-nudge"><p>'+Lx('這趟的帳目只存在這部裝置。要不要順手存一份備份？','This trip’s records are only on this device. Save a backup while you’re here?')+'</p><button class="ghost" data-act="exportJSON">'+Lx('匯出 JSON 備份','Export JSON backup')+'</button></div>':''}</div>`);break;
     }
     case 'toBook':hideLayer();ui.tab='book';ui.page=pageOfTrip(id);ui.turn='n';render();window.scrollTo(0,0);break;
     case 'open':{const t=bookTrip(id);if(!t)return;ui.detailId=t.sample?null:id;showLayer(detailView(t));break}
@@ -1302,6 +1318,9 @@ document.addEventListener('click',e=>{
     case 'snooze':{const t=tripById(id);if(t){t.snoozeUntil=Date.now()+864e5;save()}hideLayer();break}
     case 'jumpToday':if(!ui.ovDays){ui.ovDays=true;render()}document.getElementById('day-'+today())?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});break;
     case 'settings':settingsView();break;
+    case 'feedback':feedbackView();break;
+    case 'fbKind':document.querySelectorAll('.fb-kinds [data-act="fbKind"]').forEach(x=>{const on=x===b;x.className=on?'primary':'ghost';x.setAttribute('aria-pressed',String(on))});break;
+    case 'sendFeedback':sendFeedback(b);break;
     case 'setLang':{const v=b.dataset.v==='en'?'en':'zh';if(v===(EN?'en':'zh')){hideLayer();break}try{localStorage.setItem('lvtie.lang',v)}catch(e){toast(Lx('瀏覽器不允許儲存語言設定','This browser won’t let us save the language setting'));break}location.reload();break}
     case 'exportJSON':exportJSON();break;
     case 'exportCSV':downloadFile(TravelCore.csv(S),Lx('旅貼帳目-','lvtie-records-')+today()+'.csv','text/csv;charset=utf-8');toast(Lx('已建立 CSV，請確認已儲存檔案','CSV created. Please check the file was saved.'));break;
@@ -1415,16 +1434,55 @@ function saveEntry(){
 function downloadFile(content,name,mime){
   const blob=new Blob([content],{type:mime}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
+/* 備份提醒：只記「這個瀏覽器上次匯出 JSON 的時間」，不放進 S（不隨備份檔走） */
+const BACKUP_KEY='lvtie.lastBackup';
+const lastBackupAt=()=>{try{return Number(localStorage.getItem(BACKUP_KEY))||0}catch(e){return 0}};
+const needsBackup=t=>lastBackupAt()<Math.max(parseD(t.startDate),...(t.entries||[]).map(e=>Number(e.ts)||0));
+const lastBackupText=()=>{const t=lastBackupAt();if(!t)return Lx('這個瀏覽器還沒有匯出過 JSON 備份。','No JSON backup has been exported from this browser yet.');const d=new Date(t);return Lx('上次匯出 JSON 備份：','Last JSON backup: ')+d.toLocaleDateString(LOC,{year:'numeric',month:'short',day:'numeric'})};
 function exportJSON(){
   const data={format:'lvtie-backup',version:1,exportedAt:new Date().toISOString(),data:S};
   downloadFile(JSON.stringify(data),Lx('旅貼備份-','lvtie-backup-')+today()+'.json','application/json');
+  try{localStorage.setItem(BACKUP_KEY,String(Date.now()))}catch(e){}
+  const lb=document.getElementById('last-backup');if(lb)lb.textContent=lastBackupText();
   toast(Lx('已建立備份，請確認已儲存檔案','Backup created. Please check the file was saved.'));
 }
 function exportRaw(){
   try{const raw=localStorage.getItem(KEY);if(raw===null){toast(Lx('找不到原始儲存資料','No raw saved data found'));return}downloadFile(raw,Lx('旅貼原始資料-','lvtie-raw-')+today()+'.txt','text/plain;charset=utf-8')}catch(e){toast(Lx('瀏覽器不允許讀取原始儲存資料','The browser doesn’t allow reading the raw saved data'))}
 }
+function supportRow(){
+  const u=sponsorUrl();
+  return `<section class="support-row"><h2>${Lx('支持與回饋','Support & feedback')}</h2><div class="acts">${u?`<a class="support-link" href="${esc(u)}" target="_blank" rel="noopener">☕ ${Lx('贊助旅貼','Support Lvtie')}</a>`:''}<button class="ghost" data-act="feedback">💬 ${Lx('意見回饋','Send feedback')}</button></div><p class="muted">${u?Lx('贊助和意見回饋都需要網絡連線。','Support and feedback both need an internet connection.'):Lx('意見回饋需要網絡連線。','Feedback needs an internet connection.')}</p></section>`;
+}
+const fbOfflineText=()=>Lx('目前未連線。意見回饋要連線才能送出，請連線後再試。','You’re offline. Feedback needs a connection to send, so please try again when you’re online.');
+function feedbackView(){
+  const on=navigator.onLine!==false;
+  showLayer(`<div class="sheet"><div class="wrap settings feedback"><div class="hd"><h1>${Lx('意見回饋','Feedback')}</h1><button class="ghost" data-act="settings">${Lx('返回','Back')}</button></div><p class="muted">${Lx('遇到問題、想要的功能，或者只是打個招呼都可以。名字和國家可以留空；不會附上你的帳目。','Tell us about a problem, a feature you’d like, or just say hi. Name and country are optional, and none of your records are attached.')}</p><section><h2>${Lx('類型','Type')}</h2><div class="acts fb-kinds" role="group" aria-label="${Lx('類型','Type')}">${FB_KINDS.map(([v,z,e])=>`<button type="button" class="ghost" data-act="fbKind" data-v="${v}" aria-pressed="false">${Lx(z,e)}</button>`).join('')}</div></section><label class="field">${Lx('內容','Message')}<textarea id="fb-msg" rows="5" maxlength="2000" placeholder="${Lx('想跟開發者說的話','What would you like to tell the developer?')}"></textarea></label><label class="field">${Lx('名字（選填）','Name (optional)')}<input id="fb-name" maxlength="40" autocomplete="off"></label><label class="field">${Lx('國家或地區（選填）','Country or region (optional)')}<input id="fb-country" maxlength="40" autocomplete="off"></label><label class="fb-trap" aria-hidden="true">Website<input id="fb-website" tabindex="-1" autocomplete="off"></label><p id="fb-status" class="${on?'muted':'over'}" role="status">${on?'':fbOfflineText()}</p><button class="primary" data-act="sendFeedback"${on?'':' disabled'}>${Lx('送出','Send')}</button></div></div>`);
+}
+function fbOnlineChanged(){
+  const b=document.querySelector('[data-act="sendFeedback"]'),st=$('#fb-status');if(!b||!st)return;
+  const on=navigator.onLine!==false;b.disabled=!on;
+  if(!on){st.className='over';st.textContent=fbOfflineText()}else if(st.textContent===fbOfflineText()){st.className='muted';st.textContent=''}
+}
+window.addEventListener('online',fbOnlineChanged);window.addEventListener('offline',fbOnlineChanged);
+async function sendFeedback(btn){
+  const st=$('#fb-status'),ta=$('#fb-msg');if(!st||!ta)return;
+  const say=(t,bad)=>{st.className=bad?'over':'muted';st.textContent=t};
+  const message=ta.value.trim();
+  if(message.length<2){say(Lx('請先寫下內容。','Please write a message first.'),true);ta.focus();return}
+  if(navigator.onLine===false){say(fbOfflineText(),true);return}
+  const kind=document.querySelector('.fb-kinds [aria-pressed="true"]')?.dataset.v||'other';
+  const body=JSON.stringify({kind,message,name:$('#fb-name')?.value.trim()||'',country:$('#fb-country')?.value.trim()||'',website:$('#fb-website')?.value||''});
+  btn.disabled=true;say(Lx('送出中…','Sending…'));
+  const ctrl=typeof AbortController==='function'?new AbortController():null,timer=ctrl&&setTimeout(()=>ctrl.abort(),15000);
+  try{
+    const r=await fetch(FEEDBACK_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=UTF-8'},body,credentials:'omit',referrerPolicy:'no-referrer',signal:ctrl?.signal});
+    if(r.ok){hideLayer();toast(Lx('謝謝！已收到你的意見','Thanks! Your feedback was sent.'));return}
+    say(r.status===429?Lx('送得太快了，請等一分鐘再試；你寫的內容還在。','That was too fast. Please wait a minute and try again — your message is still here.'):r.status===503?Lx('今天收到的意見太多，請明天再試；你寫的內容還在。','We’ve had too much feedback today. Please try again tomorrow — your message is still here.'):Lx('送不出去，請稍後再試；你寫的內容還在。','Couldn’t send. Please try again later — your message is still here.'),true);
+  }catch(e){say(Lx('送不出去。請確認已連線，稍後再試；你寫的內容還在。','Couldn’t send. Check your connection and try again — your message is still here.'),true)}
+  finally{if(timer)clearTimeout(timer);if(btn.isConnected)btn.disabled=navigator.onLine===false}
+}
 function settingsView(){
-  showLayer(`<div class="sheet"><div class="wrap settings"><div class="hd"><h1>${Lx('備份與設定','Backup & Settings')}</h1><button class="ghost" data-act="close">${Lx('關閉','Close')}</button></div><section class="lang-set"><h2>語言 · Language</h2><div class="acts"><button class="${EN?'ghost':'primary'}" data-act="setLang" data-v="zh" aria-pressed="${!EN}">中文</button><button class="${EN?'primary':'ghost'}" data-act="setLang" data-v="en" aria-pressed="${EN}">English</button></div><p class="muted">${Lx('切換後頁面會重新載入，已儲存的帳目不受影響。','The page reloads after switching. Saved records are not affected.')}</p></section><p>${Lx('帳目只在這個瀏覽器保存，沒有雲端同步。換裝置或清除網站資料前，先存一份 JSON 備份。','Records are saved only in this browser, with no cloud sync. Save a JSON backup before switching devices or clearing site data.')}</p><section><h2>${Lx('把旅程帶走','Take your trips with you')}</h2><div class="acts"><button class="primary" data-act="exportJSON">${Lx('匯出 JSON 備份','Export JSON backup')}</button><button class="ghost" data-act="exportCSV">${Lx('匯出 CSV 帳目','Export CSV records')}</button></div><p class="muted">${Lx('JSON 可還原帳目與行程；CSV 適合試算表，不支援還原。匯出後請確認檔案已存好，內容包含你的私人旅程資料。','JSON can restore records and trips; CSV is for spreadsheets and can’t be restored. After exporting, check the file was saved — it contains your private trip data.')}</p></section><section><h2>${Lx('從備份帶回來','Restore from a backup')}</h2><label class="field">${Lx('選擇 JSON 備份','Choose JSON backup')}<input id="backup-file" type="file" accept=".json,application/json"></label><p class="muted">${Lx('先驗證，再確認合併。不覆蓋現有旅程；相同資料不重複加入，有衝突則保留為另一趟旅程。上限 50 MB。','The file is checked first, then you confirm the merge. Existing trips are never overwritten; identical data isn’t added twice, and conflicts are kept as a separate trip. Max 50 MB.')}</p><p id="import-error" class="over" role="alert"></p></section><section><h2>${Lx('本機儲存','Storage on this device')}</h2><p id="persist-status" class="muted">${Lx('持久儲存可減少系統自動回收資料的機會，但不能代替備份。','Persistent storage makes it less likely the system clears your data, but it doesn’t replace backups.')}</p><button class="ghost" data-act="persist">${Lx('申請持久儲存','Request persistent storage')}</button>${window.lvtieLoadError?'<p class="storage-alert">'+Lx('原有資料讀取失敗，為避免覆寫，已暫停儲存及匯入。請匯出原始檔並保留，再尋求協助；不要清除網站資料。','Your existing data couldn’t be read, so saving and importing are paused to avoid overwriting it. Export the raw file and keep it, then get help. Don’t clear site data.')+'</p><button class="ghost" data-act="exportRaw">'+Lx('匯出原始資料','Export raw data')+'</button>':''}</section>${S.hideSample?'<section><h2>'+Lx('範例旅程','Sample trip')+'</h2><p class="muted">'+Lx('範例旅程已刪除。重新顯示後會放回貼紙簿第 1 頁，只供參考，不計入你的記錄。','The sample trip was deleted. If restored, it goes back to page 1 of the sticker book, for reference only and not counted in your records.')+'</p><button class="ghost" data-act="restoreSample">'+Lx('重新顯示範例旅程','Restore sample trip')+'</button></section>':''}<aside id="pwa-info" class="pwa-info" aria-live="polite"></aside><p class="muted">${Lx('旅貼','Lvtie')} · 2026-11-02 gear-1</p></div></div>`);
+  showLayer(`<div class="sheet"><div class="wrap settings"><div class="hd"><h1>${Lx('備份與設定','Backup & Settings')}</h1><button class="ghost" data-act="close">${Lx('關閉','Close')}</button></div><section class="lang-set"><h2>語言 · Language</h2><div class="acts"><button class="${EN?'ghost':'primary'}" data-act="setLang" data-v="zh" aria-pressed="${!EN}">中文</button><button class="${EN?'primary':'ghost'}" data-act="setLang" data-v="en" aria-pressed="${EN}">English</button></div><p class="muted">${Lx('切換後頁面會重新載入，已儲存的帳目不受影響。','The page reloads after switching. Saved records are not affected.')}</p></section>${supportRow()}<p>${Lx('帳目只在這個瀏覽器保存，沒有雲端同步。換裝置或清除網站資料前，先存一份 JSON 備份。','Records are saved only in this browser, with no cloud sync. Save a JSON backup before switching devices or clearing site data.')}</p><section><h2>${Lx('把旅程帶走','Take your trips with you')}</h2><div class="acts"><button class="primary" data-act="exportJSON">${Lx('匯出 JSON 備份','Export JSON backup')}</button><button class="ghost" data-act="exportCSV">${Lx('匯出 CSV 帳目','Export CSV records')}</button></div><p class="muted">${Lx('JSON 可還原帳目與行程；CSV 適合試算表，不支援還原。匯出後請確認檔案已存好，內容包含你的私人旅程資料。','JSON can restore records and trips; CSV is for spreadsheets and can’t be restored. After exporting, check the file was saved — it contains your private trip data.')}</p><p id="last-backup" class="muted">${lastBackupText()}</p></section><section><h2>${Lx('從備份帶回來','Restore from a backup')}</h2><label class="field">${Lx('選擇 JSON 備份','Choose JSON backup')}<input id="backup-file" type="file" accept=".json,application/json"></label><p class="muted">${Lx('先驗證，再確認合併。不覆蓋現有旅程；相同資料不重複加入，有衝突則保留為另一趟旅程。上限 50 MB。','The file is checked first, then you confirm the merge. Existing trips are never overwritten; identical data isn’t added twice, and conflicts are kept as a separate trip. Max 50 MB.')}</p><p id="import-error" class="over" role="alert"></p></section><section><h2>${Lx('本機儲存','Storage on this device')}</h2><p id="persist-status" class="muted">${Lx('持久儲存可減少系統自動回收資料的機會，但不能代替備份。','Persistent storage makes it less likely the system clears your data, but it doesn’t replace backups.')}</p><button class="ghost" data-act="persist">${Lx('申請持久儲存','Request persistent storage')}</button>${window.lvtieLoadError?'<p class="storage-alert">'+Lx('原有資料讀取失敗，為避免覆寫，已暫停儲存及匯入。請匯出原始檔並保留，再尋求協助；不要清除網站資料。','Your existing data couldn’t be read, so saving and importing are paused to avoid overwriting it. Export the raw file and keep it, then get help. Don’t clear site data.')+'</p><button class="ghost" data-act="exportRaw">'+Lx('匯出原始資料','Export raw data')+'</button>':''}</section>${S.hideSample?'<section><h2>'+Lx('範例旅程','Sample trip')+'</h2><p class="muted">'+Lx('範例旅程已刪除。重新顯示後會放回貼紙簿第 1 頁，只供參考，不計入你的記錄。','The sample trip was deleted. If restored, it goes back to page 1 of the sticker book, for reference only and not counted in your records.')+'</p><button class="ghost" data-act="restoreSample">'+Lx('重新顯示範例旅程','Restore sample trip')+'</button></section>':''}<aside id="pwa-info" class="pwa-info" aria-live="polite"></aside>${sponsorUrl()?'<section class="sponsor"><h2>'+Lx('支持旅貼','Support Lvtie')+'</h2><p class="muted">'+Lx('旅貼免費、沒有廣告，你的帳目只存在你的裝置。如果它在旅途中幫上忙，歡迎請開發者喝杯咖啡。','Lvtie is free, has no ads, and your records stay on your device. If it helped on your trip, you can buy the developer a coffee.')+'</p><a href="'+esc(sponsorUrl())+'" target="_blank" rel="noopener">☕ '+Lx('贊助旅貼','Support with a coffee')+'</a><p class="muted">'+Lx('會在瀏覽器開啟贊助頁，需要網絡連線。','Opens the support page in your browser. Needs an internet connection.')+'</p></section>':''}<p class="muted foot-links"><a href="./privacy.html${EN?'#en':''}">${Lx('隱私說明','Privacy notice')}</a> · ${Lx('旅貼','Lvtie')} · 2026-11-02 feedback-1</p></div></div>`);
   if(window.updatePwaUI)window.updatePwaUI();
   if(navigator.storage?.persisted)navigator.storage.persisted().then(ok=>{const el=$('#persist-status');if(el)el.textContent=ok?Lx('此瀏覽器已授予持久儲存。手動清除資料或換裝置仍會遺失帳目，請定期備份。','This browser has granted persistent storage. Clearing data manually or switching devices will still lose your records, so back up regularly.'):Lx('尚未獲授持久儲存，可在下方申請。是否批准由瀏覽器決定，請定期備份。','Persistent storage hasn’t been granted; you can request it below. The browser decides whether to approve, so back up regularly.')}).catch(()=>{});
 }
