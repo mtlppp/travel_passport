@@ -90,7 +90,7 @@ h1,h2,h3,p{margin:0}
 
 /* book */
 .bk h1{font-size:30px;font-weight:900;line-height:1.2}
-.cover{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:relative;width:min(100%,340px);aspect-ratio:3/4.3;margin:10px auto 0;padding:28px 24px 28px 36px;border-radius:8px 22px 22px 8px;color:#E8C26A;text-align:center;
+.cover{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;position:relative;width:100%;height:100%;margin:0;padding:24px 20px 24px 32px;border-radius:8px 22px 22px 8px;color:#E8C26A;text-align:center;
   background:radial-gradient(120% 70% at 30% 0%,rgba(255,255,255,.12),transparent 60%),repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 2px,transparent 2px 5px),#14213D;
   box-shadow:inset 12px 0 0 rgba(0,0,0,.3),inset 14px 0 0 rgba(255,255,255,.07),0 22px 30px -14px rgba(20,33,61,.6)}
 .cover:active{transform:scale(.99)}
@@ -100,12 +100,12 @@ h1,h2,h3,p{margin:0}
 .cc{margin-top:18px;font-size:14px;font-weight:700;color:#F3DFA6;border:1.5px solid rgba(232,194,106,.5);border-radius:999px;padding:8px 16px}
 .blank{margin-top:28px;display:grid;gap:12px;justify-items:center;text-align:center}
 .blank h2{font-size:20px;font-weight:900}
-.page{--u:clamp(10px,calc((min(100vw,480px) - 132px) / 18),16px);position:relative;border-radius:6px 16px 16px 6px;padding:58px 24px 40px 32px;display:grid;gap:34px;min-height:660px;align-content:start;transform-origin:left center;
+.page{--u:12px;position:relative;width:100%;height:100%;border-radius:6px 16px 16px 6px;padding:42px 14px 10px 24px;display:grid;grid-template-rows:auto auto;gap:6px;align-content:space-evenly;overflow:hidden;transform-origin:left center;
   background:radial-gradient(circle at 15% 85%,rgba(217,120,150,.20),transparent 50%),radial-gradient(circle at 85% 15%,rgba(80,130,200,.22),transparent 55%),repeating-radial-gradient(circle at 50% 130%,rgba(63,111,224,.08) 0 1px,transparent 1px 7px),#F4F2F8;
   box-shadow:inset 8px 0 14px -8px rgba(20,33,61,.28),0 2px 0 var(--line)}
 .pn{position:absolute;top:8px;right:16px;font-size:34px;font-weight:900;color:transparent;-webkit-text-stroke:1.5px rgba(63,111,224,.38);font-variant-numeric:tabular-nums}
 .pt{position:absolute;top:18px;left:26px;font-size:13px;font-weight:800;letter-spacing:.2em;color:#6B7590}
-.slot{display:grid;place-items:center}
+.slot{display:grid;place-items:center;min-width:0}
 .slot button{display:block;padding:8px;border-radius:10px;max-width:100%}
 .slot .st{font-size:var(--u)}
 .slot button,.stage{position:relative}.slot.is-sample{gap:4px}.nowrap{white-space:nowrap;flex-shrink:0}
@@ -123,7 +123,18 @@ h1,h2,h3,p{margin:0}
 .turn-p{animation:turnP .38s ease-out}
 @keyframes turnN{from{transform:perspective(900px) rotateY(-55deg);opacity:.3}to{transform:none;opacity:1}}
 @keyframes turnP{from{transform:perspective(900px) rotateY(40deg);opacity:.3}to{transform:none;opacity:1}}
-.pg{display:grid;grid-template-columns:52px 1fr 52px;align-items:center;gap:10px;margin-top:16px}
+.pg{display:grid;grid-template-columns:52px 1fr 52px;align-items:center;gap:10px;margin-top:8px;flex:none}
+/* 貼紙簿：整頁不捲動，簿框（封面與內頁同尺寸）在標題列與翻頁列之間置中 */
+.bk{display:flex;flex-direction:column;height:calc(100vh - 18px - 92px);height:calc(100dvh - env(safe-area-inset-top) - 18px - 92px - env(safe-area-inset-bottom));min-height:440px}
+.bk-hd{display:flex;justify-content:space-between;align-items:center;gap:12px;flex:none;margin-bottom:6px}
+.bk-hd h1{font-size:24px}
+.gear{flex:none;width:44px;height:44px;border-radius:12px;border:2px solid var(--ink);display:grid;place-items:center;background:#fff}
+.gear svg{width:22px;height:22px;fill:none;stroke:var(--ink);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.bk-stage{flex:1;min-height:0;display:grid;place-items:center;container-type:size}
+.book{width:min(100%,340px);aspect-ratio:3/4.3;width:min(100cqw,380px,100cqh * 3 / 4.3);height:auto}
+.book>.cover,.book>.page{box-sizing:border-box}
+.bk .blank{margin-top:12px;flex:none}
+.hd-gear{display:flex;justify-content:space-between;align-items:center;gap:12px}.hd-gear h1{min-width:0}
 .pg button{height:52px;border-radius:16px;background:var(--ink);color:var(--sun);font-size:22px;font-weight:900}
 .pg button:disabled{opacity:.3;cursor:default}
 .pg p{text-align:center;font-weight:800;font-size:14px;color:var(--mute)}
@@ -962,11 +973,11 @@ function ovDayList(t,days){
 }
 function overviewView(){
   const t=overviewTrip();
-  if(!t)return `<section class="start"><h1>${Lx('收支總覽','Overview')}</h1><p class="sub">${Lx('先建立一趟旅程，就能在旅程期間記帳和查看預算。','Create a trip first, then you can record spending and track your budget during the trip.')}</p><button class="primary" data-act="overviewHome">${Lx('建立旅程','Create trip')}</button></section>`;
+  if(!t)return `<section class="start"><div class="hd-gear"><h1>${Lx('收支總覽','Overview')}</h1>${gearBtn()}</div><p class="sub">${Lx('先建立一趟旅程，就能在旅程期間記帳和查看預算。','Create a trip first, then you can record spending and track your budget during the trip.')}</p><button class="primary" data-act="overviewHome">${Lx('建立旅程','Create trip')}</button></section>`;
   ui.overviewId=t.id;
   const totals=stats(t),days=dailyTotals(t),net=Math.round((totals.si-totals.so)*100)/100,hasIncome=totals.si>0;
   const money=(income,out,balance)=>`<div class="ov-money ${hasIncome?'':'expense-only'}">${hasIncome?`<div><small>${Lx('收入','Income')}</small><b>${fmt(income)}</b></div>`:''}<div><small>${Lx('支出','Spent')}</small><b>${fmt(out)}</b></div>${hasIncome?`<div><small>${Lx('旅程總計','Trip net')}</small><b>${balance>0?'+':''}${fmt(balance)}</b></div>`:''}</div>`;
-  return `<header class="ov-head"><h1>${Lx('收支總覽','Overview')}</h1><label class="field">${Lx('旅程','Trip')}<select id="overview-trip">${S.trips.map(x=>`<option value="${x.id}" ${x.id===t.id?'selected':''}>${esc(tripOptLabel(x))}</option>`).join('')}</select></label><p>${esc(t.currency)} · ${t.startDate} — ${t.endDate}</p></header><details id="ov-all" class="ov-total" ${ui.ovAll!==false?'open':''}><summary><span class="ov-sum-t">${Lx('旅程累計','Trip total')}</span><span class="ov-sum-v">${Lx('支出','Spent')} ${esc(t.currency)} ${fmt(totals.so)}${t.budget!=null&&totals.so>t.budget?' <b class="over">'+Lx('· 已超預算','· over budget')+'</b>':''}</span></summary>${money(totals.si,totals.so,net)}${hkd(t,totals.so)}<p class="ov-note">${Lx('包含行前與回程後所有記錄。','Includes all pre-trip and after-trip records.')}${hasIncome?Lx('「旅程總計」不代表剩餘預算。','"Trip net" is not the same as budget left.'):''}</p><h3 class="cat-h">${Lx('支出分類','Spending by category')}</h3>${categoryStack(t)}${budgetView(t)}</details><details id="ov-days" class="ov-total ov-days" ${ui.ovDays?'open':''}><summary><span class="ov-sum-t">${Lx('每日收支','Daily totals')}</span><span class="ov-sum-v">${Lx('旅程','Trip')} ${nDays(t)} ${Lx('天','days')}</span></summary>${days.some(r=>r.day===today())?'<div class="ov-key"><span></span><button class="text-action" data-act="jumpToday">'+Lx('前往今天','Go to today')+'</button></div>':''}${legacyRangeNote(t)}${ovDayList(t,days)}</details>`;
+  return `<header class="ov-head"><div class="hd-gear"><h1>${Lx('收支總覽','Overview')}</h1>${gearBtn()}</div><label class="field">${Lx('旅程','Trip')}<select id="overview-trip">${S.trips.map(x=>`<option value="${x.id}" ${x.id===t.id?'selected':''}>${esc(tripOptLabel(x))}</option>`).join('')}</select></label><p>${esc(t.currency)} · ${t.startDate} — ${t.endDate}</p></header><details id="ov-all" class="ov-total" ${ui.ovAll!==false?'open':''}><summary><span class="ov-sum-t">${Lx('旅程累計','Trip total')}</span><span class="ov-sum-v">${Lx('支出','Spent')} ${esc(t.currency)} ${fmt(totals.so)}${t.budget!=null&&totals.so>t.budget?' <b class="over">'+Lx('· 已超預算','· over budget')+'</b>':''}</span></summary>${money(totals.si,totals.so,net)}${hkd(t,totals.so)}<p class="ov-note">${Lx('包含行前與回程後所有記錄。','Includes all pre-trip and after-trip records.')}${hasIncome?Lx('「旅程總計」不代表剩餘預算。','"Trip net" is not the same as budget left.'):''}</p><h3 class="cat-h">${Lx('支出分類','Spending by category')}</h3>${categoryStack(t)}${budgetView(t)}</details><details id="ov-days" class="ov-total ov-days" ${ui.ovDays?'open':''}><summary><span class="ov-sum-t">${Lx('每日收支','Daily totals')}</span><span class="ov-sum-v">${Lx('旅程','Trip')} ${nDays(t)} ${Lx('天','days')}</span></summary>${days.some(r=>r.day===today())?'<div class="ov-key"><span></span><button class="text-action" data-act="jumpToday">'+Lx('前往今天','Go to today')+'</button></div>':''}${legacyRangeNote(t)}${ovDayList(t,days)}</details>`;
 }
 function switchBar(t){
   const o=liveTrips().filter(x=>x.id!==t.id);if(!o.length||!liveTrips().some(x=>x.id===t.id))return '';
@@ -1039,16 +1050,19 @@ function groupSlot(g){
   const cap=g.sub.length?`${esc(g.main.map(t=>tName(t)).join(Lx('、',', ')))} ${md(g.start)}–${md(g.end)} ${Lx('· 含','· includes')} ${g.sub.length} ${Lx('段旅程','trips today')}`:`${Lx('同期','')} ${g.main.length} ${Lx('段旅程 ·','overlapping trips ·')} ${md(g.start)}–${md(g.end)}`;
   return `<div class="slot multi"><div class="grp">${btn}</div><p class="grp-cap">${cap}</p></div>`;
 }
+const gearBtn=()=>`<button class="gear" data-act="settings" aria-label="${Lx('備份與設定','Backup & Settings')}" title="${Lx('備份與設定','Backup & Settings')}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>`;
+const bookHead=()=>`<header class="bk-hd"><h1>${Lx('貼紙簿','Sticker book')}</h1>${gearBtn()}</header>`;
 function bookView(){
   const d=doneTrips(),smp=showSample();
   if(ui.page<=0||(!d.length&&!smp)){
     ui.page=0;
-    return `<section class="bk">
+    return `<section class="bk">${bookHead()}<div class="bk-stage"><div class="book">
       <button class="cover" data-act="openBook" ${d.length||smp?'':'disabled'} aria-label="${Lx('翻開貼紙簿','Open sticker book')}">
         <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="20"/><ellipse cx="24" cy="24" rx="8" ry="20"/><path d="M4 24h40M7 14h34M7 34h34"/></svg>
         <b class="ct">${Lx('旅貼','Lvtie')}</b><span class="cs">${Lx('旅程帳本','Travel ledger')}</span>
         <span class="cc">${d.length?`${Lx('已收藏','')} ${d.length} ${Lx('趟，點一下翻開','trips collected · tap to open')}`:smp?Lx('內附 1 段範例，點一下翻開','Includes 1 sample · tap to open'):Lx('還沒有旅程','No trips yet')}</span>
-      </button>
+      </button></div></div>
+      <div class="pg"><button disabled aria-label="${Lx('上一頁','Previous page')}">‹</button><p>${Lx('封面','Cover')}</p><button data-act="openBook" aria-label="${Lx('翻開貼紙簿','Open sticker book')}" ${d.length||smp?'':'disabled'}>›</button></div>
       ${d.length?'':`<div class="blank"><h2>${Lx('這本冊子還是空的','This book is still empty')}</h2><p class="sub">${Lx('完結一趟旅程，它就會貼在這裡。','Finish a trip and its sticker will be stuck here.')}${smp?Lx('第 1 頁有一段標明「範例」的旅程，可以先看看完結後的樣子；不需要時可以點開範例刪除。','Page 1 has a trip marked “Sample” so you can see what a finished trip looks like. Open it to delete when you no longer need it.'):''}</p></div>`}
     </section>`;
   }
@@ -1058,8 +1072,8 @@ function bookView(){
   const slots=items.map(groupSlot);
   if(items.length<2)slots.push('<div class="slot empty">'+Lx('下一趟旅程會貼在這裡','Your next trip goes here')+'</div>');
   const cls=ui.turn?'turn-'+ui.turn:'';ui.turn=null;
-  return `<section class="bk">
-    <div class="page ${cls}"><span class="pt">${Lx('旅程紀錄','TRIP LOG')}</span><span class="pn">${String(pg).padStart(2,'0')}</span>${slots.join('')}</div>
+  return `<section class="bk">${bookHead()}<div class="bk-stage"><div class="book">
+    <div class="page ${cls}"><span class="pt">${Lx('旅程紀錄','TRIP LOG')}</span><span class="pn">${String(pg).padStart(2,'0')}</span>${slots.join('')}</div></div></div>
     <div class="pg"><button data-act="page" data-d="-1" aria-label="${Lx('上一頁','Previous page')}">‹</button><p>${Lx('第','Page')} ${pg} ${Lx('頁，共','of')} ${total} ${Lx('頁','')}</p><button data-act="page" data-d="1" aria-label="${Lx('下一頁','Next page')}" ${pg>=total?'disabled':''}>›</button></div>
   </section>`;
 }
@@ -1117,11 +1131,11 @@ function render(){
   else if(ui.pickFor)h=destinationPicker(true);
   else if(ui.planId&&tripById(ui.planId))h=wizardView();
   else{ui.planId=null;const t=curTrip();h=t?ledgerView(t):(!ui.home&&liveTrips().length>1?chooseTripView():planningView())}
-  $('#view').innerHTML=plur('<div id="storage-notice" role="alert"></div><div id="net-chip" class="net-chip" role="status" hidden></div>'+h+'<footer class="app-foot"><p id="net-line" class="net-line" aria-live="polite"></p>'+(ui.tab==='book'?'<button class="ghost settings-btn" data-act="settings">'+Lx('備份與設定','Backup & Settings')+'</button>':'')+'</footer>');
+  $('#view').innerHTML=plur('<div id="storage-notice" role="alert"></div><div id="net-chip" class="net-chip" role="status" hidden></div>'+h+(ui.tab==='book'?'':'<footer class="app-foot"><p id="net-line" class="net-line" aria-live="polite"></p></footer>'));
   updateStorageNotice();
   if(window.updatePwaUI)window.updatePwaUI();
   syncCarousel();
-  fitTitles();
+  fitTitles();fitBook();
 }
 /* 旅程標題：未滿 12 字固定一行，放不下就自動縮小字體；12 字或以上才換行（最多兩行，仍放不下再縮小） */
 function fitTitles(root){
@@ -1136,7 +1150,19 @@ function fitTitles(root){
     while(over()&&fs>min){fs=Math.max(min,fs-1);el.style.fontSize=fs+'px'}
   });
 }
-let fitT;addEventListener('resize',()=>{clearTimeout(fitT);fitT=setTimeout(()=>fitTitles(),120)});
+/* 貼紙簿：貼紙大小跟簿框走；先按框寬高估算，再逐步縮小到兩格都放得下 */
+function fitBook(){
+  const p=document.querySelector('.bk .page');if(!p||!p.clientHeight)return;
+  const cs=getComputedStyle(p),w=p.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight),hh=p.clientHeight-parseFloat(cs.paddingTop)-parseFloat(cs.paddingBottom);
+  let u=Math.max(7,Math.floor(Math.min(16,(w-16)/18,(hh-6-32)/34)*4)/4);
+  const over=()=>{if(p.scrollHeight>p.clientHeight+1||[...p.querySelectorAll('.slot')].some(s=>s.scrollWidth>s.clientWidth+1||s.scrollHeight>s.clientHeight+1))return true;
+    /* 貼紙有旋轉與白邊陰影，scrollHeight 量不到；用實際外框比對簿框底部 */
+    const r=p.getBoundingClientRect(),k=r.height/p.offsetHeight||1,bot=r.bottom-4*k;
+    return [...p.querySelectorAll('.slot > *')].some(e=>e.getBoundingClientRect().bottom>bot)};
+  p.style.setProperty('--u',u+'px');
+  while(over()&&u>7){u-=.25;p.style.setProperty('--u',u+'px')}
+}
+let fitT;addEventListener('resize',()=>{clearTimeout(fitT);fitT=setTimeout(()=>{fitTitles();fitBook()},120)});
 
 /* ---------- actions ---------- */
 function key(k){
@@ -1398,7 +1424,7 @@ function exportRaw(){
   try{const raw=localStorage.getItem(KEY);if(raw===null){toast(Lx('找不到原始儲存資料','No raw saved data found'));return}downloadFile(raw,Lx('旅貼原始資料-','lvtie-raw-')+today()+'.txt','text/plain;charset=utf-8')}catch(e){toast(Lx('瀏覽器不允許讀取原始儲存資料','The browser doesn’t allow reading the raw saved data'))}
 }
 function settingsView(){
-  showLayer(`<div class="sheet"><div class="wrap settings"><div class="hd"><h1>${Lx('備份與設定','Backup & Settings')}</h1><button class="ghost" data-act="close">${Lx('關閉','Close')}</button></div><section class="lang-set"><h2>語言 · Language</h2><div class="acts"><button class="${EN?'ghost':'primary'}" data-act="setLang" data-v="zh" aria-pressed="${!EN}">中文</button><button class="${EN?'primary':'ghost'}" data-act="setLang" data-v="en" aria-pressed="${EN}">English</button></div><p class="muted">${Lx('切換後頁面會重新載入，已儲存的帳目不受影響。','The page reloads after switching. Saved records are not affected.')}</p></section><p>${Lx('帳目只在這個瀏覽器保存，沒有雲端同步。換裝置或清除網站資料前，先存一份 JSON 備份。','Records are saved only in this browser, with no cloud sync. Save a JSON backup before switching devices or clearing site data.')}</p><section><h2>${Lx('把旅程帶走','Take your trips with you')}</h2><div class="acts"><button class="primary" data-act="exportJSON">${Lx('匯出 JSON 備份','Export JSON backup')}</button><button class="ghost" data-act="exportCSV">${Lx('匯出 CSV 帳目','Export CSV records')}</button></div><p class="muted">${Lx('JSON 可還原帳目與行程；CSV 適合試算表，不支援還原。匯出後請確認檔案已存好，內容包含你的私人旅程資料。','JSON can restore records and trips; CSV is for spreadsheets and can’t be restored. After exporting, check the file was saved — it contains your private trip data.')}</p></section><section><h2>${Lx('從備份帶回來','Restore from a backup')}</h2><label class="field">${Lx('選擇 JSON 備份','Choose JSON backup')}<input id="backup-file" type="file" accept=".json,application/json"></label><p class="muted">${Lx('先驗證，再確認合併。不覆蓋現有旅程；相同資料不重複加入，有衝突則保留為另一趟旅程。上限 50 MB。','The file is checked first, then you confirm the merge. Existing trips are never overwritten; identical data isn’t added twice, and conflicts are kept as a separate trip. Max 50 MB.')}</p><p id="import-error" class="over" role="alert"></p></section><section><h2>${Lx('本機儲存','Storage on this device')}</h2><p id="persist-status" class="muted">${Lx('持久儲存可減少系統自動回收資料的機會，但不能代替備份。','Persistent storage makes it less likely the system clears your data, but it doesn’t replace backups.')}</p><button class="ghost" data-act="persist">${Lx('申請持久儲存','Request persistent storage')}</button>${window.lvtieLoadError?'<p class="storage-alert">'+Lx('原有資料讀取失敗，為避免覆寫，已暫停儲存及匯入。請匯出原始檔並保留，再尋求協助；不要清除網站資料。','Your existing data couldn’t be read, so saving and importing are paused to avoid overwriting it. Export the raw file and keep it, then get help. Don’t clear site data.')+'</p><button class="ghost" data-act="exportRaw">'+Lx('匯出原始資料','Export raw data')+'</button>':''}</section>${S.hideSample?'<section><h2>'+Lx('範例旅程','Sample trip')+'</h2><p class="muted">'+Lx('範例旅程已刪除。重新顯示後會放回貼紙簿第 1 頁，只供參考，不計入你的記錄。','The sample trip was deleted. If restored, it goes back to page 1 of the sticker book, for reference only and not counted in your records.')+'</p><button class="ghost" data-act="restoreSample">'+Lx('重新顯示範例旅程','Restore sample trip')+'</button></section>':''}<aside id="pwa-info" class="pwa-info" aria-live="polite"></aside><p class="muted">${Lx('旅貼','Lvtie')} · 2026-11-01 aa-1</p></div></div>`);
+  showLayer(`<div class="sheet"><div class="wrap settings"><div class="hd"><h1>${Lx('備份與設定','Backup & Settings')}</h1><button class="ghost" data-act="close">${Lx('關閉','Close')}</button></div><section class="lang-set"><h2>語言 · Language</h2><div class="acts"><button class="${EN?'ghost':'primary'}" data-act="setLang" data-v="zh" aria-pressed="${!EN}">中文</button><button class="${EN?'primary':'ghost'}" data-act="setLang" data-v="en" aria-pressed="${EN}">English</button></div><p class="muted">${Lx('切換後頁面會重新載入，已儲存的帳目不受影響。','The page reloads after switching. Saved records are not affected.')}</p></section><p>${Lx('帳目只在這個瀏覽器保存，沒有雲端同步。換裝置或清除網站資料前，先存一份 JSON 備份。','Records are saved only in this browser, with no cloud sync. Save a JSON backup before switching devices or clearing site data.')}</p><section><h2>${Lx('把旅程帶走','Take your trips with you')}</h2><div class="acts"><button class="primary" data-act="exportJSON">${Lx('匯出 JSON 備份','Export JSON backup')}</button><button class="ghost" data-act="exportCSV">${Lx('匯出 CSV 帳目','Export CSV records')}</button></div><p class="muted">${Lx('JSON 可還原帳目與行程；CSV 適合試算表，不支援還原。匯出後請確認檔案已存好，內容包含你的私人旅程資料。','JSON can restore records and trips; CSV is for spreadsheets and can’t be restored. After exporting, check the file was saved — it contains your private trip data.')}</p></section><section><h2>${Lx('從備份帶回來','Restore from a backup')}</h2><label class="field">${Lx('選擇 JSON 備份','Choose JSON backup')}<input id="backup-file" type="file" accept=".json,application/json"></label><p class="muted">${Lx('先驗證，再確認合併。不覆蓋現有旅程；相同資料不重複加入，有衝突則保留為另一趟旅程。上限 50 MB。','The file is checked first, then you confirm the merge. Existing trips are never overwritten; identical data isn’t added twice, and conflicts are kept as a separate trip. Max 50 MB.')}</p><p id="import-error" class="over" role="alert"></p></section><section><h2>${Lx('本機儲存','Storage on this device')}</h2><p id="persist-status" class="muted">${Lx('持久儲存可減少系統自動回收資料的機會，但不能代替備份。','Persistent storage makes it less likely the system clears your data, but it doesn’t replace backups.')}</p><button class="ghost" data-act="persist">${Lx('申請持久儲存','Request persistent storage')}</button>${window.lvtieLoadError?'<p class="storage-alert">'+Lx('原有資料讀取失敗，為避免覆寫，已暫停儲存及匯入。請匯出原始檔並保留，再尋求協助；不要清除網站資料。','Your existing data couldn’t be read, so saving and importing are paused to avoid overwriting it. Export the raw file and keep it, then get help. Don’t clear site data.')+'</p><button class="ghost" data-act="exportRaw">'+Lx('匯出原始資料','Export raw data')+'</button>':''}</section>${S.hideSample?'<section><h2>'+Lx('範例旅程','Sample trip')+'</h2><p class="muted">'+Lx('範例旅程已刪除。重新顯示後會放回貼紙簿第 1 頁，只供參考，不計入你的記錄。','The sample trip was deleted. If restored, it goes back to page 1 of the sticker book, for reference only and not counted in your records.')+'</p><button class="ghost" data-act="restoreSample">'+Lx('重新顯示範例旅程','Restore sample trip')+'</button></section>':''}<aside id="pwa-info" class="pwa-info" aria-live="polite"></aside><p class="muted">${Lx('旅貼','Lvtie')} · 2026-11-02 gear-1</p></div></div>`);
   if(window.updatePwaUI)window.updatePwaUI();
   if(navigator.storage?.persisted)navigator.storage.persisted().then(ok=>{const el=$('#persist-status');if(el)el.textContent=ok?Lx('此瀏覽器已授予持久儲存。手動清除資料或換裝置仍會遺失帳目，請定期備份。','This browser has granted persistent storage. Clearing data manually or switching devices will still lose your records, so back up regularly.'):Lx('尚未獲授持久儲存，可在下方申請。是否批准由瀏覽器決定，請定期備份。','Persistent storage hasn’t been granted; you can request it below. The browser decides whether to approve, so back up regularly.')}).catch(()=>{});
 }

@@ -1,5 +1,5 @@
 /* Change VERSION whenever the deployed app shell changes. */
-const VERSION = '2026-11-01-aa-1';
+const VERSION = '2026-11-02-gear-1';
 const BASE = new URL('./', self.location.href);
 const PREFIX = 'lvtie-' + encodeURIComponent(BASE.pathname) + '-';
 const CACHE = PREFIX + VERSION;
