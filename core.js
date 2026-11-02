@@ -62,8 +62,11 @@ function validateBackup(input){
     });
     const plan={};if(raw.plan!=null&&!obj(raw.plan))fail(Lx('每日行程','Daily plan'));
     for(const [d,note] of Object.entries(raw.plan||{})){if(!validDate(d))fail(Lx('行程日期','plan date'));plan[d]=str(note,Lx('行程備註','plan note'),2000)}
-    const rate=raw.hkdRate??null;if(rate!==null&&(typeof rate!=='number'||!Number.isFinite(rate)||rate<=0||rate>1000000))fail(Lx('港幣匯率','HKD rate'));
-    const t={id:tid,name,currency,start:new Date(sd+'T00:00:00').getTime(),startDate:sd,endDate:ed,status:raw.status==='active'?'planned':raw.status,entries,plan,budget:budget(raw.budget),dailyBudget:budget(raw.dailyBudget),hkdRate:currency==='HKD'?1:rate,snoozeUntil:0};
+    const rate=raw.hkdRate??null;if(rate!==null&&(typeof rate!=='number'||!Number.isFinite(rate)||rate<=0||rate>1000000))fail(Lx('參考匯率','reference rate'));
+    /* 參考貨幣：舊備份沒有這欄，當作港幣；空字串＝不換算。hkdRate 是舊欄名，意思是 1 當地幣＝多少參考貨幣 */
+    const ref=raw.ref===undefined?'HKD':raw.ref;if(typeof ref!=='string'||!(ref===''||/^[A-Z]{3}$/.test(ref)))fail(Lx('參考貨幣','reference currency'));
+    const t={id:tid,name,currency,start:new Date(sd+'T00:00:00').getTime(),startDate:sd,endDate:ed,status:raw.status==='active'?'planned':raw.status,entries,plan,budget:budget(raw.budget),dailyBudget:budget(raw.dailyBudget),hkdRate:ref&&currency===ref?1:ref?rate:null,snoozeUntil:0};
+    if(raw.ref!==undefined)t.ref=ref;
     if(typeof raw.snoozeUntil==='number'&&Number.isFinite(raw.snoozeUntil)&&raw.snoozeUntil>0)t.snoozeUntil=raw.snoozeUntil;
     if(raw.destinationId!==undefined)t.destinationId=id(raw.destinationId);
     if(raw.country!==undefined){if(typeof raw.country!=='string'||!/^[A-Z]{2}$/.test(raw.country))fail(Lx('國家代碼','country code'));t.country=raw.country}
@@ -74,7 +77,8 @@ function validateBackup(input){
   });
   return {trips};
 }
-const canonical=x=>JSON.stringify(x,(k,v)=>obj(v)?Object.fromEntries(Object.keys(v).filter(k=>!['id','snoozeUntil','start','end'].includes(k)).sort().map(k=>[k,v[k]])):v);
+/* 比對是否同一趟：沒有 ref 的舊旅程等同 ref 'HKD' */
+const canonical=x=>JSON.stringify(x,(k,v)=>obj(v)?Object.fromEntries(Object.keys(Array.isArray(v.entries)&&v.ref===undefined?{...v,ref:'HKD'}:v).filter(k=>!['id','snoozeUntil','start','end'].includes(k)).sort().map(k=>[k,k==='ref'&&v.ref===undefined?'HKD':v[k]])):v);
 function merge(current,incoming,newId){
   const trips=current.trips.slice(),seen=new Set(trips.map(canonical)),used=new Set(trips.map(t=>t.id));let added=0,skipped=0,copies=0;
   for(const t of incoming.trips){const fingerprint=canonical(t);if(seen.has(fingerprint)){skipped++;continue}const copy=JSON.parse(JSON.stringify(t));if(used.has(copy.id)){do{copy.id=newId()}while(used.has(copy.id));copies++}used.add(copy.id);seen.add(fingerprint);trips.push(copy);added++}
@@ -82,9 +86,9 @@ function merge(current,incoming,newId){
 }
 function csvCell(value){let s=String(value??'');if(/^[\s]*[=+@-]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
 function csv(data){
-  const lines=[[Lx('旅程','Trip'),Lx('幣別','Currency'),Lx('日期','Date'),Lx('時間','Time'),Lx('階段','Phase'),Lx('收支','Type'),Lx('分類','Category'),Lx('金額','Amount'),Lx('備註','Note'),Lx('港幣參考（非實際結算）','HKD reference (not actual settlement)'),Lx('手動匯率（1 當地幣＝HKD）','Manual rate (1 local = HKD)')]];
+  const lines=[[Lx('旅程','Trip'),Lx('幣別','Currency'),Lx('日期','Date'),Lx('時間','Time'),Lx('階段','Phase'),Lx('收支','Type'),Lx('分類','Category'),Lx('金額','Amount'),Lx('備註','Note'),Lx('參考換算（非實際結算）','Reference value (not actual settlement)'),Lx('參考貨幣','Reference currency'),Lx('手動匯率（1 當地幣＝參考貨幣）','Manual rate (1 local = reference)')]];
   const labels={food:Lx('餐飲','Food'),move:Lx('交通','Transport'),stay:Lx('住宿','Stay'),shop:Lx('購物','Shopping'),play:Lx('玩樂','Fun'),other:Lx('其他','Other'),in:Lx('收入','Income')};
-  data.trips.forEach(t=>t.entries.forEach(e=>{const d=new Date(e.ts),rate=t.currency==='HKD'?1:t.hkdRate;lines.push([t.name,t.currency,dateOf(e),pad(d.getHours())+':'+pad(d.getMinutes()),{before:Lx('行前','Pre-trip'),during:Lx('旅途中','During trip'),after:Lx('回程後','After trip')}[phase(t,dateOf(e))],e.type==='in'?Lx('收入','Income'):Lx('支出','Expense'),labels[e.cat]||e.cat,e.amt,e.note,rate?(e.amt*rate).toFixed(2):'',rate||''])}));
+  data.trips.forEach(t=>t.entries.forEach(e=>{const d=new Date(e.ts),ref=t.ref===undefined?'HKD':t.ref,rate=!ref?null:t.currency===ref?1:t.hkdRate;lines.push([t.name,t.currency,dateOf(e),pad(d.getHours())+':'+pad(d.getMinutes()),{before:Lx('行前','Pre-trip'),during:Lx('旅途中','During trip'),after:Lx('回程後','After trip')}[phase(t,dateOf(e))],e.type==='in'?Lx('收入','Income'):Lx('支出','Expense'),labels[e.cat]||e.cat,e.amt,e.note,rate?(e.amt*rate).toFixed(2):'',rate?ref:'',rate||''])}));
   return '﻿'+lines.map(r=>r.map(csvCell).join(',')).join('\r\n');
 }
 const api={validDate,ordinal,dateOf,total,days,phase,daily,stats,validateBackup,merge,csv,csvCell};

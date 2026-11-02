@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#14213D">
 <meta name="description" content="旅貼的隱私說明：帳目只存在你的裝置。Lvtie privacy notice: your records stay on your device.">
+<link rel="canonical" href="https://lvtie.vercel.app/privacy.html">
 <link rel="icon" type="image/png" href="./icons/icon-192.png">
 <title>旅貼隱私說明 · Lvtie Privacy</title>
 <style>
 :root{color-scheme:light;--ink:#14213D;--bg:#E6EAF0;--mute:#5A6578;--line:#D5DBE4;--blue:#3F6FE0}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 "PingFang TC","Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif}
+:root:lang(zh-Hans) body{font-family:"PingFang SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif}
 main{max-width:640px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 20px) 18px 48px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .top a{display:inline-flex;align-items:center;min-height:44px;padding:0 14px;border:2px solid var(--ink);border-radius:12px;font-weight:800;font-size:14px;color:var(--ink);text-decoration:none;background:#fff}
@@ -89,5 +91,18 @@ a{color:var(--blue)}
 <p>If this notice changes, the date on this page will be updated.</p>
 </section>
 </main>
+<script src="./i18n.js"></script>
+<script>
+/* 简体中文介面：把中文部分轉成简体（英文部分不動） */
+(function(){
+  if(self.LVTIE_LANG!=='zh-Hans'||typeof self.LvtieHans!=='function')return;
+  var H=self.LvtieHans,zh=document.querySelector('section.lang[lang="zh-Hant"]');
+  document.title=H(document.title);
+  document.querySelectorAll('.top a')[0].textContent=H(document.querySelectorAll('.top a')[0].textContent);
+  if(!zh)return;zh.lang='zh-Hans';
+  var w=document.createTreeWalker(zh,NodeFilter.SHOW_TEXT),n;
+  while((n=w.nextNode()))n.nodeValue=H(n.nodeValue);
+})();
+</script>
 </body>
 </html>

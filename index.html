@@ -4,14 +4,23 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#14213D">
-<meta name="description" content="旅貼：離線記錄旅程收支，收藏每趟旅程的紀念貼紙。帳目只存在你的裝置。Lvtie: an offline travel ledger with a sticker book. Your records stay on your device.">
+<meta name="description" content="旅貼：免費的旅行記帳 App，不用註冊、沒有廣告，離線也能記錄旅遊支出和預算，旅程完結後收藏成紀念貼紙。帳目只存在你的裝置。Lvtie: a free offline travel expense tracker and trip budget app with a sticker book. No sign-up, no ads; your records stay on your device.">
+<link rel="canonical" href="https://lvtie.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://lvtie.vercel.app/">
+<meta property="og:site_name" content="旅貼 Lvtie">
+<meta property="og:title" content="旅貼 Lvtie｜離線旅行記帳 · Offline travel expense tracker">
+<meta property="og:description" content="免費、不用註冊、離線也能記帳的旅行收支 App。A free travel expense tracker that works offline. No sign-up, no ads.">
+<meta property="og:image" content="https://lvtie.vercel.app/icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"旅貼 Lvtie","alternateName":["Lvtie","旅贴"],"url":"https://lvtie.vercel.app/","description":"Free offline travel expense tracker and trip budget app with a sticker book. No sign-up, no ads; records stay on your device.","applicationCategory":"FinanceApplication","operatingSystem":"Any (web browser)","inLanguage":["zh-Hant","zh-Hans","en"],"isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"image":"https://lvtie.vercel.app/icons/icon-512.png"}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="旅貼">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" href="./icons/icon-192.png">
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-<title>旅貼</title>
+<title>旅貼 Lvtie｜離線旅行記帳 · Offline travel expense tracker</title>
 <style>
 :root{
   color-scheme:light;
@@ -20,6 +29,7 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{touch-action:manipulation}
+:root:lang(zh-Hans){--sans:"PingFang SC","Noto Sans SC","Microsoft YaHei","Heiti SC",system-ui,sans-serif}
 html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.45}
 button,input{font:inherit;color:inherit}
 button{border:0;background:none;cursor:pointer;padding:0}
@@ -284,7 +294,6 @@ h1,h2,h3,p{margin:0}
 .fb-trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .feedback [data-act=sendFeedback]:disabled{opacity:.45}
 .backup-nudge{display:grid;gap:8px;justify-items:center;text-align:center;max-width:300px}.backup-nudge p{font-size:14px;color:rgba(255,255,255,.85);margin:0}.backup-nudge .ghost{border-color:#fff;color:#fff;min-height:44px}
-.sponsor a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border:2px solid var(--ink);border-radius:12px;font-weight:800;font-size:15px;color:var(--ink);text-decoration:none;background:#fff}
 .settings-link{padding-top:22px;text-align:center}.settings-link .ghost{font-size:13px;border:0;color:var(--mute);text-decoration:underline}
 .app-foot{padding:22px 0 4px;text-align:center;display:grid;gap:10px;justify-items:center}
 .app-foot .settings-btn{font-size:14px;font-weight:800;min-height:44px;padding:0 22px}
@@ -406,19 +415,46 @@ details.ovd>summary .ovd-r::after{content:'▾';font-size:12px;color:var(--mute)
 <script>
 /* 語言：i18n.js 提供 Lx；未載入（例如測試）時一律中文 */
 if(typeof Lx!=='function')var Lx=z=>z;
-const EN=Lx('zh','en')==='en',LOC=EN?'en-GB':'zh-HK';
+const EN=Lx('zh','en')==='en',HANS=!EN&&globalThis.LVTIE_LANG==='zh-Hans',LOC=EN?'en-GB':HANS?'zh-CN':'zh-HK';
+const curLang=()=>EN?'en':HANS?'zh-Hans':'zh';
+const toHans=s=>HANS&&typeof globalThis.LvtieHans==='function'?globalThis.LvtieHans(s):s;
 /* 贊助連結：開好 Ko-fi 等帳號後把網址填進引號；留空時設定頁不顯示贊助區塊 */
 const SPONSOR_URL='https://ko-fi.com/lvtie_';
 /* 商店版（Microsoft Store、Galaxy Store 等）的開啟網址加 ?src=store：不顯示贊助區塊，避免違反商店的付款規定 */
 /* 意見回饋接收器（Cloudflare Worker＋D1，原始碼在 feedback-worker/）；只在連線時能送出 */
 const FEEDBACK_URL='https://lvtie-feedback.mtlppp.workers.dev/feedback';
 const FB_KINDS=[['bug','問題','Problem'],['idea','建議','Suggestion'],['other','其他','Other']];
+/* 參考貨幣：顯示「約 HKD …」這類參考換算用。每趟旅程存 t.ref（舊旅程沒有這欄＝HKD；空字串＝不換算）；
+   匯率仍存在 t.hkdRate（舊欄名，意思是 1 當地幣＝多少參考貨幣）。
+   全域設定存在 localStorage 'lvtie.refCur'（貨幣代碼，或 'none'＝不換算），只用於新旅程和還沒輸入匯率的旅程。
+   沒設定過時按手機時區猜，猜不到再看語言的地區（例如 en-US），都猜不到就不換算。 */
+const TZ_CUR={'Asia/Hong_Kong':'HKD','Asia/Macau':'MOP','Asia/Taipei':'TWD','Asia/Shanghai':'CNY','Asia/Chongqing':'CNY','Asia/Harbin':'CNY','Asia/Urumqi':'CNY','Asia/Tokyo':'JPY','Asia/Seoul':'KRW','Asia/Singapore':'SGD','Asia/Kuala_Lumpur':'MYR','Asia/Kuching':'MYR','Asia/Bangkok':'THB','Asia/Ho_Chi_Minh':'VND','Asia/Saigon':'VND','Asia/Manila':'PHP','Asia/Jakarta':'IDR','Asia/Makassar':'IDR','Asia/Jayapura':'IDR','Asia/Pontianak':'IDR','Asia/Kolkata':'INR','Asia/Calcutta':'INR','Europe/London':'GBP','Europe/Zurich':'CHF','Europe/Istanbul':'TRY','Africa/Cairo':'EGP','Pacific/Auckland':'NZD','Pacific/Honolulu':'USD'};
+const REGION_CUR={HK:'HKD',MO:'MOP',TW:'TWD',CN:'CNY',JP:'JPY',KR:'KRW',SG:'SGD',MY:'MYR',TH:'THB',VN:'VND',PH:'PHP',ID:'IDR',IN:'INR',GB:'GBP',CH:'CHF',TR:'TRY',EG:'EGP',US:'USD',CA:'CAD',AU:'AUD',NZ:'NZD'};
+'AT BE CY DE EE ES FI FR GR HR IE IT LT LU LV MT NL PT SI SK'.split(' ').forEach(r=>REGION_CUR[r]='EUR');
+function guessRef(tz,langs){
+  tz=String(tz||'');
+  if(TZ_CUR[tz])return TZ_CUR[tz];
+  if(/^Australia\//.test(tz))return 'AUD';
+  if(/^Europe\/(Paris|Berlin|Busingen|Rome|Madrid|Amsterdam|Brussels|Vienna|Dublin|Lisbon|Athens|Helsinki|Luxembourg|Tallinn|Riga|Vilnius|Bratislava|Ljubljana|Malta|Zagreb|Monaco)$/.test(tz))return 'EUR';
+  if(/^America\/(Toronto|Vancouver|Edmonton|Winnipeg|Halifax|St_Johns|Regina|Montreal|Moncton|Whitehorse|Yellowknife)$/.test(tz))return 'CAD';
+  if(/^America\/(New_York|Chicago|Denver|Los_Angeles|Phoenix|Anchorage|Detroit|Boise|Juneau|Indiana\/.+|Kentucky\/.+|North_Dakota\/.+)$/.test(tz))return 'USD';
+  for(const l of langs||[]){const r=String(l||'').replace(/_/g,'-').split('-').slice(1).find(p=>/^[A-Za-z]{2}$/.test(p));if(r&&REGION_CUR[r.toUpperCase()])return REGION_CUR[r.toUpperCase()]}
+  return '';
+}
+function refCur(){
+  let v=null;try{v=localStorage.getItem('lvtie.refCur')}catch(e){}
+  if(v==='none')return '';if(/^[A-Z]{3}$/.test(v||''))return v;
+  let tz='';try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){}
+  const n=globalThis.navigator||{};return guessRef(tz,n.languages&&n.languages.length?n.languages:[n.language]);
+}
+const tripRef=t=>!t?'':t.ref===undefined?'HKD':t.ref;
 const storeBuild=()=>{if(/[?&]src=store(&|$)/.test(globalThis.location?.search||'')){try{localStorage.setItem('lvtie.store','1')}catch(e){}return true}try{return localStorage.getItem('lvtie.store')==='1'}catch(e){return false}};/* 記住商店版：從隱私說明頁返回（網址沒有 ?src=store）也不顯示贊助 */
 const sponsorUrl=()=>{if(storeBuild())return '';const u=typeof window.LVTIE_SPONSOR_URL==='string'?window.LVTIE_SPONSOR_URL:SPONSOR_URL;return /^https:\/\/[^\s"'<>]+$/.test(u)?u:''};
 /* 英文單數：「1 days」→「1 day」（只在英文介面） */
 const PLUR={days:'day',entries:'entry',trips:'trip',records:'record',countries:'country','trips collected':'trip collected','trips today':'trip today','overlapping trips':'overlapping trip'};
 const plur=h=>EN?String(h).replace(/(^|[^\d.,])1 (trips collected|trips today|overlapping trips|days|entries|trips|records|countries)\b/g,(m,p,w)=>p+'1 '+PLUR[w]):h;
-if(EN){document.querySelectorAll('[data-en]').forEach(el=>el.textContent=el.dataset.en);document.querySelectorAll('[data-en-label]').forEach(el=>el.setAttribute('aria-label',el.dataset.enLabel));document.title='Lvtie'}
+if(EN){document.querySelectorAll('[data-en]').forEach(el=>el.textContent=el.dataset.en);document.querySelectorAll('[data-en-label]').forEach(el=>el.setAttribute('aria-label',el.dataset.enLabel));document.title='Lvtie · Offline travel expense tracker'}
+if(HANS){document.querySelectorAll('[data-en]').forEach(el=>el.textContent=toHans(el.textContent));document.querySelectorAll('[data-en-label]').forEach(el=>el.setAttribute('aria-label',toHans(el.getAttribute('aria-label')||'')));document.title=toHans(document.title)}
 const CATS=[
   {k:'food',n:Lx('餐飲','Food'),e:'🍜',c:'#FF6B57'},
   {k:'move',n:Lx('交通','Transport'),e:'🚆',c:'#3F6FE0'},
@@ -490,7 +526,8 @@ function norm(t){
   if(t.status==='active')t.status='planned';
   t.plan=t.plan||{};t.entries=t.entries||[];
   t.entries.forEach(e=>{if(!e.date)e.date=iso(e.ts)});
-  if(t.hkdRate===undefined)t.hkdRate=t.currency==='HKD'?1:null;
+  if(t.ref===undefined)t.ref='HKD';
+  if(t.hkdRate===undefined)t.hkdRate=t.ref&&t.currency===t.ref?1:null;
   if(t.snoozeUntil===undefined)t.snoozeUntil=0;
   if(t.budget===undefined)t.budget=null;
   if(t.dailyBudget===undefined)t.dailyBudget=null;
@@ -504,7 +541,7 @@ const tripById=id=>S.trips.find(t=>t.id===id);
 const SAMPLE=(()=>{
   const sd='2026-04-02',d=k=>iso(parseD(sd)+k*864e5+432e5),ts=(k,h)=>parseD(d(k))+h*36e5;
   const R=[['out',18000,'move',Lx('關西機場 HARUKA 來回','Kansai Airport HARUKA return'),0,10],['out',48000,'stay',Lx('町家民宿 4 晚','Machiya guesthouse, 4 nights'),0,15],['out',1600,'food',Lx('錦市場小吃','Nishiki Market snacks'),0,18],['out',2500,'play',Lx('清水寺＋地主神社','Kiyomizu-dera + Jishu Shrine'),1,9],['out',3200,'food',Lx('湯豆腐午餐','Yudofu lunch'),1,12],['out',6800,'shop',Lx('清水燒茶杯','Kiyomizu-yaki teacup'),1,16],['out',1100,'move',Lx('巴士一日券','Bus day pass'),2,9],['out',4400,'play',Lx('和服體驗','Kimono experience'),2,10],['out',2600,'food',Lx('抹茶甜點','Matcha dessert'),2,15],['out',9800,'shop',Lx('藥妝與伴手禮','Drugstore & souvenirs'),3,17],['out',1900,'food',Lx('烏冬','Udon'),3,19],['in',2400,'in',Lx('退稅','Tax refund'),4,11],['out',1300,'food',Lx('車站便當','Station bento'),4,12]];
-  return norm({id:'__sample',sample:true,name:Lx('京都','Kyoto'),country:'JP',artIndex:1,currency:'JPY',startDate:sd,endDate:d(4),start:ts(0,9),end:ts(4,17),status:'done',budget:120000,dailyBudget:25000,hkdRate:0.052,
+  return norm({id:'__sample',sample:true,name:Lx('京都','Kyoto'),country:'JP',artIndex:1,currency:'JPY',startDate:sd,endDate:d(4),start:ts(0,9),end:ts(4,17),status:'done',budget:120000,dailyBudget:25000,ref:refCur(),hkdRate:refCur()==='HKD'?0.052:null,
     plan:{[d(0)]:Lx('抵達、錦市場','Arrive, Nishiki Market'),[d(1)]:Lx('清水寺、二年坂','Kiyomizu-dera, Ninenzaka'),[d(2)]:Lx('嵐山、和服體驗','Arashiyama, kimono experience'),[d(3)]:Lx('伏見稻荷、買手信','Fushimi Inari, souvenir shopping'),[d(4)]:Lx('回程','Fly home')},
     entries:R.map((r,i)=>({id:'s'+i,type:r[0],amt:r[1],cat:r[2],note:r[3],date:d(r[4]),ts:ts(r[4],r[5])}))});
 })();
@@ -695,7 +732,7 @@ const LEGACY_NAME={'東京':'JP','大阪':'JP','京都':'JP','福岡':'JP','札�
 const countryById=id=>COUNTRIES.find(c=>c.id===id)||null;
 /* 旅程名稱留空時存的是當時語言的國家名；兩種語言的國家名都當作「用國家名」，顯示時跟隨目前語言 */
 const CNAME_BOTH={JP:['日本','Japan'],TW:['台灣','Taiwan'],KR:['韓國','South Korea'],TH:['泰國','Thailand'],SG:['新加坡','Singapore'],MY:['馬來西亞','Malaysia'],CN:['中國內地','Mainland China'],VN:['越南','Vietnam'],PH:['菲律賓','Philippines'],ID:['印尼','Indonesia'],IN:['印度','India'],GB:['英國','United Kingdom'],FR:['法國','France'],IT:['意大利','Italy'],DE:['德國','Germany'],ES:['西班牙','Spain'],NL:['荷蘭','Netherlands'],CH:['瑞士','Switzerland'],TR:['土耳其','Türkiye'],EG:['埃及','Egypt'],US:['美國','United States'],CA:['加拿大','Canada'],AU:['澳洲','Australia'],NZ:['紐西蘭','New Zealand']};
-const isCName=(c,n)=>!!c&&(n===c.name||(CNAME_BOTH[c.id]||[]).includes(n));
+const isCName=(c,n)=>!!c&&(n===c.name||(CNAME_BOTH[c.id]||[]).includes(n)||(typeof globalThis.LvtieHans==='function'&&!!CNAME_BOTH[c.id]&&globalThis.LvtieHans(CNAME_BOTH[c.id][0])===n));
 function tName(t){if(!t)return '';if(t.sample)return Lx('京都','Kyoto');const c=countryOf(t);return c&&isCName(c,t.name)?c.name:t.name}
 /* 旅程的國家：新旅程存 t.country；舊旅程依舊目的地、名稱或唯一幣別推回（不寫入資料，舊備份重新匯入不會變成副本）。 */
 function countryOf(t){
@@ -852,8 +889,8 @@ function wizReset(){ui.planId=null;ui.newStep=1;ui.destId=null;ui.draft=emptyDra
 function newTripDetails(){
   const d=wizDest(),v=ui.draft,edit=!!ui.planId,t=edit&&tripById(ui.planId);
   if(!d){ui.newStep=1;return edit?destinationPicker():planningView()}
-  const img=countryArt(d,draftNight(d),draftArtIndex(d));
-  return `<section class="start"><div class="dest-head"><button class="ghost back" data-act="${edit?'planBack':'changeDestination'}">${Lx('‹ 返回','‹ Back')}</button><span class="step-label">${edit?Lx('修改行程 · 2 / 3','Edit trip · 2 / 3'):Lx('新增行程 · 2 / 3','New trip · 2 / 3')}</span></div><h1>${edit?Lx('修改旅程資料','Edit trip details'):Lx('安排這趟旅程','Plan this trip')}</h1>${destinationSummary(d,'changeDestination',img,img?`${Lx('代表圖：','Picture: ')}${d.arts[draftArtIndex(d)].label} · ${draftNight(d)?Lx('夜景','Night'):Lx('日景','Day')}`:'')}<h2 class="sec">${Lx('城市或地方','City or place')}</h2><label>${Lx('自行填寫（選填）','Your own wording (optional)')}<input id="f-place" maxlength="${placeMax}" value="${esc(v.place||'')}" placeholder="${Lx('例如：城市、景區或小鎮名稱','e.g. a city, scenic area or town')}" autocomplete="off"></label><p class="budget-caption">${Lx('會顯示為旅程卡片的大標題；留空就用「','Shown as the big title on the trip card. Leave blank to use “')}${esc(d.name)}${Lx('」。','”.')}</p><h2 class="sec">${Lx('旅程時長','Trip dates')}</h2><div class="two">${dateField('f-start',Lx('出發日','Departure'),v.start)}${dateField('f-end',Lx('回程日','Return'),v.end)}</div><p class="duration" id="duration">${durationText(v.start,v.end)}</p><h2 class="sec">${Lx('旅行預算','Budget')}</h2><p class="budget-caption">${Lx('以','In ')}${esc(d.money||d.currency)}${Lx('（',' (')}${esc(d.currency)}${Lx('）計算，皆可留空。','). Both are optional.')}</p><div class="two"><label>${Lx('總預算（選填）','Total budget (optional)')}<input id="f-bud" inputmode="decimal" value="${esc(v.budget)}" placeholder="${Lx('不填也可以','Optional')}" autocomplete="off"></label><label>${Lx('每日預算（選填）','Daily budget (optional)')}<input id="f-dbud" inputmode="decimal" value="${esc(v.dailyBudget)}" placeholder="${Lx('不填也可以','Optional')}" autocomplete="off"></label></div>${d.currency==='HKD'?'':`<label>${Lx('港幣參考匯率（選填）','HKD reference rate (optional)')}<span class="rate-label">1 ${esc(d.currency)} ${Lx('＝ 多少 HKD？手動匯率，只作參考。','= how many HKD? Manual rate, for reference only.')}</span><input id="f-rate" inputmode="decimal" value="${esc(v.rate??'')}" placeholder="${Lx('輸入你兌換時的匯率','Rate you exchanged at')}" autocomplete="off"></label>`}<button class="primary" data-act="wizNext">${Lx('下一步：每日行程','Next: daily plan')}</button></section>`;
+  const img=countryArt(d,draftNight(d),draftArtIndex(d)),wref=t?tripRef(t):refCur();
+  return `<section class="start"><div class="dest-head"><button class="ghost back" data-act="${edit?'planBack':'changeDestination'}">${Lx('‹ 返回','‹ Back')}</button><span class="step-label">${edit?Lx('修改行程 · 2 / 3','Edit trip · 2 / 3'):Lx('新增行程 · 2 / 3','New trip · 2 / 3')}</span></div><h1>${edit?Lx('修改旅程資料','Edit trip details'):Lx('安排這趟旅程','Plan this trip')}</h1>${destinationSummary(d,'changeDestination',img,img?`${Lx('代表圖：','Picture: ')}${d.arts[draftArtIndex(d)].label} · ${draftNight(d)?Lx('夜景','Night'):Lx('日景','Day')}`:'')}<h2 class="sec">${Lx('城市或地方','City or place')}</h2><label>${Lx('自行填寫（選填）','Your own wording (optional)')}<input id="f-place" maxlength="${placeMax}" value="${esc(v.place||'')}" placeholder="${Lx('例如：城市、景區或小鎮名稱','e.g. a city, scenic area or town')}" autocomplete="off"></label><p class="budget-caption">${Lx('會顯示為旅程卡片的大標題；留空就用「','Shown as the big title on the trip card. Leave blank to use “')}${esc(d.name)}${Lx('」。','”.')}</p><h2 class="sec">${Lx('旅程時長','Trip dates')}</h2><div class="two">${dateField('f-start',Lx('出發日','Departure'),v.start)}${dateField('f-end',Lx('回程日','Return'),v.end)}</div><p class="duration" id="duration">${durationText(v.start,v.end)}</p><h2 class="sec">${Lx('旅行預算','Budget')}</h2><p class="budget-caption">${Lx('以','In ')}${esc(d.money||d.currency)}${Lx('（',' (')}${esc(d.currency)}${Lx('）計算，皆可留空。','). Both are optional.')}</p><div class="two"><label>${Lx('總預算（選填）','Total budget (optional)')}<input id="f-bud" inputmode="decimal" value="${esc(v.budget)}" placeholder="${Lx('不填也可以','Optional')}" autocomplete="off"></label><label>${Lx('每日預算（選填）','Daily budget (optional)')}<input id="f-dbud" inputmode="decimal" value="${esc(v.dailyBudget)}" placeholder="${Lx('不填也可以','Optional')}" autocomplete="off"></label></div>${!wref||d.currency===wref?'':`<label>${Lx(`${wref} 參考匯率（選填）`,`${wref} reference rate (optional)`)}<span class="rate-label">1 ${esc(d.currency)} ${Lx(`＝ 多少 ${wref}？手動匯率，只作參考。`,`= how many ${wref}? Manual rate, for reference only.`)}</span><input id="f-rate" inputmode="decimal" value="${esc(v.rate??'')}" placeholder="${Lx('輸入你兌換時的匯率','Rate you exchanged at')}" autocomplete="off"></label>`}<button class="primary" data-act="wizNext">${Lx('下一步：每日行程','Next: daily plan')}</button></section>`;
 }
 function planStep(){
   const d=wizDest(),v=ui.draft,edit=!!ui.planId;
@@ -897,10 +934,10 @@ function saveTrip(confirmed){
     if(d.id){t.country=d.id;t.currency=d.currency;if(draftArtIndex(d))t.artIndex=draftArtIndex(d);else delete t.artIndex;if(draftNight(d))t.artVariant='night';else delete t.artVariant}
     t.name=place||d.name;
     if(v.start!==t.startDate||v.end!==t.endDate){t.startDate=v.start;t.endDate=v.end;t.start=parseD(v.start);if(t.status==='done')t.end=parseD(v.end);t.snoozeUntil=0;delete ui.asked[t.id]}
-    t.budget=budNum(v.budget);t.dailyBudget=budNum(v.dailyBudget);t.hkdRate=t.currency==='HKD'?null:rate;t.plan=wizPlan();
+    t.budget=budNum(v.budget);t.dailyBudget=budNum(v.dailyBudget);t.hkdRate=!t.ref?null:t.currency===t.ref?1:rate;t.plan=wizPlan();
   }else{
-    t=norm({id:uid(),country:d.id,name:place||d.name,currency:d.currency,start:parseD(v.start),startDate:v.start,endDate:v.end,status:'planned',entries:[],budget:budNum(v.budget),dailyBudget:budNum(v.dailyBudget),plan:wizPlan()});
-    if(d.currency!=='HKD'&&rate)t.hkdRate=rate;
+    t=norm({id:uid(),ref:refCur(),country:d.id,name:place||d.name,currency:d.currency,start:parseD(v.start),startDate:v.start,endDate:v.end,status:'planned',entries:[],budget:budNum(v.budget),dailyBudget:budNum(v.dailyBudget),plan:wizPlan()});
+    if(t.ref&&d.currency!==t.ref&&rate)t.hkdRate=rate;
     if(draftArtIndex(d))t.artIndex=draftArtIndex(d);
     if(draftNight(d))t.artVariant='night';
     S.trips.push(t);
@@ -1003,7 +1040,7 @@ function budgetBars(t,day,dout,din,inDates){
   const c=esc(t.currency),lb=day===today()?Lx('今天','Today'):Lx('當天','Day'),pc=(a,b)=>Math.round(a/b*100);
   const meter=(used,cap,label)=>`<div class="bb-meter${used>cap?' over':''}" role="progressbar" aria-label="${label}" aria-valuenow="${pc(used,cap)}" aria-valuemin="0" aria-valuemax="100"><i style="width:${Math.min(100,used/cap*100)}%"></i></div>`;
   const db=inDates&&t.dailyBudget?t.dailyBudget:null;
-  const left=`<div class="bb"><div class="bb-t"><span>${lb}${Lx('支出',' spent')}</span><b>${c} ${fmt(dout)}</b></div>${db?`${meter(dout,db,lb+Lx('預算使用率',' budget used'))}<small>${Lx('每日預算','Daily budget')} ${fmt(db)} ${Lx('· 已用','· used')} ${pc(dout,db)}%</small>`:''}${din?`<small>${Lx('收入','Income')} ${fmt(din)}</small>`:''}${hkd(t,dout)}${db&&dout>db?`<p class="bb-warn" role="alert">${EN?`⚠ Over ${day===today()?'today’s':'the day’s'} budget by`:`⚠ 超出${lb}預算`} ${fmt(Math.round((dout-db)*100)/100)}</p>`:''}</div>`;
+  const left=`<div class="bb"><div class="bb-t"><span>${lb}${Lx('支出',' spent')}</span><b>${c} ${fmt(dout)}</b></div>${db?`${meter(dout,db,lb+Lx('預算使用率',' budget used'))}<small>${Lx('每日預算','Daily budget')} ${fmt(db)} ${Lx('· 已用','· used')} ${pc(dout,db)}%</small>`:''}${din?`<small>${Lx('收入','Income')} ${fmt(din)}</small>`:''}${hkd(t,dout)}${db&&dout>db?`<p class="bb-warn" role="alert">${EN?`⚠ Over ${day===today()?'today’s':'the day’s'} budget by`:`⚠ ${toHans('超出')}${lb}${toHans('預算')}`} ${fmt(Math.round((dout-db)*100)/100)}</p>`:''}</div>`;
   let right='';
   if(t.budget){const so=stats(t).so;right=`<div class="bb bb-r"><div class="bb-t"><span>${Lx('總預算','Total budget')}</span><b>${fmt(so)}${Lx('／',' / ')}${fmt(t.budget)}</b></div>${meter(so,t.budget,Lx('總預算使用率','Total budget used'))}<small>${Lx('已用','Used')} ${pc(so,t.budget)}%</small>${so>t.budget?`<p class="bb-warn" role="alert">${Lx('⚠ 超出總預算','⚠ Over total budget by')} ${fmt(Math.round((so-t.budget)*100)/100)}</p>`:''}</div>`}
   return `<div class="bud-row${right?'':' one'}">${left}${right}</div>`;
@@ -1226,7 +1263,7 @@ document.addEventListener('click',e=>{
       const d=countryById(ui.pickFor?ui.pickDest:ui.destId);if(!d){toast(Lx('先選國家','Choose a country first'));return}
       if(ui.pickFor){const t=tripById(ui.pickFor);if(!t)return;
         if(t.entries.length&&t.currency!==d.currency){toast(Lx('已有帳目，只能更改為相同幣別的國家','This trip already has records, so you can only switch to a country with the same currency'));return}
-        if(t.currency!==d.currency)t.hkdRate=d.currency==='HKD'?1:null;
+        if(t.currency!==d.currency)t.hkdRate=t.ref&&d.currency===t.ref?1:null;
         const old=countryOf(t);if(!t.name.trim()||(old&&isCName(old,t.name)))t.name=d.name;
         if(!old||old.id!==d.id)delete t.artIndex; /* 換國家：景點圖不同，回到第一張 */
         t.country=d.id;t.currency=d.currency;save();ui.pickFor=null;
@@ -1321,7 +1358,7 @@ document.addEventListener('click',e=>{
     case 'feedback':feedbackView();break;
     case 'fbKind':document.querySelectorAll('.fb-kinds [data-act="fbKind"]').forEach(x=>{const on=x===b;x.className=on?'primary':'ghost';x.setAttribute('aria-pressed',String(on))});break;
     case 'sendFeedback':sendFeedback(b);break;
-    case 'setLang':{const v=b.dataset.v==='en'?'en':'zh';if(v===(EN?'en':'zh')){hideLayer();break}try{localStorage.setItem('lvtie.lang',v)}catch(e){toast(Lx('瀏覽器不允許儲存語言設定','This browser won’t let us save the language setting'));break}location.reload();break}
+    case 'setLang':{const v=['zh','zh-Hans','en'].includes(b.dataset.v)?b.dataset.v:'zh';if(v===curLang()){hideLayer();break}try{localStorage.setItem('lvtie.lang',v)}catch(e){toast(Lx('瀏覽器不允許儲存語言設定','This browser won’t let us save the language setting'));break}location.reload();break}
     case 'exportJSON':exportJSON();break;
     case 'exportCSV':downloadFile(TravelCore.csv(S),Lx('旅貼帳目-','lvtie-records-')+today()+'.csv','text/csv;charset=utf-8');toast(Lx('已建立 CSV，請確認已儲存檔案','CSV created. Please check the file was saved.'));break;
     case 'exportRaw':exportRaw();break;
@@ -1362,6 +1399,13 @@ document.addEventListener('input',e=>{
 document.addEventListener('toggle',e=>{const el=e.target;if(el.id==='ov-all')ui.ovAll=el.open;else if(el.id==='ov-days')ui.ovDays=el.open;else if(el.classList&&el.classList.contains('ovd')&&el.dataset.day){(ui.ovOpen=ui.ovOpen||{})[ui.overviewId+'|'+el.dataset.day]=el.open}},true);
 document.addEventListener('change',e=>{
   const el=e.target,f=el.dataset&&el.dataset.f;
+  if(el.id==='ref-cur'){
+    const v=el.value==='none'?'':el.value;
+    try{localStorage.setItem('lvtie.refCur',v||'none')}catch(err){toast(Lx('瀏覽器不允許儲存這個設定','This browser won’t let us save this setting'));return}
+    adoptRef(v);save();render();settingsView();
+    toast(v?Lx(`參考貨幣改為 ${v}`,`Reference currency set to ${v}`):Lx('已關閉參考換算','Reference conversion turned off'));
+    return;
+  }
   if(el.id==='destination-select'){
     const d=countryById(el.value);
     if(ui.pickFor)ui.pickDest=d?d.id:null;else ui.destId=d?d.id:null;
@@ -1396,10 +1440,15 @@ document.addEventListener('visibilitychange',()=>{
 });
 /* Core improvements: local-only backups, explicit dates, rates and editing. */
 function hkd(t,n,prefix=Lx('約','≈')){
-  if(!t||t.currency==='HKD'||!(t.hkdRate>0))return '';
-  return `<small class="hkd">${prefix} HKD ${fmt(Math.round(n*t.hkdRate*100)/100)}</small>`;
+  const r=tripRef(t);if(!t||!r||t.currency===r||!(t.hkdRate>0))return '';
+  return `<small class="hkd">${prefix} ${esc(r)} ${fmt(Math.round(n*t.hkdRate*100)/100)}</small>`;
 }
-function rateField(t){return t.currency==='HKD'?'<p class="budget-caption">'+Lx('本旅程已用港幣記帳，毋須換算。','This trip is already recorded in HKD; no conversion needed.')+'</p>':`<label>${Lx('港幣參考匯率（選填）','HKD reference rate (optional)')}<span class="rate-label">1 ${esc(t.currency)} ${Lx('＝ 多少 HKD？','= how many HKD?')}</span><input data-f="hkdRate" inputmode="decimal" value="${t.hkdRate??''}" placeholder="${Lx('輸入你兌換時的匯率','Rate you exchanged at')}" autocomplete="off"></label><p class="budget-caption">${Lx('手動匯率，非即時報價。只作參考，不改動原帳；更新匯率會重算整趟旅程的港幣參考值。清空即可關閉。','Manual rate, not a live quote. For reference only and doesn’t change your records; updating it recalculates the HKD reference for the whole trip. Clear it to turn off.')}</p>`}
+function rateField(t){
+  const r=tripRef(t);
+  if(!r)return '<p class="budget-caption">'+Lx('這趟旅程沒有參考貨幣，所以不顯示換算。可在「備份與設定」選擇參考貨幣。','This trip has no reference currency, so no conversion is shown. You can choose one in Backup & Settings.')+'</p>';
+  if(t.currency===r)return '<p class="budget-caption">'+Lx(`本旅程已用 ${r} 記帳，毋須換算。`,`This trip is already recorded in ${r}; no conversion needed.`)+'</p>';
+  return `<label>${Lx(`${r} 參考匯率（選填）`,`${r} reference rate (optional)`)}<span class="rate-label">1 ${esc(t.currency)} ${Lx(`＝ 多少 ${r}？`,`= how many ${r}?`)}</span><input data-f="hkdRate" inputmode="decimal" value="${t.hkdRate??''}" placeholder="${Lx('輸入你兌換時的匯率','Rate you exchanged at')}" autocomplete="off"></label><p class="budget-caption">${Lx('手動匯率，非即時報價。只作參考，不改動原帳；更新匯率會重算整趟旅程的參考換算。清空即可關閉。','Manual rate, not a live quote. For reference only and doesn’t change your records; updating it recalculates the reference values for the whole trip. Clear it to turn off.')}</p>`;
+}
 function updateStorageNotice(){
   const el=$('#storage-notice');if(!el)return;
   el.innerHTML=window.lvtieStorageError?`<p class="storage-alert">${window.lvtieLoadError?Lx('無法讀取原有帳目，已停止覆寫，請先匯出原始資料。','Could not read your existing records; saving has been stopped. Please export the raw data first.'):Lx('未能儲存在本機；請勿關閉頁面，先匯出備份。','Could not save on this device. Don’t close the page; export a backup first.')}<button class="text-action" data-act="settings">${Lx('開啟備份設定','Open backup settings')}</button></p>`:'';
@@ -1449,6 +1498,18 @@ function exportJSON(){
 function exportRaw(){
   try{const raw=localStorage.getItem(KEY);if(raw===null){toast(Lx('找不到原始儲存資料','No raw saved data found'));return}downloadFile(raw,Lx('旅貼原始資料-','lvtie-raw-')+today()+'.txt','text/plain;charset=utf-8')}catch(e){toast(Lx('瀏覽器不允許讀取原始儲存資料','The browser doesn’t allow reading the raw saved data'))}
 }
+/* 設定頁的參考貨幣選單：港幣、澳門元，加上 24 國用到的貨幣（不重複） */
+function refOptions(){const seen=new Set(),out=[['HKD',Lx('港幣','Hong Kong dollar')],['MOP',Lx('澳門元','Macanese pataca')]];out.forEach(([c])=>seen.add(c));COUNTRIES.forEach(c=>{if(!seen.has(c.currency)){seen.add(c.currency);out.push([c.currency,c.money])}});return out}
+function refSection(){
+  const cur=refCur(),opts=refOptions();
+  if(cur&&!opts.some(([c])=>c===cur))opts.push([cur,cur]);
+  return `<section class="ref-set"><h2>${Lx('參考貨幣','Reference currency')}</h2><label class="field">${Lx('換算成','Convert to')}<select id="ref-cur"><option value="none" ${cur?'':'selected'}>${Lx('不換算','No conversion')}</option>${opts.map(([c,n])=>`<option value="${c}" ${c===cur?'selected':''}>${c} · ${esc(n)}</option>`).join('')}</select></label><p class="muted">${Lx('用來顯示「約 '+(cur||'HKD')+' …」這類參考換算，匯率在每趟旅程自己輸入。改了只影響新旅程和還沒輸入匯率的旅程；已輸入匯率的旅程保留原本的貨幣。','Used for reference amounts like “≈ '+(cur||'USD')+' …”. You enter the rate for each trip. Changing it only affects new trips and trips without a rate; trips that already have a rate keep their currency.')}</p></section>`;
+}
+/* 改參考貨幣：新旅程用新設定；還沒輸入匯率（或本身就用參考貨幣記帳）的旅程跟著換，已輸入匯率的不動 */
+function adoptRef(code){
+  let n=0;S.trips.forEach(t=>{const r=tripRef(t);if(r===code)return;if(r&&t.currency!==r&&t.hkdRate>0)return;t.ref=code;t.hkdRate=code&&t.currency===code?1:null;n++});
+  return n;
+}
 function supportRow(){
   const u=sponsorUrl();
   return `<section class="support-row"><h2>${Lx('支持與回饋','Support & feedback')}</h2><div class="acts">${u?`<a class="support-link" href="${esc(u)}" target="_blank" rel="noopener">☕ ${Lx('贊助旅貼','Support Lvtie')}</a>`:''}<button class="ghost" data-act="feedback">💬 ${Lx('意見回饋','Send feedback')}</button></div><p class="muted">${u?Lx('贊助和意見回饋都需要網絡連線。','Support and feedback both need an internet connection.'):Lx('意見回饋需要網絡連線。','Feedback needs an internet connection.')}</p></section>`;
@@ -1482,7 +1543,7 @@ async function sendFeedback(btn){
   finally{if(timer)clearTimeout(timer);if(btn.isConnected)btn.disabled=navigator.onLine===false}
 }
 function settingsView(){
-  showLayer(`<div class="sheet"><div class="wrap settings"><div class="hd"><h1>${Lx('備份與設定','Backup & Settings')}</h1><button class="ghost" data-act="close">${Lx('關閉','Close')}</button></div><section class="lang-set"><h2>語言 · Language</h2><div class="acts"><button class="${EN?'ghost':'primary'}" data-act="setLang" data-v="zh" aria-pressed="${!EN}">中文</button><button class="${EN?'primary':'ghost'}" data-act="setLang" data-v="en" aria-pressed="${EN}">English</button></div><p class="muted">${Lx('切換後頁面會重新載入，已儲存的帳目不受影響。','The page reloads after switching. Saved records are not affected.')}</p></section>${supportRow()}<p>${Lx('帳目只在這個瀏覽器保存，沒有雲端同步。換裝置或清除網站資料前，先存一份 JSON 備份。','Records are saved only in this browser, with no cloud sync. Save a JSON backup before switching devices or clearing site data.')}</p><section><h2>${Lx('把旅程帶走','Take your trips with you')}</h2><div class="acts"><button class="primary" data-act="exportJSON">${Lx('匯出 JSON 備份','Export JSON backup')}</button><button class="ghost" data-act="exportCSV">${Lx('匯出 CSV 帳目','Export CSV records')}</button></div><p class="muted">${Lx('JSON 可還原帳目與行程；CSV 適合試算表，不支援還原。匯出後請確認檔案已存好，內容包含你的私人旅程資料。','JSON can restore records and trips; CSV is for spreadsheets and can’t be restored. After exporting, check the file was saved — it contains your private trip data.')}</p><p id="last-backup" class="muted">${lastBackupText()}</p></section><section><h2>${Lx('從備份帶回來','Restore from a backup')}</h2><label class="field">${Lx('選擇 JSON 備份','Choose JSON backup')}<input id="backup-file" type="file" accept=".json,application/json"></label><p class="muted">${Lx('先驗證，再確認合併。不覆蓋現有旅程；相同資料不重複加入，有衝突則保留為另一趟旅程。上限 50 MB。','The file is checked first, then you confirm the merge. Existing trips are never overwritten; identical data isn’t added twice, and conflicts are kept as a separate trip. Max 50 MB.')}</p><p id="import-error" class="over" role="alert"></p></section><section><h2>${Lx('本機儲存','Storage on this device')}</h2><p id="persist-status" class="muted">${Lx('持久儲存可減少系統自動回收資料的機會，但不能代替備份。','Persistent storage makes it less likely the system clears your data, but it doesn’t replace backups.')}</p><button class="ghost" data-act="persist">${Lx('申請持久儲存','Request persistent storage')}</button>${window.lvtieLoadError?'<p class="storage-alert">'+Lx('原有資料讀取失敗，為避免覆寫，已暫停儲存及匯入。請匯出原始檔並保留，再尋求協助；不要清除網站資料。','Your existing data couldn’t be read, so saving and importing are paused to avoid overwriting it. Export the raw file and keep it, then get help. Don’t clear site data.')+'</p><button class="ghost" data-act="exportRaw">'+Lx('匯出原始資料','Export raw data')+'</button>':''}</section>${S.hideSample?'<section><h2>'+Lx('範例旅程','Sample trip')+'</h2><p class="muted">'+Lx('範例旅程已刪除。重新顯示後會放回貼紙簿第 1 頁，只供參考，不計入你的記錄。','The sample trip was deleted. If restored, it goes back to page 1 of the sticker book, for reference only and not counted in your records.')+'</p><button class="ghost" data-act="restoreSample">'+Lx('重新顯示範例旅程','Restore sample trip')+'</button></section>':''}<aside id="pwa-info" class="pwa-info" aria-live="polite"></aside>${sponsorUrl()?'<section class="sponsor"><h2>'+Lx('支持旅貼','Support Lvtie')+'</h2><p class="muted">'+Lx('旅貼免費、沒有廣告，你的帳目只存在你的裝置。如果它在旅途中幫上忙，歡迎請開發者喝杯咖啡。','Lvtie is free, has no ads, and your records stay on your device. If it helped on your trip, you can buy the developer a coffee.')+'</p><a href="'+esc(sponsorUrl())+'" target="_blank" rel="noopener">☕ '+Lx('贊助旅貼','Support with a coffee')+'</a><p class="muted">'+Lx('會在瀏覽器開啟贊助頁，需要網絡連線。','Opens the support page in your browser. Needs an internet connection.')+'</p></section>':''}<p class="muted foot-links"><a href="./privacy.html${EN?'#en':''}">${Lx('隱私說明','Privacy notice')}</a> · ${Lx('旅貼','Lvtie')} · 2026-11-02 feedback-1</p></div></div>`);
+  showLayer(`<div class="sheet"><div class="wrap settings"><div class="hd"><h1>${Lx('備份與設定','Backup & Settings')}</h1><button class="ghost" data-act="close">${Lx('關閉','Close')}</button></div><section class="lang-set"><h2>${HANS?'语言':'語言'} · Language</h2><div class="acts">${[['zh','繁體中文'],['zh-Hans','简体中文'],['en','English']].map(([v,n])=>{const on=v===curLang();return `<button class="${on?'primary':'ghost'}" data-act="setLang" data-v="${v}" aria-pressed="${on}" lang="${v==='en'?'en':v==='zh'?'zh-Hant':'zh-Hans'}">${n}</button>`}).join('')}</div><p class="muted">${Lx('切換後頁面會重新載入，已儲存的帳目不受影響。','The page reloads after switching. Saved records are not affected.')}</p></section>${supportRow()}${refSection()}<p>${Lx('帳目只在這個瀏覽器保存，沒有雲端同步。換裝置或清除網站資料前，先存一份 JSON 備份。','Records are saved only in this browser, with no cloud sync. Save a JSON backup before switching devices or clearing site data.')}</p><section><h2>${Lx('把旅程帶走','Take your trips with you')}</h2><div class="acts"><button class="primary" data-act="exportJSON">${Lx('匯出 JSON 備份','Export JSON backup')}</button><button class="ghost" data-act="exportCSV">${Lx('匯出 CSV 帳目','Export CSV records')}</button></div><p class="muted">${Lx('JSON 可還原帳目與行程；CSV 適合試算表，不支援還原。匯出後請確認檔案已存好，內容包含你的私人旅程資料。','JSON can restore records and trips; CSV is for spreadsheets and can’t be restored. After exporting, check the file was saved — it contains your private trip data.')}</p><p id="last-backup" class="muted">${lastBackupText()}</p></section><section><h2>${Lx('從備份帶回來','Restore from a backup')}</h2><label class="field">${Lx('選擇 JSON 備份','Choose JSON backup')}<input id="backup-file" type="file" accept=".json,application/json"></label><p class="muted">${Lx('先驗證，再確認合併。不覆蓋現有旅程；相同資料不重複加入，有衝突則保留為另一趟旅程。上限 50 MB。','The file is checked first, then you confirm the merge. Existing trips are never overwritten; identical data isn’t added twice, and conflicts are kept as a separate trip. Max 50 MB.')}</p><p id="import-error" class="over" role="alert"></p></section><section><h2>${Lx('本機儲存','Storage on this device')}</h2><p id="persist-status" class="muted">${Lx('持久儲存可減少系統自動回收資料的機會，但不能代替備份。','Persistent storage makes it less likely the system clears your data, but it doesn’t replace backups.')}</p><button class="ghost" data-act="persist">${Lx('申請持久儲存','Request persistent storage')}</button>${window.lvtieLoadError?'<p class="storage-alert">'+Lx('原有資料讀取失敗，為避免覆寫，已暫停儲存及匯入。請匯出原始檔並保留，再尋求協助；不要清除網站資料。','Your existing data couldn’t be read, so saving and importing are paused to avoid overwriting it. Export the raw file and keep it, then get help. Don’t clear site data.')+'</p><button class="ghost" data-act="exportRaw">'+Lx('匯出原始資料','Export raw data')+'</button>':''}</section>${S.hideSample?'<section><h2>'+Lx('範例旅程','Sample trip')+'</h2><p class="muted">'+Lx('範例旅程已刪除。重新顯示後會放回貼紙簿第 1 頁，只供參考，不計入你的記錄。','The sample trip was deleted. If restored, it goes back to page 1 of the sticker book, for reference only and not counted in your records.')+'</p><button class="ghost" data-act="restoreSample">'+Lx('重新顯示範例旅程','Restore sample trip')+'</button></section>':''}<aside id="pwa-info" class="pwa-info" aria-live="polite"></aside><p class="muted foot-links"><a href="./privacy.html${EN?'#en':''}">${Lx('隱私說明','Privacy notice')}</a> · ${Lx('旅貼','Lvtie')} · 2026-11-02 locale-1</p></div></div>`);
   if(window.updatePwaUI)window.updatePwaUI();
   if(navigator.storage?.persisted)navigator.storage.persisted().then(ok=>{const el=$('#persist-status');if(el)el.textContent=ok?Lx('此瀏覽器已授予持久儲存。手動清除資料或換裝置仍會遺失帳目，請定期備份。','This browser has granted persistent storage. Clearing data manually or switching devices will still lose your records, so back up regularly.'):Lx('尚未獲授持久儲存，可在下方申請。是否批准由瀏覽器決定，請定期備份。','Persistent storage hasn’t been granted; you can request it below. The browser decides whether to approve, so back up regularly.')}).catch(()=>{});
 }
